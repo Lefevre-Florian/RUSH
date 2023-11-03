@@ -33,6 +33,7 @@ namespace Com.IsartDigital.Rush
 
         private float _UpdatedDurationTick = DURATION_BETWEEN_TICK;
         public float ElapsedTime { get; private set; } = 0f;
+        public float Ratio { get {return ElapsedTime / _UpdatedDurationTick; } private set { } }
 
         // Signals
         public event Action OnTick;
@@ -52,7 +53,10 @@ namespace Com.IsartDigital.Rush
             _InternalTimer = StartCoroutine(Tick());
         }
 
-        private void Update() => ElapsedTime += Time.deltaTime * _TickMultiplier;
+        private void Update()
+        {
+            ElapsedTime += Time.deltaTime * _TickMultiplier;
+        }
 
         private IEnumerator Tick()
         {
@@ -68,12 +72,15 @@ namespace Com.IsartDigital.Rush
             yield return null;
         }
 
-        public void UpdateTickMultiplier(int pMultiplier)
+        public void UpdateTickMultiplier(float pMultiplier)
         {
             if (pMultiplier > MIN_MULTIPLIER || pMultiplier < MAX_MULTIPLIER)
             {
                 _TickMultiplier = pMultiplier;
                 _UpdatedDurationTick = DURATION_BETWEEN_TICK * _TickMultiplier;
+
+                StopCoroutine(_InternalTimer);
+                _InternalTimer = StartCoroutine(Tick());
             } 
         }
 
