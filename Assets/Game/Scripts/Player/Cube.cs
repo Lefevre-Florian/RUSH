@@ -98,7 +98,6 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void InternalCheckCollision()
         {
-            Debug.Log("ok");
             _Down = Vector3.down;
 
             if(Physics.Raycast(transform.position, _Down, out _Hit, _RaycastDistance))
