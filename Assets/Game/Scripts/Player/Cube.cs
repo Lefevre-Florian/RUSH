@@ -8,22 +8,15 @@ namespace Com.IsartDigital.Rush.Cube
 {
     public class Cube : MonoBehaviour
     {
-        [SerializeField][Range(0.1f, 5f)] private float _Speed = 1f;
-
         [Header("Raycasting")]
         [SerializeField] private float _RaycastOffsetOutSideCube = 0.4f;
         [SerializeField] private float _RaycastFallHeight = 2f;
 
         [SerializeField] private int _GroundLayer = 1;
 
-        private float _ElapsedTime = 0f;
-        private float _DurationBetweenTick = 1f;
-
         private Action DoAction = null;
 
-        // Movement & Rotation
-        private float _Ratio = 0f;
-
+        // Movements & rotations
         private Vector3 _MovementDirection = default;
         private Quaternion _RotationDirection = default;
 
@@ -36,6 +29,9 @@ namespace Com.IsartDigital.Rush.Cube
         private Vector3 _Down = default;
         private RaycastHit _Hit = default;
 
+        // References
+        private Clock _Clock = null;
+
         private void Start()
         {
             float lCubeSide = transform.localScale.x;
@@ -46,28 +42,20 @@ namespace Com.IsartDigital.Rush.Cube
 
             _MovementDirection = transform.forward;
             _RotationDirection = Quaternion.AngleAxis(90f, transform.right);
-            
+
+            _Clock = Clock.GetInstance();
+            _Clock.OnTick += InternalCheckCollision;
+
             SetActionVoid();
         }
 
         private void Update()
         {
-            Tick();
             if (DoAction != null)
                 DoAction();
         }
 
         //Move the clock later in the clock main (and make it a coroutine)
-        private void Tick()
-        {
-            if (_ElapsedTime > _DurationBetweenTick)
-            {
-                _ElapsedTime -= _DurationBetweenTick;
-
-                InternalCheckCollision();
-            }
-            _ElapsedTime += Time.deltaTime * _Speed;
-        }
 
         private void SetActionMove()
         {
@@ -82,15 +70,13 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void DoActionMove()
         {
-            _Ratio = _ElapsedTime / _DurationBetweenTick;
-
             // Without compensating the height of the cube so it may clip in the ground
             //transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Ratio);
             //transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation,_Ratio);
             
             // With the height compensation base on the face diagonal so it doesn't clip in the ground
-            transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation, _Ratio);
-            transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Ratio) + (Vector3.up * _RotationOffsetY * Mathf.Sin(Mathf.PI * _Ratio));
+            transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation, _Clock.Ratio);
+            transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio) + (Vector3.up * _RotationOffsetY * Mathf.Sin(Mathf.PI * _Clock.Ratio));
 
             // Check for the best solution so a Quaternion rotation around the forward base vertice
         }
@@ -105,13 +91,14 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void DoActionFall()
         {
-            transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _ElapsedTime / _DurationBetweenTick);
+            transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
         }
 
         private void SetActionVoid() => DoAction = null;
 
         private void InternalCheckCollision()
         {
+            Debug.Log("ok");
             _Down = Vector3.down;
 
             if(Physics.Raycast(transform.position, _Down, out _Hit, _RaycastDistance))
@@ -127,6 +114,15 @@ namespace Com.IsartDigital.Rush.Cube
                 SetActionFall();
                 /*if (!Physics.Raycast(transform.position, _Down, out _Hit, _RaycastDistance * _RaycastFallHeight))
                     SetActionVoid();*/
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if(_Clock != null)
+            {
+                _Clock.OnTick -= InternalCheckCollision;
+                _Clock = null;
             }
         }
 
