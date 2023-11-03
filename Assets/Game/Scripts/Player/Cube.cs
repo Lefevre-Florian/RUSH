@@ -45,7 +45,7 @@ namespace Com.IsartDigital.Rush.Cube
             _RaycastDistance = lCubeSide / 2 + _RaycastOffsetOutSideCube;
 
             _MovementDirection = transform.forward;
-            _RotationDirection = Quaternion.AngleAxis(90f, (-transform.up + transform.position) + (transform.position + transform.right));
+            _RotationDirection = Quaternion.AngleAxis(90f, transform.right);
             
             SetActionVoid();
         }
