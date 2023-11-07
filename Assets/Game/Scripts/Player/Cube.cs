@@ -59,11 +59,15 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void SetActionMove()
         {
+            //(transform.localPosition + (_MovementDirection * transform.localScale.x) + Vector3.down * 0.5f);
+
             _InitialRotation = transform.rotation;
             _TargetedRotation = _RotationDirection * _InitialRotation;
 
             _InitialPosition = transform.position;
             _TargetedPosition = _InitialPosition + (_MovementDirection * transform.localScale.x);
+
+            //Quaternion.AngleAxis(lAngle * (i + 1), transform.right) * transform.up * lRadius + transform.position
 
             DoAction = DoActionMove;
         }
@@ -79,6 +83,8 @@ namespace Com.IsartDigital.Rush.Cube
             transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio) + (Vector3.up * _RotationOffsetY * Mathf.Sin(Mathf.PI * _Clock.Ratio));
 
             // Check for the best solution so a Quaternion rotation around the forward base vertice
+            //transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
+            //transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation, _Clock.Ratio);
         }
 
         private void SetActionFall()
