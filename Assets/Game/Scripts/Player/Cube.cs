@@ -1,3 +1,4 @@
+using Com.IsartDigital.Rush.Tiles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +13,9 @@ namespace Com.IsartDigital.Rush.Cube
         [SerializeField] private float _RaycastOffsetOutSideCube = 0.4f;
         [SerializeField] private float _RaycastFallHeight = 2f;
 
+        [Header("Collision Layers")]
         [SerializeField] private int _GroundLayer = 1;
+        [SerializeField] private int _TeleporterLayer = 1;
 
         private Action DoAction = null;
 
@@ -31,6 +34,10 @@ namespace Com.IsartDigital.Rush.Cube
 
         // References
         private Clock _Clock = null;
+
+        private int _ActionTick = 0;
+        private int _InternalTick = 0;
+        private bool _CheckCollision = true;
 
         private void Start()
         {
@@ -54,8 +61,6 @@ namespace Com.IsartDigital.Rush.Cube
             if (DoAction != null)
                 DoAction();
         }
-
-        //Move the clock later in the clock main (and make it a coroutine)
 
         private void SetActionMove()
         {
@@ -95,12 +100,38 @@ namespace Com.IsartDigital.Rush.Cube
             DoAction = DoActionFall;
         }
 
-        private void DoActionFall()
+        private void DoActionFall() => transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
+
+        private void SetActionTeleport(Teleporter pTeleporter)
         {
-            transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
+            _InternalTick = 0;
+            GetComponent<MeshRenderer>().enabled = false;
+
+            _ActionTick = pTeleporter.TeleportationTick;
+            transform.position = pTeleporter.OutputPosition + Vector3.up * (transform.localScale.y / 2);
+
+            _Clock.OnTick += InternalClockTick;
+            _Clock.OnTick -= InternalCheckCollision;
+
+            DoAction = DoActionTeleport;
+        }
+
+        private void DoActionTeleport()
+        {
+            if (_InternalTick == _ActionTick)
+            {
+                GetComponent<MeshRenderer>().enabled = true;
+
+                _Clock.OnTick -= InternalClockTick;
+                _Clock.OnTick += InternalCheckCollision;
+
+                SetActionMove();
+            }
         }
 
         private void SetActionVoid() => DoAction = null;
+
+        private void InternalClockTick() => _InternalTick += 1;
 
         private void InternalCheckCollision()
         {
@@ -113,6 +144,8 @@ namespace Com.IsartDigital.Rush.Cube
 
                 if (lCollided.layer == _GroundLayer)
                     SetActionMove();
+                else if (lCollided.layer == _TeleporterLayer)
+                    SetActionTeleport(lCollided.GetComponent<Teleporter>());
             }
             else
             {
