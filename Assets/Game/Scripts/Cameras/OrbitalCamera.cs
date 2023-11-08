@@ -41,15 +41,12 @@ namespace Com.IsartDigital.Rush.Camera
         {
             if (Input.GetButton(_RightClickInput))
             {
-
                 _VerticalAngle += _Speed * Time.deltaTime * Input.GetAxis(_HorizontalAxis) * Mathf.Deg2Rad;
                 _HorizontalAngle += _Speed * Time.deltaTime * Input.GetAxis(_VerticalAxis) * Mathf.Deg2Rad;
 
                 if(_VerticalAngle != 0 || _HorizontalAngle != 0)
                 {
-                    Debug.Log(_HorizontalAngle);
-                    if (_HorizontalAngle > _MaxYAngle * Mathf.Deg2Rad || _HorizontalAngle < _MinYAngle * Mathf.Deg2Rad)
-                        return;
+                    _HorizontalAngle = Mathf.Clamp(_HorizontalAngle, _MinYAngle * Mathf.Deg2Rad, _MaxYAngle * Mathf.Deg2Rad);
 
                     transform.position = _Center + new Vector3(Mathf.Cos(_HorizontalAngle) * Mathf.Cos(_VerticalAngle),
                                                                Mathf.Sin(_HorizontalAngle),
