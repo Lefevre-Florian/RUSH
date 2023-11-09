@@ -15,6 +15,7 @@ namespace Com.IsartDigital.Rush.Cube
 
         [Header("Collision Layers")]
         [SerializeField] private int _GroundLayer = 1;
+        [SerializeField] private int _DirectionLayer = 1;
         [SerializeField] private int _TeleporterLayer = 1;
 
         private Action DoAction = null;
@@ -153,6 +154,11 @@ namespace Com.IsartDigital.Rush.Cube
                     SetActionMove();
                 else if (lCollided.layer == _TeleporterLayer)
                     SetActionTeleport(lCollided.GetComponent<Teleporter>());
+                else if(lCollided.layer == _DirectionLayer)
+                {
+                    _MovementDirection = lCollided.GetComponent<DirectionalTiles>().GetDirection();
+                    SetActionMove();
+                }
             }
             else
             {
