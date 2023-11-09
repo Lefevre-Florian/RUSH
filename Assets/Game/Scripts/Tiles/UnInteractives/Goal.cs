@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -8,10 +6,7 @@ namespace Com.IsartDigital.Rush.Tiles
 {
     public class Goal : MonoBehaviour
     {
-        private const float DISTANCE_CHECK = 1f;
-
         [SerializeField] private int _RequiredCubes = 1;
-        [SerializeField] private int _CubeLayer = 3;
 
         private Clock _Clock = null;
         private RaycastHit _Hit = default;
@@ -28,7 +23,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void OnCollisionCheck()
         {
-            if(Physics.BoxCast(transform.position - Vector3.up / 2, Vector3.right / 2, Vector3.up, out _Hit))
+            Debug.DrawRay(transform.position, Vector3.up, Color.blue, 1f);
+            if(Physics.Raycast(transform.position, Vector3.up, out _Hit, 1f))
             {
                 Destroy(_Hit.collider.gameObject);
 

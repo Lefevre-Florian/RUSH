@@ -1,7 +1,4 @@
 using Com.IsartDigital.Rush.Tiles;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian
