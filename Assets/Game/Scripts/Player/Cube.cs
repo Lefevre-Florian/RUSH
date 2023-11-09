@@ -37,7 +37,6 @@ namespace Com.IsartDigital.Rush.Cube
 
         private int _ActionTick = 0;
         private int _InternalTick = 0;
-        private bool _CheckCollision = true;
 
         private void Start()
         {
@@ -150,8 +149,11 @@ namespace Com.IsartDigital.Rush.Cube
             else
             {
                 SetActionFall();
-                /*if (!Physics.Raycast(transform.position, _Down, out _Hit, _RaycastDistance * _RaycastFallHeight))
-                    SetActionVoid();*/
+                if (!Physics.Raycast(transform.position, _Down, out _Hit, _RaycastDistance * _RaycastFallHeight))
+                {
+                    Debug.Log("Loose a cube !");
+                    SetActionVoid();
+                }
             }
         }
 

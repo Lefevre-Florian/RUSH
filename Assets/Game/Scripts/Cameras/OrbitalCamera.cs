@@ -14,6 +14,11 @@ namespace Com.IsartDigital.Rush.Camera
         [SerializeField] private float _MinYAngle = 0f;
         [SerializeField] private float _MaxYAngle = 80f;
 
+        [Header("Zoom parameters")]
+        [SerializeField] private float _MinZoom = 5f;
+        [SerializeField] private float _MaxZoom = 2f;
+        [SerializeField] private float _ZoomForce = 0.5f;
+
         [Header("Windows / Laptop")]
         [SerializeField] private string _VerticalAxis = "";
         [SerializeField] private string _HorizontalAxis = "";
@@ -23,6 +28,9 @@ namespace Com.IsartDigital.Rush.Camera
         private Vector3 _Center = default;
 
         private float _Radius = 0f;
+
+        private float _MaxRadius = 0f;
+        private float _MinRadius = 0f;
 
         private float _HorizontalAngle = 0f;
         private float _VerticalAngle = 0f;
@@ -35,6 +43,9 @@ namespace Com.IsartDigital.Rush.Camera
 
             transform.LookAt(_Center);
             _Radius = Vector3.Distance(transform.position, _Center);
+
+            _MaxRadius = _Radius + _MaxZoom;
+            _MinRadius = _Radius - _MinZoom;
         }
 
         void Update()
@@ -48,12 +59,31 @@ namespace Com.IsartDigital.Rush.Camera
                 {
                     _HorizontalAngle = Mathf.Clamp(_HorizontalAngle, _MinYAngle * Mathf.Deg2Rad, _MaxYAngle * Mathf.Deg2Rad);
 
-                    transform.position = _Center + new Vector3(Mathf.Cos(_HorizontalAngle) * Mathf.Cos(_VerticalAngle),
-                                                               Mathf.Sin(_HorizontalAngle),
-                                                               Mathf.Cos(_HorizontalAngle) * Mathf.Sin(_VerticalAngle)) * _Radius;
-                    transform.LookAt(_Center);
+                    UpdateCameraPositionOnCircle();
                 }
             }
+
+            if(Input.GetAxis(_ScrollWheel) > 0f && _Radius >= _MinRadius)
+            {
+                _Radius -= _ZoomForce;
+
+                UpdateCameraPositionOnCircle();
+            }
+            else if(Input.GetAxis(_ScrollWheel) < 0f && _Radius <= _MaxRadius)
+            {
+                _Radius += _ZoomForce;
+
+                UpdateCameraPositionOnCircle();
+            }
+
+        }
+
+        private void UpdateCameraPositionOnCircle()
+        {
+            transform.position = _Center + new Vector3(Mathf.Cos(_HorizontalAngle) * Mathf.Cos(_VerticalAngle),
+                                                               Mathf.Sin(_HorizontalAngle),
+                                                               Mathf.Cos(_HorizontalAngle) * Mathf.Sin(_VerticalAngle)) * _Radius;
+            transform.LookAt(_Center);
         }
     }
 }

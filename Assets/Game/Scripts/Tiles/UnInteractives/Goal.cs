@@ -28,7 +28,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void OnCollisionCheck()
         {
-            if(Physics.BoxCast(transform.position - Vector3.up / 2, Vector3.right / 2, Vector3.up, out _Hit))
+            Debug.DrawRay(transform.position, Vector3.up, Color.blue, 1f);
+            if(Physics.Raycast(transform.position, Vector3.up, out _Hit, 1f))
             {
                 Destroy(_Hit.collider.gameObject);
 
