@@ -22772,6 +22772,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _MouseSpeed: 300
   _KeyboardSpeed: 100
+  _PhoneSpeed: 50
   _MinYAngle: 0
   _MaxYAngle: 80
   _MinZoom: 5

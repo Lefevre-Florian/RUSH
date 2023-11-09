@@ -6,8 +6,10 @@ namespace Com.IsartDigital.Rush.Camera
     public class OrbitalCamera : MonoBehaviour
     {
 
+        [Header("Support speed")]
         [SerializeField] private float _MouseSpeed = 10f;
         [SerializeField] private float _KeyboardSpeed = 10f;
+        [SerializeField] private float _PhoneSpeed = 10f;
 
         [Header("Vertical parameters")]
         [SerializeField] private float _MinYAngle = 0f;
@@ -32,15 +34,19 @@ namespace Com.IsartDigital.Rush.Camera
 
         private float _Radius = 0f;
 
+        #if UNITY_STANDALONE
         private float _MaxRadius = 0f;
         private float _MinRadius = 0f;
-
+        #endif
+        
         private float _HorizontalAngle = 0f;
         private float _VerticalAngle = 0f;
 
+        #if UNITY_ANDROID
         private Touch _Touch = default;
         private Vector2 _TouchDirection = default;
         private Vector2 _StartTouchPosition = default;
+        #endif
 
         void Start()
         {
@@ -49,12 +55,15 @@ namespace Com.IsartDigital.Rush.Camera
             transform.LookAt(_Center);
             _Radius = Vector3.Distance(transform.position, _Center);
 
+            #if UNITY_STANDALONE
             _MaxRadius = _Radius + _MaxZoom;
             _MinRadius = _Radius - _MinZoom;
+            #endif
         }
 
         void Update()
         {
+            #if UNITY_ANDROID
             if (Input.touchCount > 0)
             {
                 _Touch = Input.GetTouch(0);
@@ -65,10 +74,11 @@ namespace Com.IsartDigital.Rush.Camera
                 {
                     _TouchDirection = (_Touch.position - _StartTouchPosition).normalized;
 
-                    _VerticalAngle += _MouseSpeed * Time.deltaTime * _TouchDirection.x * Mathf.Deg2Rad;
-                    _HorizontalAngle += _MouseSpeed * Time.deltaTime * _TouchDirection.y * Mathf.Deg2Rad;
+                    _VerticalAngle += _PhoneSpeed * Time.deltaTime * _TouchDirection.x * Mathf.Deg2Rad;
+                    _HorizontalAngle += _PhoneSpeed * Time.deltaTime * _TouchDirection.y * Mathf.Deg2Rad;
                 }
             }
+            #endif
 
             #if UNITY_STANDALONE
             if (Input.GetButton(_RightClickInput))
