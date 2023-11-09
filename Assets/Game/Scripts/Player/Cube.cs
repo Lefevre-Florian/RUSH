@@ -17,6 +17,7 @@ namespace Com.IsartDigital.Rush.Cube
         [SerializeField] private int _GroundLayer = 6;
         [SerializeField] private int _DirectionLayer = 9;
         [SerializeField] private int _StopperLayer = 10;
+        [SerializeField] private int _ConvoyerLayer = 8;
         [SerializeField] private int _TeleporterLayer = 7;
 
         private Action DoAction = null;
@@ -71,7 +72,6 @@ namespace Com.IsartDigital.Rush.Cube
 
             _InitialPosition = transform.position;
             _TargetedPosition = _InitialPosition + (_MovementDirection * transform.localScale.x);
-
             //Quaternion.AngleAxis(lAngle * (i + 1), transform.right) * transform.up * lRadius + transform.position
 
             DoAction = DoActionMove;
@@ -104,7 +104,7 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void SetActionTeleport(Teleporter pTeleporter)
         {
-            SetWait();
+            SetActionWait();
 
             GetComponent<MeshRenderer>().enabled = false;
 
@@ -127,23 +127,17 @@ namespace Com.IsartDigital.Rush.Cube
             }
         }
 
-        private void SetWait()
+        private void SetActionWait()
         {
             _InternalTick = 0;
 
             _Clock.OnTick += InternalClockTick;
             _Clock.OnTick -= InternalCheckCollision;
+
+            DoAction = DoActionWait;
         }
 
-        private void SetActionStop(Stop pStopper)
-        {
-            SetWait();
-
-            _ActionTick = pStopper.Wait;
-            DoAction = DoActionStop;
-        }
-
-        private void DoActionStop()
+        private void DoActionWait()
         {
             if(_InternalTick == _ActionTick)
             {
@@ -152,6 +146,32 @@ namespace Com.IsartDigital.Rush.Cube
                 SetActionMove();
             }
         }
+
+        private void SetActionConvoter(Vector3 pDirection)
+        {
+            _InitialPosition = transform.position;
+            _TargetedPosition = _InitialPosition + (pDirection * transform.localScale.x);
+
+            SetActionWait();
+
+            DoAction = DoActionConvoyer;
+        }
+
+        private void DoActionConvoyer()
+        {
+            if (transform.position == _TargetedPosition)
+            {
+                if(_InternalTick == _ActionTick)
+                {
+                    _Clock.OnTick -= InternalClockTick;
+                    _Clock.OnTick += InternalCheckCollision;
+                    SetActionMove();
+                }
+            }
+            else
+                transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
+        }
+
 
         private void SetActionVoid() => DoAction = null;
 
@@ -180,7 +200,15 @@ namespace Com.IsartDigital.Rush.Cube
                 else if (lCollided.layer == _TeleporterLayer)
                     SetActionTeleport(lCollided.GetComponent<Teleporter>());
                 else if (lCollided.layer == _StopperLayer)
-                    SetActionStop(lCollided.GetComponent<Stop>());
+                {
+                    _ActionTick = lCollided.GetComponent<Stop>().Wait;
+                    SetActionWait();
+                }
+                else if (lCollided.layer == _ConvoyerLayer)
+                {
+                    _ActionTick = lCollided.GetComponent<Stop>().Wait;
+                    SetActionConvoter(lCollided.GetComponent<DirectionalTiles>().GetDirection());
+                }
                 else if (lCollided.layer == _DirectionLayer)
                 {
                     _MovementDirection = lCollided.GetComponent<DirectionalTiles>().GetDirection();
