@@ -26,7 +26,7 @@ namespace Com.IsartDigital.Rush.Tiles
             transform.LookAt(transform.position + _DirectionalVector);
         }
 
-        public Vector3 GetDirection()
+        public virtual Vector3 GetDirection()
         {
             return _DirectionalVector;
         }

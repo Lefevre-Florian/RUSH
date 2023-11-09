@@ -19,6 +19,7 @@ namespace Com.IsartDigital.Rush.Cube
         [SerializeField] private int _StopperLayer = 10;
         [SerializeField] private int _ConvoyerLayer = 8;
         [SerializeField] private int _TeleporterLayer = 7;
+        [SerializeField] private int _SpliterLayer = 12;
 
         private Action DoAction = null;
 
@@ -208,6 +209,11 @@ namespace Com.IsartDigital.Rush.Cube
                 {
                     _ActionTick = lCollided.GetComponent<Stop>().Wait;
                     SetActionConvoter(lCollided.GetComponent<DirectionalTiles>().GetDirection());
+                }
+                else if (lCollided.layer == _SpliterLayer)
+                {
+                    _MovementDirection = lCollided.GetComponent<Spliter>().GetDirection();
+                    SetActionMove();
                 }
                 else if (lCollided.layer == _DirectionLayer)
                 {
