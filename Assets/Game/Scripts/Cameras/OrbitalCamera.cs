@@ -6,7 +6,10 @@ namespace Com.IsartDigital.Rush.Camera
     public class OrbitalCamera : MonoBehaviour
     {
 
-        [SerializeField] private float _Speed = 10f;
+        [Header("Support speed")]
+        [SerializeField] private float _MouseSpeed = 10f;
+        [SerializeField] private float _KeyboardSpeed = 10f;
+        [SerializeField] private float _PhoneSpeed = 10f;
 
         [Header("Vertical parameters")]
         [SerializeField] private float _MinYAngle = 0f;
@@ -17,21 +20,33 @@ namespace Com.IsartDigital.Rush.Camera
         [SerializeField] private float _MaxZoom = 2f;
         [SerializeField] private float _ZoomForce = 0.5f;
 
-        [Header("Windows / Laptop")]
-        [SerializeField] private string _VerticalAxis = "";
-        [SerializeField] private string _HorizontalAxis = "";
+        [Header("PC / Mouse")]
+        [SerializeField] private string _VerticalMouseAxis = "";
+        [SerializeField] private string _HorizontalMouseAxis = "";
         [SerializeField] private string _RightClickInput = "";
         [SerializeField] private string _ScrollWheel = "";
+
+        [Header("PC / Keyboard")]
+        [SerializeField] private string _HorizontalKeyboardAxis = "";
+        [SerializeField] private string _VerticalKeyboardAxis = "";
 
         private Vector3 _Center = default;
 
         private float _Radius = 0f;
 
+        #if UNITY_STANDALONE
         private float _MaxRadius = 0f;
         private float _MinRadius = 0f;
-
+        #endif
+        
         private float _HorizontalAngle = 0f;
         private float _VerticalAngle = 0f;
+
+        #if UNITY_ANDROID
+        private Touch _Touch = default;
+        private Vector2 _TouchDirection = default;
+        private Vector2 _StartTouchPosition = default;
+        #endif
 
         void Start()
         {
@@ -40,38 +55,66 @@ namespace Com.IsartDigital.Rush.Camera
             transform.LookAt(_Center);
             _Radius = Vector3.Distance(transform.position, _Center);
 
+            #if UNITY_STANDALONE
             _MaxRadius = _Radius + _MaxZoom;
             _MinRadius = _Radius - _MinZoom;
+            #endif
         }
 
         void Update()
         {
-            if (Input.GetButton(_RightClickInput))
+            #if UNITY_ANDROID
+            if (Input.touchCount > 0)
             {
-                _VerticalAngle += _Speed * Time.deltaTime * Input.GetAxis(_HorizontalAxis) * Mathf.Deg2Rad;
-                _HorizontalAngle += _Speed * Time.deltaTime * Input.GetAxis(_VerticalAxis) * Mathf.Deg2Rad;
-
-                if(_VerticalAngle != 0 || _HorizontalAngle != 0)
+                _Touch = Input.GetTouch(0);
+                if(_Touch.phase == TouchPhase.Began)
                 {
-                    _HorizontalAngle = Mathf.Clamp(_HorizontalAngle, _MinYAngle * Mathf.Deg2Rad, _MaxYAngle * Mathf.Deg2Rad);
+                    _StartTouchPosition = _Touch.position;
+                }else if(_Touch.phase == TouchPhase.Moved)
+                {
+                    _TouchDirection = (_Touch.position - _StartTouchPosition).normalized;
 
-                    UpdateCameraPositionOnCircle();
+                    _VerticalAngle += _PhoneSpeed * Time.deltaTime * _TouchDirection.x * Mathf.Deg2Rad;
+                    _HorizontalAngle += _PhoneSpeed * Time.deltaTime * _TouchDirection.y * Mathf.Deg2Rad;
                 }
             }
+            #endif
 
-            if(Input.GetAxis(_ScrollWheel) > 0f && _Radius >= _MinRadius)
+            #if UNITY_STANDALONE
+            if (Input.GetButton(_RightClickInput))
+            {
+                // Mouse only
+                _VerticalAngle += _MouseSpeed * Time.deltaTime * Input.GetAxis(_HorizontalMouseAxis) * Mathf.Deg2Rad;
+                _HorizontalAngle += _MouseSpeed * Time.deltaTime * Input.GetAxis(_VerticalMouseAxis) * Mathf.Deg2Rad;
+            }
+            else
+            {
+                // Keyboard only
+                _VerticalAngle += _KeyboardSpeed * Time.deltaTime * Input.GetAxis(_HorizontalKeyboardAxis) * Mathf.Deg2Rad;
+                _HorizontalAngle += _KeyboardSpeed * Time.deltaTime * Input.GetAxis(_VerticalKeyboardAxis) * Mathf.Deg2Rad;
+            }
+
+            // Zoom options
+            if (Input.GetAxis(_ScrollWheel) > 0f && _Radius >= _MinRadius)
             {
                 _Radius -= _ZoomForce;
 
                 UpdateCameraPositionOnCircle();
             }
-            else if(Input.GetAxis(_ScrollWheel) < 0f && _Radius <= _MaxRadius)
+            else if (Input.GetAxis(_ScrollWheel) < 0f && _Radius <= _MaxRadius)
             {
                 _Radius += _ZoomForce;
 
                 UpdateCameraPositionOnCircle();
             }
+            #endif
 
+            if (_VerticalAngle != 0 || _HorizontalAngle != 0)
+            {
+                _HorizontalAngle = Mathf.Clamp(_HorizontalAngle, _MinYAngle * Mathf.Deg2Rad, _MaxYAngle * Mathf.Deg2Rad);
+
+                UpdateCameraPositionOnCircle();
+            }
         }
 
         private void UpdateCameraPositionOnCircle()

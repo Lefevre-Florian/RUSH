@@ -22770,16 +22770,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5019fecf46e58214d9742c15dfb38b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Speed: 250
+  _MouseSpeed: 300
+  _KeyboardSpeed: 100
+  _PhoneSpeed: 50
   _MinYAngle: 0
   _MaxYAngle: 80
   _MinZoom: 5
   _MaxZoom: 2
   _ZoomForce: 0.5
-  _VerticalAxis: Mouse Y
-  _HorizontalAxis: Mouse X
+  _VerticalMouseAxis: Mouse Y
+  _HorizontalMouseAxis: Mouse X
   _RightClickInput: Mouse Right
   _ScrollWheel: Mouse ScrollWheel
+  _HorizontalKeyboardAxis: Horizontal
+  _VerticalKeyboardAxis: Vertical
 --- !u!43 &972342077
 Mesh:
   m_ObjectHideFlags: 0
