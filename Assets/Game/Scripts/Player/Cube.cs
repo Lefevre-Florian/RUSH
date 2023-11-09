@@ -14,9 +14,10 @@ namespace Com.IsartDigital.Rush.Cube
         [SerializeField] private float _RaycastFallHeight = 2f;
 
         [Header("Collision Layers")]
-        [SerializeField] private int _GroundLayer = 1;
-        [SerializeField] private int _DirectionLayer = 1;
-        [SerializeField] private int _TeleporterLayer = 1;
+        [SerializeField] private int _GroundLayer = 6;
+        [SerializeField] private int _DirectionLayer = 9;
+        [SerializeField] private int _StopperLayer = 10;
+        [SerializeField] private int _TeleporterLayer = 7;
 
         private Action DoAction = null;
 
@@ -103,14 +104,12 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void SetActionTeleport(Teleporter pTeleporter)
         {
-            _InternalTick = 0;
+            SetWait();
+
             GetComponent<MeshRenderer>().enabled = false;
 
             _ActionTick = pTeleporter.TeleportationTick;
             transform.position = pTeleporter.OutputPosition + Vector3.up * (transform.localScale.y / 2);
-
-            _Clock.OnTick += InternalClockTick;
-            _Clock.OnTick -= InternalCheckCollision;
 
             DoAction = DoActionTeleport;
         }
@@ -124,6 +123,32 @@ namespace Com.IsartDigital.Rush.Cube
                 _Clock.OnTick -= InternalClockTick;
                 _Clock.OnTick += InternalCheckCollision;
 
+                SetActionMove();
+            }
+        }
+
+        private void SetWait()
+        {
+            _InternalTick = 0;
+
+            _Clock.OnTick += InternalClockTick;
+            _Clock.OnTick -= InternalCheckCollision;
+        }
+
+        private void SetActionStop(Stop pStopper)
+        {
+            SetWait();
+
+            _ActionTick = pStopper.Wait;
+            DoAction = DoActionStop;
+        }
+
+        private void DoActionStop()
+        {
+            if(_InternalTick == _ActionTick)
+            {
+                _Clock.OnTick -= InternalClockTick;
+                _Clock.OnTick += InternalCheckCollision;
                 SetActionMove();
             }
         }
@@ -154,7 +179,9 @@ namespace Com.IsartDigital.Rush.Cube
                     SetActionMove();
                 else if (lCollided.layer == _TeleporterLayer)
                     SetActionTeleport(lCollided.GetComponent<Teleporter>());
-                else if(lCollided.layer == _DirectionLayer)
+                else if (lCollided.layer == _StopperLayer)
+                    SetActionStop(lCollided.GetComponent<Stop>());
+                else if (lCollided.layer == _DirectionLayer)
                 {
                     _MovementDirection = lCollided.GetComponent<DirectionalTiles>().GetDirection();
                     SetActionMove();
