@@ -26915,7 +26915,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1184502713200352757, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.25
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 1184502713200352757, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: m_LocalPosition.y
@@ -26923,7 +26923,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1184502713200352757, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.25
+      value: 1.2500005
       objectReference: {fileID: 0}
     - target: {fileID: 1184502713200352757, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: m_LocalRotation.w
@@ -26931,15 +26931,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1184502713200352757, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1184502713200352757, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.000000014901161
       objectReference: {fileID: 0}
     - target: {fileID: 1184502713200352757, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1184502713200352757, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -26968,6 +26968,14 @@ PrefabInstance:
     - target: {fileID: 6188690345343213041, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6188690345343213041, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
+      propertyPath: _StopperLayer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6188690345343213041, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
+      propertyPath: _DirectionLayer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6188690345343213041, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
       propertyPath: _TeleporterLayer

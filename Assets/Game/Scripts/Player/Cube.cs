@@ -14,8 +14,12 @@ namespace Com.IsartDigital.Rush.Cube
         [SerializeField] private float _RaycastFallHeight = 2f;
 
         [Header("Collision Layers")]
-        [SerializeField] private int _GroundLayer = 1;
-        [SerializeField] private int _TeleporterLayer = 1;
+        [SerializeField] private int _GroundLayer = 6;
+        [SerializeField] private int _DirectionLayer = 9;
+        [SerializeField] private int _StopperLayer = 10;
+        [SerializeField] private int _ConvoyerLayer = 8;
+        [SerializeField] private int _TeleporterLayer = 7;
+        [SerializeField] private int _SpliterLayer = 12;
 
         private Action DoAction = null;
 
@@ -69,7 +73,6 @@ namespace Com.IsartDigital.Rush.Cube
 
             _InitialPosition = transform.position;
             _TargetedPosition = _InitialPosition + (_MovementDirection * transform.localScale.x);
-
             //Quaternion.AngleAxis(lAngle * (i + 1), transform.right) * transform.up * lRadius + transform.position
 
             DoAction = DoActionMove;
@@ -102,14 +105,12 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void SetActionTeleport(Teleporter pTeleporter)
         {
-            _InternalTick = 0;
+            SetActionWait();
+
             GetComponent<MeshRenderer>().enabled = false;
 
             _ActionTick = pTeleporter.TeleportationTick;
             transform.position = pTeleporter.OutputPosition + Vector3.up * (transform.localScale.y / 2);
-
-            _Clock.OnTick += InternalClockTick;
-            _Clock.OnTick -= InternalCheckCollision;
 
             DoAction = DoActionTeleport;
         }
@@ -126,6 +127,52 @@ namespace Com.IsartDigital.Rush.Cube
                 SetActionMove();
             }
         }
+
+        private void SetActionWait()
+        {
+            _InternalTick = 0;
+
+            _Clock.OnTick += InternalClockTick;
+            _Clock.OnTick -= InternalCheckCollision;
+
+            DoAction = DoActionWait;
+        }
+
+        private void DoActionWait()
+        {
+            if(_InternalTick == _ActionTick)
+            {
+                _Clock.OnTick -= InternalClockTick;
+                _Clock.OnTick += InternalCheckCollision;
+                SetActionMove();
+            }
+        }
+
+        private void SetActionConvoter(Vector3 pDirection)
+        {
+            _InitialPosition = transform.position;
+            _TargetedPosition = _InitialPosition + (pDirection * transform.localScale.x);
+
+            SetActionWait();
+
+            DoAction = DoActionConvoyer;
+        }
+
+        private void DoActionConvoyer()
+        {
+            if (transform.position == _TargetedPosition)
+            {
+                if(_InternalTick == _ActionTick)
+                {
+                    _Clock.OnTick -= InternalClockTick;
+                    _Clock.OnTick += InternalCheckCollision;
+                    SetActionMove();
+                }
+            }
+            else
+                transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
+        }
+
 
         private void SetActionVoid() => DoAction = null;
 
@@ -153,6 +200,26 @@ namespace Com.IsartDigital.Rush.Cube
                     SetActionMove();
                 else if (lCollided.layer == _TeleporterLayer)
                     SetActionTeleport(lCollided.GetComponent<Teleporter>());
+                else if (lCollided.layer == _StopperLayer)
+                {
+                    _ActionTick = lCollided.GetComponent<Stop>().Wait;
+                    SetActionWait();
+                }
+                else if (lCollided.layer == _ConvoyerLayer)
+                {
+                    _ActionTick = lCollided.GetComponent<Stop>().Wait;
+                    SetActionConvoter(lCollided.GetComponent<DirectionalTiles>().GetDirection());
+                }
+                else if (lCollided.layer == _SpliterLayer)
+                {
+                    _MovementDirection = lCollided.GetComponent<Spliter>().GetDirection();
+                    SetActionMove();
+                }
+                else if (lCollided.layer == _DirectionLayer)
+                {
+                    _MovementDirection = lCollided.GetComponent<DirectionalTiles>().GetDirection();
+                    SetActionMove();
+                }
             }
             else
             {
