@@ -1,7 +1,5 @@
 using Com.IsartDigital.Rush.Tiles;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -9,6 +7,8 @@ namespace Com.IsartDigital.Rush.Cube
 {
     public class Cube : MonoBehaviour
     {
+        private const int MAX_DIRECTION_COUNT = 4;
+
         [Header("Raycasting")]
         [SerializeField] private float _RaycastOffsetOutSideCube = 0.4f;
         [SerializeField] private float _RaycastFallHeight = 2f;
@@ -29,7 +29,6 @@ namespace Com.IsartDigital.Rush.Cube
 
         // Raycasting & collisions
         private float _RaycastDistance = 0f;
-        private Vector3 _Down = default;
         private RaycastHit _Hit = default;
 
         // References
@@ -134,11 +133,20 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void InternalCheckCollision()
         {
-            _Down = Vector3.down;
-
-            if(Physics.Raycast(transform.position, _Down, out _Hit, _RaycastDistance))
+            // Collision check on forward (Cubes & Walls)
+            if(Physics.Raycast(transform.position, _MovementDirection, out _Hit, _RaycastDistance))
             {
-                Debug.DrawRay(transform.position, _Down * _RaycastDistance, Color.red);
+                for (int i = 0; i < MAX_DIRECTION_COUNT; i++)
+                {
+                    if (!Physics.Raycast(transform.position, _MovementDirection, _RaycastDistance)) break;
+                    _MovementDirection = Quaternion.AngleAxis(90f, Vector3.up) * _MovementDirection;       
+                }
+            }
+
+            // Collision check on Ground & Tiles
+            if(Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance))
+            {
+                Debug.DrawRay(transform.position, Vector3.down * _RaycastDistance, Color.red);
                 GameObject lCollided = _Hit.collider.gameObject;
 
                 if (lCollided.layer == _GroundLayer)
@@ -149,7 +157,7 @@ namespace Com.IsartDigital.Rush.Cube
             else
             {
                 SetActionFall();
-                if (!Physics.Raycast(transform.position, _Down, out _Hit, _RaycastDistance * _RaycastFallHeight))
+                if (!Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance * _RaycastFallHeight))
                 {
                     Debug.Log("Loose a cube !");
                     SetActionVoid();

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -8,10 +6,7 @@ namespace Com.IsartDigital.Rush.Tiles
 {
     public class Goal : MonoBehaviour
     {
-        private const float DISTANCE_CHECK = 1f;
-
         [SerializeField] private int _RequiredCubes = 1;
-        [SerializeField] private int _CubeLayer = 3;
 
         private Clock _Clock = null;
         private RaycastHit _Hit = default;

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -34,8 +32,6 @@ namespace Com.IsartDigital.Rush.Camera
 
         private float _HorizontalAngle = 0f;
         private float _VerticalAngle = 0f;
-
-        private Vector3 _Direction;
 
         void Start()
         {

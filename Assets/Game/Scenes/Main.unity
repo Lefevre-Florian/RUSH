@@ -22773,6 +22773,9 @@ MonoBehaviour:
   _Speed: 250
   _MinYAngle: 0
   _MaxYAngle: 80
+  _MinZoom: 5
+  _MaxZoom: 2
+  _ZoomForce: 0.5
   _VerticalAxis: Mouse Y
   _HorizontalAxis: Mouse X
   _RightClickInput: Mouse Right
