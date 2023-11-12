@@ -25,6 +25,7 @@ namespace Com.IsartDigital.Rush.Cube
         private Action DoAction = null;
 
         // Movements & rotations
+        private bool _IsStuned = false;
         private Vector3 _MovementDirection = default;
 
         private Vector3 _InitialPosition, _TargetedPosition = default;
@@ -96,6 +97,8 @@ namespace Com.IsartDigital.Rush.Cube
             GetComponent<MeshRenderer>().enabled = false;
             transform.position = _TargetedPosition + Vector3.up * (transform.localScale.y / 2);
 
+            _IsStuned = true;
+
             DoAction = DoActionTeleport;
         }
 
@@ -106,8 +109,7 @@ namespace Com.IsartDigital.Rush.Cube
                 GetComponent<MeshRenderer>().enabled = true;
 
                 _Clock.OnTick -= InternalClockTick;
-                _Clock.OnTick += InternalCheckCollision;
-
+                _IsStuned = false;
                 SetActionMove();
             }
         }
@@ -117,7 +119,7 @@ namespace Com.IsartDigital.Rush.Cube
             _InternalTick = 0;
 
             _Clock.OnTick += InternalClockTick;
-            _Clock.OnTick -= InternalCheckCollision;
+            _IsStuned = true;
 
             DoAction = DoActionWait;
         }
@@ -127,7 +129,7 @@ namespace Com.IsartDigital.Rush.Cube
             if(_InternalTick == _ActionTick)
             {
                 _Clock.OnTick -= InternalClockTick;
-                _Clock.OnTick += InternalCheckCollision;
+                _IsStuned = false;
                 SetActionMove();
             }
         }
@@ -136,6 +138,8 @@ namespace Com.IsartDigital.Rush.Cube
         {
             _InitialPosition = transform.position;
             _TargetedPosition = _InitialPosition + (pDirection * transform.localScale.x);
+
+            _IsStuned = true;
 
             SetActionWait();
 
@@ -149,7 +153,7 @@ namespace Com.IsartDigital.Rush.Cube
                 if(_InternalTick == _ActionTick)
                 {
                     _Clock.OnTick -= InternalClockTick;
-                    _Clock.OnTick += InternalCheckCollision;
+                    _IsStuned = false;
                     SetActionMove();
                 }
             }
@@ -188,7 +192,8 @@ namespace Com.IsartDigital.Rush.Cube
 
                 if (lCollided.layer == _GroundLayer)
                 {
-                    SetActionMove();
+                    if(!_IsStuned)
+                        SetActionMove();
                 }
                 else if (lCollided.layer == _TeleporterLayer)
                 {
