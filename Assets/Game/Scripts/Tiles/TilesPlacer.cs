@@ -36,6 +36,8 @@ namespace Com.IsartDigital.Rush.Managers
         [SerializeField] private string _InputDelete = "";
         [SerializeField] private string _InputScroll = "";
 
+        [SerializeField] private Transform _Container = null;
+
         private RaycastHit _Hit = default;
         private UnityEngine.Camera _MainCamera = null;
 
@@ -67,9 +69,6 @@ namespace Com.IsartDigital.Rush.Managers
 
         private void Update()
         {
-            if (Input.GetButtonDown(_InputScroll))
-                ChangeTileType();
-
             if (Input.GetButtonDown(_InputAccept))
                 InsertTile();
             if (Input.GetButtonDown(_InputDelete))
@@ -85,7 +84,18 @@ namespace Com.IsartDigital.Rush.Managers
                     _TargetedGameobject = _Hit.collider.gameObject.transform;
                     if (_TargetedGameobject != null)
                     {
-                        Destroy(_TargetedGameobject);
+                        int lLength = _TilesLayers.Length;
+                        int lIndex = 0;
+                        for (int i = 0; i < lLength; i++)
+                        {
+                            if (_TilesLayers[i] == _TargetedGameobject.gameObject.layer)
+                            {
+                                lIndex = i;
+                                break;
+                            }
+                        }
+                        _TileFabric[lIndex]._Quantity += 1;
+                        Destroy(_TargetedGameobject.gameObject);
                     }
                 }
 
@@ -101,12 +111,11 @@ namespace Com.IsartDigital.Rush.Managers
                     _TargetedGameobject = _Hit.collider.gameObject.transform;
                     if (_TargetedGameobject != null && _TileFabric[_CurrentIndex]._Quantity != 0)
                     {
-                        Debug.Log(_TargetedGameobject.position);
                         _TileFabric[_CurrentIndex]._Quantity -= 1;
                         Instantiate(_TileFabric[_CurrentIndex]._Type,
                                     _TargetedGameobject.position + Vector3.up,
                                     new Quaternion(),
-                                    transform.parent);
+                                    _Container);
 
                         if (_TileFabric[_CurrentIndex]._Quantity == 0) ChangeTileType();
                     }

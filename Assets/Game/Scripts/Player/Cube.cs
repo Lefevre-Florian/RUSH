@@ -1,6 +1,7 @@
 using Com.IsartDigital.Rush.Tiles;
 using System;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.Cube
@@ -25,9 +26,7 @@ namespace Com.IsartDigital.Rush.Cube
 
         // Movements & rotations
         private Vector3 _MovementDirection = default;
-        private Quaternion _RotationDirection = default;
 
-        private float _RotationOffsetY = 0f;
         private Vector3 _InitialPosition, _TargetedPosition = default;
         private Quaternion _InitialRotation, _TargetedRotation = default;
 
@@ -43,14 +42,8 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void Start()
         {
-            float lCubeSide = transform.localScale.x;
-            float lCubeDiagonal = Mathf.Sqrt(2) * lCubeSide;
-            _RotationOffsetY = lCubeDiagonal / 2 - lCubeSide / 2;
-
-            _RaycastDistance = lCubeSide / 2 + _RaycastOffsetOutSideCube;
-
+            _RaycastDistance = transform.localScale.x / 2 + _RaycastOffsetOutSideCube;
             _MovementDirection = transform.forward;
-            _RotationDirection = Quaternion.AngleAxis(90f, transform.right);
 
             _Clock = Clock.GetInstance();
             _Clock.OnTick += InternalCheckCollision;
@@ -64,33 +57,27 @@ namespace Com.IsartDigital.Rush.Cube
                 DoAction();
         }
 
+        #region State Machine
         private void SetActionMove()
         {
-            //(transform.localPosition + (_MovementDirection * transform.localScale.x) + Vector3.down * 0.5f);
+            Vector3 lPivot = transform.position + Vector3.down * (transform.localScale.y / 2) + _MovementDirection * (transform.localScale.x / 2);
+            Vector3 lAxis = -Vector3.Cross(Vector3.up, transform.position - lPivot).normalized;
+            Debug.Log(lAxis);
+            Debug.DrawLine(transform.position + lAxis, transform.position + lAxis * 2, Color.green, 1f);
 
             _InitialRotation = transform.rotation;
-            _TargetedRotation = _RotationDirection * _InitialRotation;
+            _TargetedRotation = Quaternion.AngleAxis(90f, lAxis) * _InitialRotation;
 
             _InitialPosition = transform.position;
             _TargetedPosition = _InitialPosition + (_MovementDirection * transform.localScale.x);
-            //Quaternion.AngleAxis(lAngle * (i + 1), transform.right) * transform.up * lRadius + transform.position
 
             DoAction = DoActionMove;
         }
 
         private void DoActionMove()
-        {
-            // Without compensating the height of the cube so it may clip in the ground
-            //transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Ratio);
-            //transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation,_Ratio);
-            
-            // With the height compensation base on the face diagonal so it doesn't clip in the ground
+        {            
             transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation, _Clock.Ratio);
-            transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio) + (Vector3.up * _RotationOffsetY * Mathf.Sin(Mathf.PI * _Clock.Ratio));
-
-            // Check for the best solution so a Quaternion rotation around the forward base vertice
-            //transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
-            //transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation, _Clock.Ratio);
+            transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
         }
 
         private void SetActionFall()
@@ -103,14 +90,11 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void DoActionFall() => transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
 
-        private void SetActionTeleport(Teleporter pTeleporter)
+        private void SetActionTeleport()
         {
             SetActionWait();
-
             GetComponent<MeshRenderer>().enabled = false;
-
-            _ActionTick = pTeleporter.TeleportationTick;
-            transform.position = pTeleporter.OutputPosition + Vector3.up * (transform.localScale.y / 2);
+            transform.position = _TargetedPosition + Vector3.up * (transform.localScale.y / 2);
 
             DoAction = DoActionTeleport;
         }
@@ -173,8 +157,8 @@ namespace Com.IsartDigital.Rush.Cube
                 transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
         }
 
-
         private void SetActionVoid() => DoAction = null;
+        #endregion
 
         private void InternalClockTick() => _InternalTick += 1;
 
@@ -183,11 +167,17 @@ namespace Com.IsartDigital.Rush.Cube
             // Collision check on forward (Cubes & Walls)
             if(Physics.Raycast(transform.position, _MovementDirection, out _Hit, _RaycastDistance))
             {
-                for (int i = 0; i < MAX_DIRECTION_COUNT; i++)
+                GameObject lCollided = _Hit.collider.gameObject;
+                if (lCollided.layer == _GroundLayer)
                 {
-                    if (!Physics.Raycast(transform.position, _MovementDirection, _RaycastDistance)) break;
-                    _MovementDirection = Quaternion.AngleAxis(90f, Vector3.up) * _MovementDirection;       
+                    for (int i = 0; i < MAX_DIRECTION_COUNT; i++)
+                    {
+                        if (!Physics.Raycast(transform.position, _MovementDirection, _RaycastDistance)) break;
+                        _MovementDirection = Quaternion.AngleAxis(90f, Vector3.up) * _MovementDirection;
+                    }
                 }
+                else if (lCollided.layer == gameObject.layer)
+                    Debug.Log("Collide with other player so loose the game");
             }
 
             // Collision check on Ground & Tiles
@@ -197,9 +187,17 @@ namespace Com.IsartDigital.Rush.Cube
                 GameObject lCollided = _Hit.collider.gameObject;
 
                 if (lCollided.layer == _GroundLayer)
+                {
                     SetActionMove();
+                }
                 else if (lCollided.layer == _TeleporterLayer)
-                    SetActionTeleport(lCollided.GetComponent<Teleporter>());
+                {
+                    Teleporter lRef = lCollided.GetComponent<Teleporter>();
+
+                    _TargetedPosition = lRef.OutputPosition;
+                    _ActionTick = lRef.TeleportationTick;
+                    SetActionTeleport();
+                }
                 else if (lCollided.layer == _StopperLayer)
                 {
                     _ActionTick = lCollided.GetComponent<Stop>().Wait;
@@ -223,10 +221,10 @@ namespace Com.IsartDigital.Rush.Cube
             }
             else
             {
+                // Falling state + check if fall is infinite (in case trigger end of game)
                 SetActionFall();
                 if (!Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance * _RaycastFallHeight))
                 {
-                    Debug.Log("Loose a cube !");
                     SetActionVoid();
                 }
             }
@@ -236,7 +234,10 @@ namespace Com.IsartDigital.Rush.Cube
         {
             if(_Clock != null)
             {
+                // Disconnecting every possible signals
                 _Clock.OnTick -= InternalCheckCollision;
+                _Clock.OnTick -= InternalClockTick;
+
                 _Clock = null;
             }
         }
