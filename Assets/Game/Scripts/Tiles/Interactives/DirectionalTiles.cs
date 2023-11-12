@@ -22,7 +22,6 @@ namespace Com.IsartDigital.Rush.Tiles
         private void Start()
         {
             _DirectionalVector = _Directions[_Direction];
-
             transform.LookAt(transform.position + _DirectionalVector);
         }
 

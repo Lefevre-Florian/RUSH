@@ -76,12 +76,19 @@ namespace Com.IsartDigital.Rush
         {
             if (pMultiplier > MIN_MULTIPLIER || pMultiplier < MAX_MULTIPLIER)
             {
+                ElapsedTime = 0f;
+
                 _TickMultiplier = pMultiplier;
-                _UpdatedDurationTick = DURATION_BETWEEN_TICK * _TickMultiplier;
+                _UpdatedDurationTick = DURATION_BETWEEN_TICK / _TickMultiplier;
 
                 StopCoroutine(_InternalTimer);
                 _InternalTimer = StartCoroutine(Tick());
             } 
+        }
+        private void OnValidate()
+        {
+            if(_InternalTimer != null)
+                UpdateTickMultiplier(_TickMultiplier);
         }
 
         private void OnDestroy()

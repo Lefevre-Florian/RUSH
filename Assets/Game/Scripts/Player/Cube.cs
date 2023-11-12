@@ -22,6 +22,9 @@ namespace Com.IsartDigital.Rush.Cube
         [SerializeField] private int _TeleporterLayer = 7;
         [SerializeField] private int _SpliterLayer = 12;
 
+        [Header("Timing")]
+        [SerializeField] private int _CollisionWallTickWait = 2;
+
         private Action DoAction = null;
 
         // Movements & rotations
@@ -63,22 +66,20 @@ namespace Com.IsartDigital.Rush.Cube
         {
             Vector3 lPivot = transform.position + Vector3.down * (transform.localScale.y / 2) + _MovementDirection * (transform.localScale.x / 2);
             Vector3 lAxis = -Vector3.Cross(Vector3.up, transform.position - lPivot).normalized;
-            Debug.Log(lAxis);
-            Debug.DrawLine(transform.position + lAxis, transform.position + lAxis * 2, Color.green, 1f);
 
             _InitialRotation = transform.rotation;
             _TargetedRotation = Quaternion.AngleAxis(90f, lAxis) * _InitialRotation;
 
             _InitialPosition = transform.position;
-            _TargetedPosition = _InitialPosition + (_MovementDirection * transform.localScale.x);
+            _TargetedPosition = lPivot + (Quaternion.AngleAxis(90f, lAxis) * (transform.position - lPivot));
 
             DoAction = DoActionMove;
         }
 
         private void DoActionMove()
         {            
-            transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation, _Clock.Ratio);
             transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
+            transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation, _Clock.Ratio);
         }
 
         private void SetActionFall()
@@ -179,6 +180,9 @@ namespace Com.IsartDigital.Rush.Cube
                         if (!Physics.Raycast(transform.position, _MovementDirection, _RaycastDistance)) break;
                         _MovementDirection = Quaternion.AngleAxis(90f, Vector3.up) * _MovementDirection;
                     }
+
+                    _ActionTick = _CollisionWallTickWait;
+                    SetActionWait();
                 }
                 else if (lCollided.layer == gameObject.layer)
                     Debug.Log("Collide with other player so loose the game");
@@ -187,7 +191,6 @@ namespace Com.IsartDigital.Rush.Cube
             // Collision check on Ground & Tiles
             if(Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance))
             {
-                Debug.DrawRay(transform.position, Vector3.down * _RaycastDistance, Color.red);
                 GameObject lCollided = _Hit.collider.gameObject;
 
                 if (lCollided.layer == _GroundLayer)
