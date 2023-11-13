@@ -72,8 +72,9 @@ namespace Com.IsartDigital.Rush.Cube
         }
 
         #region State Machine
-        private void SetActionMove()
+        public void SetActionMove()
         {
+            _IsStuned = false;
             Vector3 lPivot = transform.position + Vector3.down * (transform.localScale.y / 2) + _MovementDirection * (transform.localScale.x / 2);
             Vector3 lAxis = -Vector3.Cross(Vector3.up, transform.position - lPivot).normalized;
 
@@ -102,31 +103,9 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void DoActionFall() => transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
 
-        private void SetActionTeleport()
+        public void SetActionWait(int pWaitDuration)
         {
-            SetActionWait();
-            GetComponent<MeshRenderer>().enabled = false;
-            transform.position = _TargetedPosition + Vector3.up * (transform.localScale.y / 2);
-
-            _IsStuned = true;
-
-            DoAction = DoActionTeleport;
-        }
-
-        private void DoActionTeleport()
-        {
-            if (_InternalTick == _ActionTick)
-            {
-                GetComponent<MeshRenderer>().enabled = true;
-
-                _Clock.OnTick -= InternalClockTick;
-                _IsStuned = false;
-                SetActionMove();
-            }
-        }
-
-        private void SetActionWait()
-        {
+            _ActionTick = pWaitDuration;
             _InternalTick = 0;
 
             _Clock.OnTick += InternalClockTick;
@@ -152,7 +131,7 @@ namespace Com.IsartDigital.Rush.Cube
 
             _IsStuned = true;
 
-            SetActionWait();
+            SetActionWait(_ActionTick);
 
             DoAction = DoActionConvoyer;
         }
@@ -191,8 +170,7 @@ namespace Com.IsartDigital.Rush.Cube
                         _MovementDirection = Quaternion.AngleAxis(90f, Vector3.up) * _MovementDirection;
                     }
 
-                    _ActionTick = _CollisionWallTickWait;
-                    SetActionWait();
+                    SetActionWait(_CollisionWallTickWait);
                 }
                 else if (lCollided.layer == gameObject.layer)
                     Debug.Log("Collide with other player so loose the game");
@@ -208,18 +186,9 @@ namespace Com.IsartDigital.Rush.Cube
                     if(!_IsStuned)
                         SetActionMove();
                 }
-                else if (lCollided.layer == _TeleporterLayer)
-                {
-                    Teleporter lRef = lCollided.GetComponent<Teleporter>();
-
-                    _TargetedPosition = lRef.OutputPosition;
-                    _ActionTick = lRef.TeleportationTick;
-                    SetActionTeleport();
-                }
                 else if (lCollided.layer == _StopperLayer)
                 {
-                    _ActionTick = lCollided.GetComponent<Stop>().Wait;
-                    SetActionWait();
+                    SetActionWait(lCollided.GetComponent<Stop>().Wait);
                 }
                 else if (lCollided.layer == _ConvoyerLayer)
                 {
