@@ -23,7 +23,7 @@ namespace Com.IsartDigital.Rush
             {Colors.GREEN, Color.green },
             {Colors.VIOLET, Color.magenta },
             {Colors.YELLOW, Color.yellow },
-            {Colors.ORANGE, Color.black }
+            {Colors.ORANGE, new Color(255f,127f,0f) }
         };
 
         public static Dictionary<Colors, Color> Library
