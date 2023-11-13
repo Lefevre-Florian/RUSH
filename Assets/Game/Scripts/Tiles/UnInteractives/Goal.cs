@@ -29,10 +29,10 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void OnCollisionCheck()
         {
-            Debug.DrawRay(transform.position, Vector3.up, Color.red, 1f);
+            Debug.DrawRay(transform.position, Vector3.up, Color.red, 0.5f);
             if(Physics.Raycast(transform.position, Vector3.up, out _Hit, RAYCAST_DISTANCE))
             {
-                Debug.Log("ok");
+                
                 if (_Hit.collider.gameObject.GetComponent<Cube.Cube>().Color != _Color)
                     return;
 

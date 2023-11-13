@@ -47,15 +47,21 @@ namespace Com.IsartDigital.Rush
             }
             _Instance = this;
         }
-        
-        private void Start()
-        {
-            _InternalTimer = StartCoroutine(Tick());
-        }
+
+        private void Start() => StartTicking();
 
         private void Update()
         {
             ElapsedTime += Time.deltaTime * _TickMultiplier;
+        }
+
+        public void StartTicking()
+        {
+            if (_InternalTimer != null)
+                StopCoroutine(_InternalTimer);
+            _InternalTimer = StartCoroutine(Tick());
+
+            ElapsedTime = 0f;
         }
 
         private IEnumerator Tick()
