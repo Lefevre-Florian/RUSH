@@ -5,7 +5,7 @@ using UnityEngine;
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.Tiles
 {
-    public class DirectionalTiles : MonoBehaviour
+    public class DirectionalTiles : Tile
     {
         private static Dictionary<Vectors, Vector3> _Directions = new Dictionary<Vectors, Vector3>
         {
@@ -19,13 +19,21 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected Vector3 _DirectionalVector = default;
 
-        private void Start()
+        protected override void Init()
         {
             _DirectionalVector = _Directions[_Direction];
             transform.LookAt(transform.position + _DirectionalVector);
+
+            base.Init();
         }
 
-        public virtual Vector3 GetDirection()
+        protected override void OnCollisionComportement()
+        {
+            Cube.Cube lCube = _Hit.collider.gameObject.GetComponent<Cube.Cube>();
+            lCube.SetDirectionMove(GetDirection());
+        }
+
+        protected virtual Vector3 GetDirection()
         {
             return _DirectionalVector;
         }

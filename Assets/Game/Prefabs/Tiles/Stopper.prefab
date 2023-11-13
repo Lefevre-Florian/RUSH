@@ -67,6 +67,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe114c55a2c5274580ef175574c3483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 8
   _WaitDuration: 2
 --- !u!1 &1428114272049884
 GameObject:

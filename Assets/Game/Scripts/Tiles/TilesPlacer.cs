@@ -46,6 +46,8 @@ namespace Com.IsartDigital.Rush.Managers
         private int _CurrentIndex = 0;
         private int[] _TilesLayers = new int[0];
 
+        private GameObject _Preview = null;
+
         private void Awake()
         {
             if(_Instance != null)

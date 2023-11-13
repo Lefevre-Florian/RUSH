@@ -24,7 +24,11 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void OnCollisionCheck()
         {
-            if (Physics.Raycast(transform.position + (Vector3.up * RAYCAST_OFFSETING), Vector3.up, out _Hit, RAYCAST_DISTANCE, _PlayerLayer))
+            if (Physics.Raycast(transform.position + (Vector3.up * RAYCAST_OFFSETING), 
+                                Vector3.up, 
+                                out _Hit, 
+                                RAYCAST_DISTANCE, 
+                                _PlayerLayer))
                 OnCollisionComportement();   
         }
 

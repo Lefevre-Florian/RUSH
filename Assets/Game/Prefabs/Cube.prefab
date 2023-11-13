@@ -352,6 +352,9 @@ MonoBehaviour:
   _ConvoyerLayer: 8
   _TeleporterLayer: 7
   _SpliterLayer: 12
+  _Ground:
+    serializedVersion: 2
+    m_Bits: 64
   _CollisionWallTickWait: 2
 --- !u!65 &8868582157660570629
 BoxCollider:
