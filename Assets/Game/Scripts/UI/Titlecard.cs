@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.UI
 {
     public class Titlecard : MonoBehaviour
