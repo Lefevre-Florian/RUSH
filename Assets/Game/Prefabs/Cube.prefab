@@ -352,7 +352,7 @@ MonoBehaviour:
   _ConvoyerLayer: 8
   _TeleporterLayer: 7
   _SpliterLayer: 12
-  _CollisionWallTickWait: 5
+  _CollisionWallTickWait: 2
 --- !u!65 &8868582157660570629
 BoxCollider:
   m_ObjectHideFlags: 0
