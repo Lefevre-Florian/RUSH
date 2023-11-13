@@ -44,6 +44,8 @@ namespace Com.IsartDigital.Rush.Cube
         private int _ActionTick = 0;
         private int _InternalTick = 0;
 
+        [HideInInspector] public Colors Color { get; private set; } = default;
+
         private void Start()
         {
             _RaycastDistance = transform.localScale.x / 2 + _RaycastOffsetOutSideCube;
@@ -59,6 +61,14 @@ namespace Com.IsartDigital.Rush.Cube
         {
             if (DoAction != null)
                 DoAction();
+        }
+
+        public void Init(Colors pSpawnColor)
+        {
+            Material lMaterial = GetComponent<Renderer>().material;
+            lMaterial.color = ColorLibrary.Library[pSpawnColor];
+
+            Color = pSpawnColor;
         }
 
         #region State Machine

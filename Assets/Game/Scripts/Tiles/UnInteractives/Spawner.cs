@@ -1,8 +1,10 @@
+using Com.IsartDigital.Rush.Cube;
 using UnityEngine;
 
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.Tiles
 {
+    [RequireComponent(typeof(ColoredTiles))]
     public class Spawner : MonoBehaviour
     {
         // In tick rate sync
@@ -16,12 +18,15 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private Clock _Clock = null;
 
+        private Colors _ColorIdentifier = default;
         private int _InternalDelay = 0;
 
         private void Start()
         {
             _Clock = Clock.GetInstance();
             _Clock.OnTick += DelayCubeSpawn;
+
+            _ColorIdentifier = GetComponent<ColoredTiles>().Color;
         }
 
         private void DelayCubeSpawn()
@@ -41,7 +46,9 @@ namespace Com.IsartDigital.Rush.Tiles
             _InternalDelay += 1;
             if(_InternalDelay == _SpawnFrequency && _NumberCubeToSpawn > 0)
             {
-                Instantiate(_CubePrefab, transform.position + Vector3.up * 0.5f, transform.rotation, transform.parent) ;
+                Instantiate(_CubePrefab, transform.position + Vector3.up * 0.5f, transform.rotation, transform.parent)
+                           .GetComponent<Cube.Cube>()
+                           .Init(_ColorIdentifier);
 
                 _NumberCubeToSpawn -= 1;
                 _InternalDelay = 0;

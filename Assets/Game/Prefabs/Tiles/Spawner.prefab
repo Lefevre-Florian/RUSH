@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4358187150086414}
   - component: {fileID: 65600886747357360}
   - component: {fileID: 3842554813203140046}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,10 +67,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db8a301040cfd7428bdf3a385c08860, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _NumberCubeToSpawn: 5
+  _NumberCubeToSpawn: 1
   _SpawnDelay: 2
   _SpawnFrequency: 2
-  _CubePrefab: {fileID: 4400966011703461974, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
+  _CubePrefab: {fileID: 1322089863668955444, guid: 3ff5aaa5ff8b8fd48a2c80551c281e00, type: 3}
 --- !u!1 &1451354327250352
 GameObject:
   m_ObjectHideFlags: 0
@@ -82,7 +82,7 @@ GameObject:
   - component: {fileID: 4997781578967948}
   - component: {fileID: 33384601887706480}
   - component: {fileID: 23577666094423652}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
