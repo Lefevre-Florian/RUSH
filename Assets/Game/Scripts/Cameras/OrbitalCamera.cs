@@ -40,7 +40,7 @@ namespace Com.IsartDigital.Rush.Camera
         #endif
         
         private float _HorizontalAngle = 0f;
-        private float _VerticalAngle = 0f;
+        private float _VerticalAngle = 90f;
 
         #if UNITY_ANDROID
         private Touch _Touch = default;
