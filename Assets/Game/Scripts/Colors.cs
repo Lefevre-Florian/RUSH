@@ -7,7 +7,7 @@ namespace Com.IsartDigital.Rush
     public enum Colors
     {
         RED = 0,
-        BLUE = 1,
+        CYAN = 1,
         GREEN = 2,
         YELLOW = 3,
         VIOLET = 4,
@@ -19,7 +19,7 @@ namespace Com.IsartDigital.Rush
         private static Dictionary<Colors, Color> _Library = new Dictionary<Colors, Color>()
         {
             {Colors.RED, Color.red },
-            {Colors.BLUE, Color.blue },
+            {Colors.CYAN, Color.cyan },
             {Colors.GREEN, Color.green },
             {Colors.VIOLET, Color.magenta },
             {Colors.YELLOW, Color.yellow },

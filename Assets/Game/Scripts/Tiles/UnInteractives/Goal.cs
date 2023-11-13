@@ -7,6 +7,7 @@ namespace Com.IsartDigital.Rush.Tiles
     [RequireComponent(typeof(ColoredTiles))]
     public class Goal : MonoBehaviour
     {
+        private const float RAYCAST_OFFSETING = 0.3f;
         private const float RAYCAST_DISTANCE = 1f;
 
         [SerializeField] private int _RequiredCubes = 1;
@@ -29,10 +30,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void OnCollisionCheck()
         {
-            Debug.DrawRay(transform.position, Vector3.up, Color.red, 0.5f);
-            if(Physics.Raycast(transform.position, Vector3.up, out _Hit, RAYCAST_DISTANCE))
+            if(Physics.Raycast(transform.position + (Vector3.up * RAYCAST_OFFSETING), Vector3.up, out _Hit, RAYCAST_DISTANCE))
             {
-                
                 if (_Hit.collider.gameObject.GetComponent<Cube.Cube>().Color != _Color)
                     return;
 
