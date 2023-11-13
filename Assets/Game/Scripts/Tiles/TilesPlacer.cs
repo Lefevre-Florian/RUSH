@@ -69,6 +69,7 @@ namespace Com.IsartDigital.Rush.Managers
 
         private void Update()
         {
+            // Input that place or destroy the tile
             if (Input.GetButtonDown(_InputAccept))
                 InsertTile();
             if (Input.GetButtonDown(_InputDelete))
@@ -113,7 +114,7 @@ namespace Com.IsartDigital.Rush.Managers
                     {
                         _TileFabric[_CurrentIndex]._Quantity -= 1;
                         Instantiate(_TileFabric[_CurrentIndex]._Type,
-                                    _TargetedGameobject.position + Vector3.up,
+                                    _TargetedGameobject.position + Vector3.up * (_TargetedGameobject.localScale.y / 2),
                                     new Quaternion(),
                                     _Container);
 
