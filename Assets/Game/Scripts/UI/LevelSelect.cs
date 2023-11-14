@@ -1,3 +1,4 @@
+using Com.IsartDigital.Rush.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ namespace Com.IsartDigital.Rush.UI
         [Header("Navigation")]
         [SerializeField] private Button _NextBtn = null;
         [SerializeField] private Button _PreviousBtn = null;
+        [SerializeField] private Button _StartBtn = null;
         [SerializeField] private TextMeshProUGUI _LevelNameLabel = null;
 
         private int _CurrentIndex = 0;
@@ -35,11 +37,12 @@ namespace Com.IsartDigital.Rush.UI
             _LevelRenderers[_CurrentIndex].SetActive(true);
             UpdateNavigationState();
 
+            _StartBtn.onClick.AddListener(StartLevel);
             _NextBtn.onClick.AddListener(NextLevel);
             _PreviousBtn.onClick.AddListener(PreviousLevel);
         }
 
-        public void NextLevel()
+        private void NextLevel()
         {
             if (_CurrentIndex + 1 < _LevelRenderers.Length)
             {
@@ -50,7 +53,7 @@ namespace Com.IsartDigital.Rush.UI
             UpdateNavigationState();
         }
 
-        public void PreviousLevel()
+        private void PreviousLevel()
         {
             if (_CurrentIndex - 1 >= 0)
             {
@@ -59,6 +62,12 @@ namespace Com.IsartDigital.Rush.UI
             }
 
             UpdateNavigationState();
+        }
+
+        private void StartLevel()
+        {
+            Destroy(transform.parent.gameObject);
+            LevelManager.GetInstance().LoadLevel(_CurrentIndex);
         }
 
         private void UpdateNavigationState()
@@ -80,6 +89,7 @@ namespace Com.IsartDigital.Rush.UI
 
         private void OnDestroy()
         {
+            _StartBtn.onClick.RemoveListener(StartLevel);
             _PreviousBtn.onClick.RemoveListener(PreviousLevel);
             _NextBtn.onClick.RemoveListener(NextLevel);
         }

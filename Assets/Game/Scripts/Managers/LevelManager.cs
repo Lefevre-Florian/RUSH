@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows;
 
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.Managers
@@ -11,7 +8,7 @@ namespace Com.IsartDigital.Rush.Managers
         #region Singleton
         private static LevelManager _Instance = null;
 
-        private static LevelManager GetInstance()
+        public static LevelManager GetInstance()
         {
             if (_Instance == null)
                 _Instance = new LevelManager();
@@ -25,6 +22,13 @@ namespace Com.IsartDigital.Rush.Managers
         [SerializeField] private int _LevelID = 0;
         [SerializeField] private GameObject[] _Levels = null;
 
+        [SerializeField] private GameObject _GameScene = null;
+
+        public GameObject[] Levels
+        {
+            get { return _Levels; }
+            private set { _Levels = value; }
+        }
 
         private void Awake()
         {
@@ -37,14 +41,13 @@ namespace Com.IsartDigital.Rush.Managers
             _Instance = this;
         }
 
-        private void Start() => LoadLevel(_LevelID);
-
         public void LoadLevel(int pLevelID)
         {
             _LevelID = pLevelID;
             if(_Levels != null && _LevelID < _Levels.Length)
             {
-                Instantiate(_Levels[_LevelID], Vector3.zero, new Quaternion(), transform.parent);
+                Transform lLevel = Instantiate(_GameScene, Vector3.zero, new Quaternion(), transform.parent).transform;
+                Instantiate(_Levels[_LevelID], lLevel.transform.position, new Quaternion(), lLevel);
             }
         }
 
