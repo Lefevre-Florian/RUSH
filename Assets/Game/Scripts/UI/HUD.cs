@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Com.IsartDigital.Rush.Managers;
 
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.UI
@@ -16,6 +17,8 @@ namespace Com.IsartDigital.Rush.UI
         private void Start()
         {
             _Clock = Clock.GetInstance();
+
+            TilesPlacer lTilePlacer = TilesPlacer.GetInstance();
 
             if(_GameButton != null)
                 _GameButton.onClick.AddListener(_Clock.StartTicking);

@@ -11,7 +11,7 @@ namespace Com.IsartDigital.Rush
         GREEN = 2,
         YELLOW = 3,
         VIOLET = 4,
-        ORANGE = 5
+        PINK = 5
     }
 
     public static class ColorLibrary
@@ -23,7 +23,7 @@ namespace Com.IsartDigital.Rush
             {Colors.GREEN, Color.green },
             {Colors.VIOLET, Color.magenta },
             {Colors.YELLOW, Color.yellow },
-            {Colors.ORANGE, new Color(255f,127f,0f) }
+            {Colors.PINK, new Color(255f,0f,212f) }
         };
 
         public static Dictionary<Colors, Color> Library
