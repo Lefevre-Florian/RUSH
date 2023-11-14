@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -9,12 +10,40 @@ namespace Com.IsartDigital.Rush.Tiles
 
         public int Wait { get { return _WaitDuration; } private set { _WaitDuration = value; } }
 
+        private Queue<Cube.Cube> _CubePaused = new Queue<Cube.Cube>();
+
+        private int _InternalTick = 0;
+
         protected override void OnCollisionComportement()
         {
             Cube.Cube lCube = _Hit.collider.gameObject.GetComponent<Cube.Cube>();
+
+            if (_CubePaused.Contains(lCube))
+                return;
+
             lCube.SetActionWait(_WaitDuration);
+            _CubePaused.Enqueue(lCube);
+
+            _Clock.OnTick += CleanStoppeur;
         }
 
+        private void CleanStoppeur()
+        {
+            if (++_InternalTick % _WaitDuration == 0)
+                _CubePaused.Dequeue();
+
+            if (_CubePaused.Count == 0)
+            {
+                _Clock.OnTick -= CleanStoppeur;
+                _InternalTick = 0;
+            }
+        }
+
+        protected override void Destroy()
+        {
+            _Clock.OnTick -= CleanStoppeur;
+            base.Destroy();
+        }
 
     }
 
