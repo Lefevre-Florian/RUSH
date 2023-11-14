@@ -35,6 +35,8 @@ namespace Com.IsartDigital.Rush
         public float ElapsedTime { get; private set; } = 0f;
         public float Ratio { get {return ElapsedTime / _UpdatedDurationTick; } private set { } }
 
+        private int _CurrentTick = 0;
+
         // Signals
         public event Action OnTick;
 
@@ -70,6 +72,7 @@ namespace Com.IsartDigital.Rush
             {
                 yield return new WaitForSeconds(_UpdatedDurationTick);
                 OnTick?.Invoke();
+                //Debug.Log("Ticking : " + ++_CurrentTick);
 
                 ElapsedTime -= _UpdatedDurationTick;
             }

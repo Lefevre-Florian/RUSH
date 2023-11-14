@@ -113,6 +113,8 @@ namespace Com.IsartDigital.Rush.Cube
 
         public void SetActionWait(int pWaitDuration = 1)
         {
+            _Clock.OnTick -= InternalClockTick;
+
             _ActionTick = pWaitDuration;
             _InternalTick = 0;
 
@@ -128,16 +130,23 @@ namespace Com.IsartDigital.Rush.Cube
             {
                 _Clock.OnTick -= InternalClockTick;
                 _IsStuned = false;
-                SetActionMove();
+                InternalCheckCollision();
             }
         }
 
         public void SetActionSlideMove(Vector3 pDirection)
         {
+            _Clock.OnTick -= InternalClockTick;
+
             _InitialPosition = transform.position;
             _TargetedPosition = _InitialPosition + (pDirection * transform.localScale.x);
 
             _IsStuned = true;
+
+            _Clock.OnTick += InternalClockTick;
+            
+            _InternalTick = 0;
+            _ActionTick = 2;
 
             DoAction = DoActionConvoyer;
         }
@@ -150,7 +159,6 @@ namespace Com.IsartDigital.Rush.Cube
                 {
                     _Clock.OnTick -= InternalClockTick;
                     _IsStuned = false;
-                    SetActionMove();
                 }
             }
             else
@@ -160,7 +168,10 @@ namespace Com.IsartDigital.Rush.Cube
         private void SetActionVoid() => DoAction = null;
         #endregion
 
-        private void InternalClockTick() => _InternalTick += 1;
+        private void InternalClockTick()
+        {
+            _InternalTick += 1;
+        }
 
         private void InternalCheckCollision()
         {
@@ -168,7 +179,7 @@ namespace Com.IsartDigital.Rush.Cube
             if(Physics.Raycast(transform.position, _MovementDirection, out _Hit, _RaycastDistance))
             {
                 GameObject lCollided = _Hit.collider.gameObject;
-                if (lCollided.layer == _GroundLayer)
+                if (lCollided.layer == _GroundLayer && !_IsStuned)
                 {
                     for (int i = 0; i < MAX_DIRECTION_COUNT; i++)
                     {

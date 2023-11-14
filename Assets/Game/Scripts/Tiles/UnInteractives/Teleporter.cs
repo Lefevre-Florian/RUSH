@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Com.IsartDigital.Rush.Tiles
         }
 
         private Queue<Cube.Cube> _TeleportationStack = new Queue<Cube.Cube>();
+        private Queue<Cube.Cube> _TeleportationMemory = new Queue<Cube.Cube>();
 
         public Queue<Cube.Cube> TeleportationStack
         {
@@ -23,11 +25,13 @@ namespace Com.IsartDigital.Rush.Tiles
             private set { _TeleportationStack = value; }
         }
 
+        private int _InternalTick = 0;
+
         protected override void OnCollisionComportement()
         {
             Cube.Cube lCube = _Hit.collider.gameObject.GetComponent<Cube.Cube>();
 
-            if (_Output.TeleportationStack.Contains(lCube))
+            if (_Output.TeleportationStack.Count != 0 && _Output.TeleportationStack.Contains(lCube) || _Output._TeleportationMemory.Contains(lCube))
                 return;
 
             if(_TeleportationStack.Count == 0)
@@ -36,7 +40,6 @@ namespace Com.IsartDigital.Rush.Tiles
             lCube.GetComponent<MeshRenderer>().enabled = false;
             lCube.SetActionWait(_TeleportationTick);
             lCube.transform.position = OutputPosition + Vector3.up * 0.5f;
-            Debug.Log(lCube.transform.position);
 
             _TeleportationStack.Enqueue(lCube);
         }
@@ -45,10 +48,27 @@ namespace Com.IsartDigital.Rush.Tiles
         {
             Cube.Cube lCube = _TeleportationStack.Dequeue();
             lCube.GetComponent<MeshRenderer>().enabled = true;
-            lCube.SetActionMove();
+
+            _TeleportationMemory.Enqueue(lCube);
+
+            if (_TeleportationMemory.Count != 0)
+                _Clock.OnTick += CleanQueue;
 
             if (_TeleportationStack.Count == 0)
                 _Clock.OnTick -= ManageTeleportation;
+        }
+
+        private void CleanQueue()
+        {
+            if(++_InternalTick % (_TeleportationTick + 1) == 0)
+                _TeleportationMemory.Dequeue();
+
+            if (_TeleportationMemory.Count == 0)
+            {
+                _Clock.OnTick -= CleanQueue;
+                _InternalTick = 0;
+            }
+                
         }
 
         protected override void Destroy()
