@@ -151,6 +151,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ebf6b3312de334791ec202b4c8f631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _PlayerLayer:
+    serializedVersion: 2
+    m_Bits: 8
   _Output: {fileID: 0}
   _TeleportationTick: 2
 --- !u!114 &2310305955795039964

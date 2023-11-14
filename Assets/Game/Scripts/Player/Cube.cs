@@ -22,6 +22,8 @@ namespace Com.IsartDigital.Rush.Cube
         [SerializeField] private int _TeleporterLayer = 7;
         [SerializeField] private int _SpliterLayer = 12;
 
+        [SerializeField] private LayerMask _Ground = default;
+
         [Header("Timing")]
         [SerializeField] private int _CollisionWallTickWait = 2;
 
@@ -72,8 +74,9 @@ namespace Com.IsartDigital.Rush.Cube
         }
 
         #region State Machine
-        private void SetActionMove()
+        public void SetActionMove()
         {
+            _IsStuned = false;
             Vector3 lPivot = transform.position + Vector3.down * (transform.localScale.y / 2) + _MovementDirection * (transform.localScale.x / 2);
             Vector3 lAxis = -Vector3.Cross(Vector3.up, transform.position - lPivot).normalized;
 
@@ -92,6 +95,12 @@ namespace Com.IsartDigital.Rush.Cube
             transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation, _Clock.Ratio);
         }
 
+        public void SetDirectionMove(Vector3 pDirection)
+        {
+            _MovementDirection = pDirection;
+            SetActionMove();
+        }
+
         private void SetActionFall()
         {
             _InitialPosition = transform.position;
@@ -102,31 +111,9 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void DoActionFall() => transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
 
-        private void SetActionTeleport()
+        public void SetActionWait(int pWaitDuration = 1)
         {
-            SetActionWait();
-            GetComponent<MeshRenderer>().enabled = false;
-            transform.position = _TargetedPosition + Vector3.up * (transform.localScale.y / 2);
-
-            _IsStuned = true;
-
-            DoAction = DoActionTeleport;
-        }
-
-        private void DoActionTeleport()
-        {
-            if (_InternalTick == _ActionTick)
-            {
-                GetComponent<MeshRenderer>().enabled = true;
-
-                _Clock.OnTick -= InternalClockTick;
-                _IsStuned = false;
-                SetActionMove();
-            }
-        }
-
-        private void SetActionWait()
-        {
+            _ActionTick = pWaitDuration;
             _InternalTick = 0;
 
             _Clock.OnTick += InternalClockTick;
@@ -145,14 +132,12 @@ namespace Com.IsartDigital.Rush.Cube
             }
         }
 
-        private void SetActionConvoter(Vector3 pDirection)
+        public void SetActionSlideMove(Vector3 pDirection)
         {
             _InitialPosition = transform.position;
             _TargetedPosition = _InitialPosition + (pDirection * transform.localScale.x);
 
             _IsStuned = true;
-
-            SetActionWait();
 
             DoAction = DoActionConvoyer;
         }
@@ -187,55 +172,21 @@ namespace Com.IsartDigital.Rush.Cube
                 {
                     for (int i = 0; i < MAX_DIRECTION_COUNT; i++)
                     {
-                        if (!Physics.Raycast(transform.position, _MovementDirection, _RaycastDistance)) break;
+                        if (!Physics.Raycast(transform.position, _MovementDirection, _RaycastDistance, _Ground)) break;
                         _MovementDirection = Quaternion.AngleAxis(90f, Vector3.up) * _MovementDirection;
                     }
 
-                    _ActionTick = _CollisionWallTickWait;
-                    SetActionWait();
+                    SetActionWait(_CollisionWallTickWait);
                 }
                 else if (lCollided.layer == gameObject.layer)
                     Debug.Log("Collide with other player so loose the game");
             }
 
             // Collision check on Ground & Tiles
-            if(Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance))
+            if(Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance, _Ground))
             {
-                GameObject lCollided = _Hit.collider.gameObject;
-
-                if (lCollided.layer == _GroundLayer)
-                {
-                    if(!_IsStuned)
-                        SetActionMove();
-                }
-                else if (lCollided.layer == _TeleporterLayer)
-                {
-                    Teleporter lRef = lCollided.GetComponent<Teleporter>();
-
-                    _TargetedPosition = lRef.OutputPosition;
-                    _ActionTick = lRef.TeleportationTick;
-                    SetActionTeleport();
-                }
-                else if (lCollided.layer == _StopperLayer)
-                {
-                    _ActionTick = lCollided.GetComponent<Stop>().Wait;
-                    SetActionWait();
-                }
-                else if (lCollided.layer == _ConvoyerLayer)
-                {
-                    _ActionTick = lCollided.GetComponent<Stop>().Wait;
-                    SetActionConvoter(lCollided.GetComponent<DirectionalTiles>().GetDirection());
-                }
-                else if (lCollided.layer == _SpliterLayer)
-                {
-                    _MovementDirection = lCollided.GetComponent<Spliter>().GetDirection();
+                if (!_IsStuned)
                     SetActionMove();
-                }
-                else if (lCollided.layer == _DirectionLayer)
-                {
-                    _MovementDirection = lCollided.GetComponent<DirectionalTiles>().GetDirection();
-                    SetActionMove();
-                }
             }
             else
             {

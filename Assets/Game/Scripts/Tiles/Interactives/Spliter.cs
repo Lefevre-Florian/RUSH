@@ -7,7 +7,7 @@ namespace Com.IsartDigital.Rush.Tiles
     {
         private int _Switchers = 0;
 
-        public override Vector3 GetDirection()
+        protected override Vector3 GetDirection()
         {
             return (_Switchers++ % 2 == 0) ? transform.right : -transform.right;
         }
