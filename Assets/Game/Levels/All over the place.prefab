@@ -272,6 +272,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnDelay
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnFrequency
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _NumberCubeToSpawn
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7567483275528803928, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _Color
       value: 1
@@ -337,6 +349,18 @@ PrefabInstance:
     - target: {fileID: 4358187150086414, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnFrequency
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _NumberCubeToSpawn
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7567483275528803928, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _Color
@@ -560,6 +584,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnDelay
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnFrequency
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _NumberCubeToSpawn
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 7567483275528803928, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _Color
       value: 4
@@ -625,6 +661,18 @@ PrefabInstance:
     - target: {fileID: 4358187150086414, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnDelay
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnFrequency
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _NumberCubeToSpawn
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

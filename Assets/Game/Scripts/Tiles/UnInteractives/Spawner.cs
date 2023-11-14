@@ -36,6 +36,8 @@ namespace Com.IsartDigital.Rush.Tiles
             {
                 _InternalDelay = 0;
 
+                CreateCube();
+
                 _Clock.OnTick -= DelayCubeSpawn;
                 _Clock.OnTick += CubeSpawner;
             }
@@ -46,13 +48,18 @@ namespace Com.IsartDigital.Rush.Tiles
             _InternalDelay += 1;
             if(_InternalDelay == _SpawnFrequency && _NumberCubeToSpawn > 0)
             {
-                Instantiate(_CubePrefab, transform.position + Vector3.up * 0.5f, transform.rotation, transform.parent)
+                CreateCube();
+                _InternalDelay = 0;
+            }
+        }
+
+        private void CreateCube()
+        {
+            Instantiate(_CubePrefab, transform.position + Vector3.up * 0.5f, transform.rotation, transform.parent)
                            .GetComponent<Cube.Cube>()
                            .Init(_ColorIdentifier);
 
-                _NumberCubeToSpawn -= 1;
-                _InternalDelay = 0;
-            }
+            _NumberCubeToSpawn -= 1;
         }
 
         private void OnDestroy()
