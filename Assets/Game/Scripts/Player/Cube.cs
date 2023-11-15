@@ -1,4 +1,5 @@
 using Com.IsartDigital.Rush.Tiles;
+using Com.IsartDigital.Rush.UI;
 using System;
 using UnityEngine;
 using UnityEngine.ProBuilder;
@@ -16,11 +17,6 @@ namespace Com.IsartDigital.Rush.Cube
 
         [Header("Collision Layers")]
         [SerializeField] private int _GroundLayer = 6;
-        [SerializeField] private int _DirectionLayer = 9;
-        [SerializeField] private int _StopperLayer = 10;
-        [SerializeField] private int _ConvoyerLayer = 8;
-        [SerializeField] private int _TeleporterLayer = 7;
-        [SerializeField] private int _SpliterLayer = 12;
 
         [SerializeField] private LayerMask _Ground = default;
 
@@ -48,6 +44,9 @@ namespace Com.IsartDigital.Rush.Cube
 
         [HideInInspector] public Colors Color { get; private set; } = default;
 
+        // Signals
+        public event Action OnDied;
+
         private void Start()
         {
             _RaycastDistance = transform.localScale.x / 2 + _RaycastOffsetOutSideCube;
@@ -55,6 +54,7 @@ namespace Com.IsartDigital.Rush.Cube
 
             _Clock = Clock.GetInstance();
             _Clock.OnTick += InternalCheckCollision;
+            _Clock.OnReset += Clear;
 
             SetActionVoid();
         }
@@ -206,9 +206,12 @@ namespace Com.IsartDigital.Rush.Cube
                 if (!Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance * _RaycastFallHeight))
                 {
                     SetActionVoid();
+                    OnDied?.Invoke();
                 }
             }
         }
+
+        private void Clear() => Destroy(gameObject);
 
         private void OnDestroy()
         {
@@ -217,6 +220,8 @@ namespace Com.IsartDigital.Rush.Cube
                 // Disconnecting every possible signals
                 _Clock.OnTick -= InternalCheckCollision;
                 _Clock.OnTick -= InternalClockTick;
+
+                _Clock.OnReset -= Clear;
 
                 _Clock = null;
             }

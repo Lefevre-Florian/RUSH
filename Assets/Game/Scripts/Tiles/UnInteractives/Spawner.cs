@@ -1,4 +1,6 @@
 using Com.IsartDigital.Rush.Cube;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -7,6 +9,8 @@ namespace Com.IsartDigital.Rush.Tiles
     [RequireComponent(typeof(ColoredTiles))]
     public class Spawner : MonoBehaviour
     {
+        public static List<Spawner> Spawners { get; private set; } = new List<Spawner>();
+
         // In tick rate sync
         [Header("Spawn")]
         [SerializeField] private int _NumberCubeToSpawn = 1;
@@ -21,12 +25,34 @@ namespace Com.IsartDigital.Rush.Tiles
         private Colors _ColorIdentifier = default;
         private int _InternalDelay = 0;
 
+        private int _InternalNumberCubeToSpawn = 0;
+
+        // Signals
+        public event Action<Cube.Cube> OnCubeSpawned;
+
+        private void Awake() => Spawners.Add(this);
+
         private void Start()
         {
+            Init();
+
             _Clock = Clock.GetInstance();
-            _Clock.OnTick += DelayCubeSpawn;
+            _Clock.OnGameStart += StartSpawner;
+            _Clock.OnReset += Init;
 
             _ColorIdentifier = GetComponent<ColoredTiles>().Color;
+        }
+
+        private void Init()
+        {
+            _InternalNumberCubeToSpawn = _NumberCubeToSpawn;
+            _InternalDelay = 0;
+        }
+
+        private void StartSpawner()
+        {
+            _Clock.OnGameStart -= StartSpawner;
+            _Clock.OnTick += DelayCubeSpawn;
         }
 
         private void DelayCubeSpawn()
@@ -46,7 +72,7 @@ namespace Com.IsartDigital.Rush.Tiles
         private void CubeSpawner()
         {
             _InternalDelay += 1;
-            if(_InternalDelay == _SpawnFrequency && _NumberCubeToSpawn > 0)
+            if(_InternalDelay == _SpawnFrequency && _InternalNumberCubeToSpawn > 0)
             {
                 CreateCube();
                 _InternalDelay = 0;
@@ -55,15 +81,23 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void CreateCube()
         {
-            Instantiate(_CubePrefab, transform.position + Vector3.up * 0.5f, transform.rotation, transform.parent)
-                           .GetComponent<Cube.Cube>()
-                           .Init(_ColorIdentifier);
+            Debug.Log("Create cube");
+            Cube.Cube lCube = Instantiate(_CubePrefab, transform.position + Vector3.up * 0.5f, transform.rotation, transform.parent)
+                                         .GetComponent<Cube.Cube>();
+            lCube.Init(_ColorIdentifier);
 
-            _NumberCubeToSpawn -= 1;
+            OnCubeSpawned?.Invoke(lCube);
+            _InternalNumberCubeToSpawn -= 1;
         }
 
         private void OnDestroy()
         {
+            Spawners.Remove(this);
+
+            _Clock.OnGameStart -= StartSpawner;
+
+            _Clock.OnReset -= Init;
+
             _Clock.OnTick -= CubeSpawner;
             _Clock.OnTick -= DelayCubeSpawn;
 

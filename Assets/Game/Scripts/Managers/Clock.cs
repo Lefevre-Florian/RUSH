@@ -39,6 +39,8 @@ namespace Com.IsartDigital.Rush
 
         // Signals
         public event Action OnTick;
+        public event Action OnGameStart;
+        public event Action OnReset;
 
         private void Awake()
         {
@@ -50,11 +52,16 @@ namespace Com.IsartDigital.Rush
             _Instance = this;
         }
 
-        private void Start() => StartTicking();
-
         private void Update()
         {
             ElapsedTime += Time.deltaTime * _TickMultiplier;
+        }
+
+        public void ResetTicking()
+        {
+            StopTicking();
+
+            OnReset?.Invoke();
         }
 
         public void StartTicking()
@@ -62,6 +69,16 @@ namespace Com.IsartDigital.Rush
             if (_InternalTimer != null)
                 StopCoroutine(_InternalTimer);
             _InternalTimer = StartCoroutine(Tick());
+
+            OnGameStart?.Invoke();
+            ElapsedTime = 0f;
+        }
+
+        public void StopTicking()
+        {
+            if (_InternalTimer != null)
+                StopCoroutine(_InternalTimer);
+            _InternalTimer = null;
 
             ElapsedTime = 0f;
         }
@@ -72,7 +89,7 @@ namespace Com.IsartDigital.Rush
             {
                 yield return new WaitForSeconds(_UpdatedDurationTick);
                 OnTick?.Invoke();
-                //Debug.Log("Ticking : " + ++_CurrentTick);
+                Debug.Log("Ticking : " + ++_CurrentTick);
 
                 ElapsedTime -= _UpdatedDurationTick;
             }
@@ -102,8 +119,7 @@ namespace Com.IsartDigital.Rush
 
         private void OnDestroy()
         {
-            if (_InternalTimer != null)
-                StopCoroutine(Tick());
+            StopTicking();
 
             if (_Instance != null)
                 _Instance = null;
