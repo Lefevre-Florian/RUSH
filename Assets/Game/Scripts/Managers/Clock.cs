@@ -40,6 +40,7 @@ namespace Com.IsartDigital.Rush
         // Signals
         public event Action OnTick;
         public event Action OnGameStart;
+        public event Action OnReset;
 
         private void Awake()
         {
@@ -54,6 +55,13 @@ namespace Com.IsartDigital.Rush
         private void Update()
         {
             ElapsedTime += Time.deltaTime * _TickMultiplier;
+        }
+
+        public void ResetTicking()
+        {
+            StopTicking();
+
+            OnReset?.Invoke();
         }
 
         public void StartTicking()
@@ -81,7 +89,7 @@ namespace Com.IsartDigital.Rush
             {
                 yield return new WaitForSeconds(_UpdatedDurationTick);
                 OnTick?.Invoke();
-                //Debug.Log("Ticking : " + ++_CurrentTick);
+                Debug.Log("Ticking : " + ++_CurrentTick);
 
                 ElapsedTime -= _UpdatedDurationTick;
             }

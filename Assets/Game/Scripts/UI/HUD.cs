@@ -54,14 +54,20 @@ namespace Com.IsartDigital.Rush.UI
 
             TilesPlacer lTilePlacer = TilesPlacer.GetInstance();
 
+            _ResetButton.onClick.AddListener(ResetGame);
+            _GameButton.onClick.AddListener(StartGameMode);
+
+            Init();
+        }
+
+        private void Init()
+        {
             _PauseButton.gameObject.SetActive(false);
             _ResetButton.gameObject.SetActive(false);
 
             _MsgLabel.gameObject.SetActive(false);
-
-            _ResetButton.onClick.AddListener(ResetGame);
-            _GameButton.onClick.AddListener(StartGameMode);
         }
+
 
         private void StartGameMode()
         {
@@ -74,7 +80,11 @@ namespace Com.IsartDigital.Rush.UI
 
         private void ResetGame()
         {
-            _MsgLabel.gameObject.SetActive(false);
+            Init();
+            Time.timeScale = 1f;
+
+            _GameButton.gameObject.SetActive(true);
+            _Clock.ResetTicking();
         }
 
         public void ManagePauseMode()
@@ -96,7 +106,7 @@ namespace Com.IsartDigital.Rush.UI
         /// </param>
         public void DisplayGameoverState(bool pState)
         {
-            ManagePauseMode();
+            Time.timeScale = 0f;
 
             _MsgLabel.gameObject.SetActive(true);
             if (pState)

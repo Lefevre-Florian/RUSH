@@ -45,12 +45,21 @@ namespace Com.IsartDigital.Rush.Managers
             _Clock = Clock.GetInstance();
             _HUD = HUD.GetInstance();
 
+            _Clock.OnReset += Init;
+
+            Init();
+        }
+
+        private void Init()
+        {
             _CountBeforeEnd = Goal.Targets.Count;
             foreach (Goal lTarget in Goal.Targets)
                 lTarget.OnFullyArrived += UpdateEndGameScore;
 
             foreach (Spawner lSpawner in Spawner.Spawners)
                 lSpawner.OnCubeSpawned += AddCubeToPlayingParty;
+
+            _Cubes = new List<Cube.Cube>();
         }
 
         private void AddCubeToPlayingParty(Cube.Cube pCube)
@@ -69,7 +78,6 @@ namespace Com.IsartDigital.Rush.Managers
         // Executed if win condition = true
         private void UpdateEndGameScore()
         {
-            Debug.Log(_CountBeforeEnd - 1);
             if (--_CountBeforeEnd == 0)
             {
                 CleanGame();
@@ -99,6 +107,8 @@ namespace Com.IsartDigital.Rush.Managers
         private void OnDestroy()
         {
             CleanGame();
+            _Clock.OnReset -= Init;
+
             _Clock = null;
             _HUD = null;
 

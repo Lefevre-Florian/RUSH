@@ -8,11 +8,23 @@ namespace Com.IsartDigital.Rush.Tiles
     {
         [SerializeField] private int _WaitDuration = 2;
 
-        public int Wait { get { return _WaitDuration; } private set { _WaitDuration = value; } }
-
         private Queue<Cube.Cube> _CubePaused = new Queue<Cube.Cube>();
 
         private int _InternalTick = 0;
+
+        protected override void Init()
+        {
+            _Clock.OnReset += Restore;
+
+            base.Init();
+        }
+
+        private void Restore()
+        {
+            _CubePaused.Clear();
+            _CubePaused = new Queue<Cube.Cube>();
+            _InternalTick = 0;
+        }
 
         protected override void OnCollisionComportement()
         {
@@ -41,6 +53,7 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected override void Destroy()
         {
+            _Clock.OnReset -= Restore;
             _Clock.OnTick -= CleanStoppeur;
             base.Destroy();
         }

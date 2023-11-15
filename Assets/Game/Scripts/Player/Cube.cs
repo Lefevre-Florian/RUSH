@@ -54,6 +54,7 @@ namespace Com.IsartDigital.Rush.Cube
 
             _Clock = Clock.GetInstance();
             _Clock.OnTick += InternalCheckCollision;
+            _Clock.OnReset += Clear;
 
             SetActionVoid();
         }
@@ -210,6 +211,8 @@ namespace Com.IsartDigital.Rush.Cube
             }
         }
 
+        private void Clear() => Destroy(gameObject);
+
         private void OnDestroy()
         {
             if(_Clock != null)
@@ -217,6 +220,8 @@ namespace Com.IsartDigital.Rush.Cube
                 // Disconnecting every possible signals
                 _Clock.OnTick -= InternalCheckCollision;
                 _Clock.OnTick -= InternalClockTick;
+
+                _Clock.OnReset -= Clear;
 
                 _Clock = null;
             }
