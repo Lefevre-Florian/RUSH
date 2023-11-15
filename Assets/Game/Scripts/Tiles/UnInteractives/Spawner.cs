@@ -24,9 +24,15 @@ namespace Com.IsartDigital.Rush.Tiles
         private void Start()
         {
             _Clock = Clock.GetInstance();
-            _Clock.OnTick += DelayCubeSpawn;
+            _Clock.OnGameStart += StartSpawner;
 
             _ColorIdentifier = GetComponent<ColoredTiles>().Color;
+        }
+
+        private void StartSpawner()
+        {
+            _Clock.OnGameStart -= StartSpawner;
+            _Clock.OnTick += DelayCubeSpawn;
         }
 
         private void DelayCubeSpawn()
@@ -64,6 +70,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void OnDestroy()
         {
+            _Clock.OnGameStart -= StartSpawner;
+
             _Clock.OnTick -= CubeSpawner;
             _Clock.OnTick -= DelayCubeSpawn;
 

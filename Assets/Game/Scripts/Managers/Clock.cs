@@ -39,6 +39,7 @@ namespace Com.IsartDigital.Rush
 
         // Signals
         public event Action OnTick;
+        public event Action OnGameStart;
 
         private void Awake()
         {
@@ -49,8 +50,6 @@ namespace Com.IsartDigital.Rush
             }
             _Instance = this;
         }
-
-        private void Start() => StartTicking();
 
         private void Update()
         {
@@ -63,6 +62,7 @@ namespace Com.IsartDigital.Rush
                 StopCoroutine(_InternalTimer);
             _InternalTimer = StartCoroutine(Tick());
 
+            OnGameStart?.Invoke();
             ElapsedTime = 0f;
         }
 

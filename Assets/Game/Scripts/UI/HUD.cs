@@ -9,6 +9,7 @@ namespace Com.IsartDigital.Rush.UI
 {
     public class HUD : MonoBehaviour
     {
+        [SerializeField] private Button _PauseButton = null;
         [SerializeField] private Button _GameButton = null;
 
         private Clock _Clock = null;
@@ -20,8 +21,18 @@ namespace Com.IsartDigital.Rush.UI
 
             TilesPlacer lTilePlacer = TilesPlacer.GetInstance();
 
+            _PauseButton.gameObject.SetActive(false);
+
             if(_GameButton != null)
-                _GameButton.onClick.AddListener(_Clock.StartTicking);
+                _GameButton.onClick.AddListener(StartGameMode);
+        }
+
+        private void StartGameMode()
+        {
+            _Clock.StartTicking();
+
+            _PauseButton.gameObject.SetActive(true);
+            _GameButton.gameObject.SetActive(false);
         }
 
         public void ManagePauseMode()
@@ -37,7 +48,7 @@ namespace Com.IsartDigital.Rush.UI
         private void OnDestroy()
         {
             if (_GameButton != null)
-                _GameButton.onClick.RemoveListener(_Clock.StartTicking);
+                _GameButton.onClick.RemoveListener(StartGameMode);
             _Clock = null;
         }
 
