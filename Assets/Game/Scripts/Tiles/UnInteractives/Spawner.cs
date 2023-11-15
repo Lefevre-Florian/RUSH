@@ -1,4 +1,6 @@
 using Com.IsartDigital.Rush.Cube;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -7,6 +9,8 @@ namespace Com.IsartDigital.Rush.Tiles
     [RequireComponent(typeof(ColoredTiles))]
     public class Spawner : MonoBehaviour
     {
+        public static List<Spawner> Spawners { get; private set; } = new List<Spawner>();
+
         // In tick rate sync
         [Header("Spawn")]
         [SerializeField] private int _NumberCubeToSpawn = 1;
@@ -20,6 +24,11 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private Colors _ColorIdentifier = default;
         private int _InternalDelay = 0;
+
+        // Signals
+        public event Action<Cube.Cube> OnCubeSpawned;
+
+        private void Awake() => Spawners.Add(this);
 
         private void Start()
         {
@@ -61,15 +70,18 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void CreateCube()
         {
-            Instantiate(_CubePrefab, transform.position + Vector3.up * 0.5f, transform.rotation, transform.parent)
-                           .GetComponent<Cube.Cube>()
-                           .Init(_ColorIdentifier);
+            Cube.Cube lCube = Instantiate(_CubePrefab, transform.position + Vector3.up * 0.5f, transform.rotation, transform.parent)
+                                         .GetComponent<Cube.Cube>();
+            lCube.Init(_ColorIdentifier);
 
+            OnCubeSpawned?.Invoke(lCube);
             _NumberCubeToSpawn -= 1;
         }
 
         private void OnDestroy()
         {
+            Spawners.Remove(this);
+
             _Clock.OnGameStart -= StartSpawner;
 
             _Clock.OnTick -= CubeSpawner;

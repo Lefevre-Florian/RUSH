@@ -66,6 +66,15 @@ namespace Com.IsartDigital.Rush
             ElapsedTime = 0f;
         }
 
+        public void StopTicking()
+        {
+            if (_InternalTimer != null)
+                StopCoroutine(_InternalTimer);
+            _InternalTimer = null;
+
+            ElapsedTime = 0f;
+        }
+
         private IEnumerator Tick()
         {
             while (isActiveAndEnabled)
@@ -102,8 +111,7 @@ namespace Com.IsartDigital.Rush
 
         private void OnDestroy()
         {
-            if (_InternalTimer != null)
-                StopCoroutine(Tick());
+            StopTicking();
 
             if (_Instance != null)
                 _Instance = null;

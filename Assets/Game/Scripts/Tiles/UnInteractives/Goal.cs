@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -7,6 +8,8 @@ namespace Com.IsartDigital.Rush.Tiles
     [RequireComponent(typeof(ColoredTiles))]
     public class Goal : Tile
     {
+        public static List<Goal> Targets { get; private set; } = new List<Goal>();
+
         [SerializeField] private int _RequiredCubes = 1;
 
         private Colors _Color = default;
@@ -14,10 +17,11 @@ namespace Com.IsartDigital.Rush.Tiles
         // Signals
         public event Action OnFullyArrived;
 
+        private void Awake() => Targets.Add(this);
+
         protected override void Init()
         {
             _Color = GetComponent<ColoredTiles>().Color;
-
             base.Init();
         }
 
@@ -30,6 +34,13 @@ namespace Com.IsartDigital.Rush.Tiles
 
             if (--_RequiredCubes == 0)
                 OnFullyArrived?.Invoke();
+        }
+
+        protected override void Destroy()
+        {
+            Targets.Remove(this);
+
+            base.Destroy();
         }
 
     }

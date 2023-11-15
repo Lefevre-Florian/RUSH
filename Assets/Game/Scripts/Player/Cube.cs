@@ -1,4 +1,5 @@
 using Com.IsartDigital.Rush.Tiles;
+using Com.IsartDigital.Rush.UI;
 using System;
 using UnityEngine;
 using UnityEngine.ProBuilder;
@@ -16,11 +17,6 @@ namespace Com.IsartDigital.Rush.Cube
 
         [Header("Collision Layers")]
         [SerializeField] private int _GroundLayer = 6;
-        [SerializeField] private int _DirectionLayer = 9;
-        [SerializeField] private int _StopperLayer = 10;
-        [SerializeField] private int _ConvoyerLayer = 8;
-        [SerializeField] private int _TeleporterLayer = 7;
-        [SerializeField] private int _SpliterLayer = 12;
 
         [SerializeField] private LayerMask _Ground = default;
 
@@ -47,6 +43,9 @@ namespace Com.IsartDigital.Rush.Cube
         private int _InternalTick = 0;
 
         [HideInInspector] public Colors Color { get; private set; } = default;
+
+        // Signals
+        public event Action OnDied;
 
         private void Start()
         {
@@ -206,6 +205,7 @@ namespace Com.IsartDigital.Rush.Cube
                 if (!Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance * _RaycastFallHeight))
                 {
                     SetActionVoid();
+                    OnDied?.Invoke();
                 }
             }
         }
