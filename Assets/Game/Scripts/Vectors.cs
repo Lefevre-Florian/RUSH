@@ -1,7 +1,7 @@
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush
 {
-    enum Vectors
+    public enum Vectors
     {
         FORWARD = 0,
         BACKWARD = 1,
