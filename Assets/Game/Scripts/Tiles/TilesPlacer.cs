@@ -1,3 +1,4 @@
+using Com.IsartDigital.Rush.Data;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -20,15 +21,8 @@ namespace Com.IsartDigital.Rush.Managers
         }
         #endregion
 
-        [Serializable]
-        private struct Tiles
-        {
-            public GameObject _Type;
-            public int _Quantity;
-        }
-
         [Header("Tiles & Fabric")]
-        [SerializeField] private Tiles[] _TileFabric = new Tiles[0];
+        [SerializeField] private Level _TileDatas = null;
         [SerializeField] private int _GroundLayer = 6;
 
         [Header("Windows / PC")]
@@ -45,8 +39,19 @@ namespace Com.IsartDigital.Rush.Managers
 
         private int _CurrentIndex = 0;
         private int[] _TilesLayers = new int[0];
+        private TileData[] _TileFabric = new TileData[0];
 
         private GameObject _Preview = null;
+
+        private bool _InputTriggerable = true;
+        private bool _IsDisplayable = true;
+
+        public TileData[] Tiles { get { return _TileFabric; } private set { _TileFabric = value; } }
+
+        // Signals
+        public event Action<int> OnTilePlaced;
+        public event Action<int> OnTileRemoved;
+        public event Action<int> OnTileChanged;
 
         private void Awake()
         {
@@ -63,14 +68,23 @@ namespace Com.IsartDigital.Rush.Managers
         {
             _MainCamera = UnityEngine.Camera.main;
 
-            int lLength = _TileFabric.Length;
+            int lLength = _TileDatas.Tile.Length;
+
+            _TileFabric = new TileData[lLength];
             _TilesLayers = new int[lLength];
+
             for (int i = 0; i < lLength; i++)
-                _TilesLayers[i] = _TileFabric[i]._Type.layer;
+            {
+                _TileFabric[i] = _TileDatas.Tile[i];
+                _TilesLayers[i] = _TileFabric[i].prefab.layer;
+            }
         }
 
         private void Update()
         {
+            if (!_InputTriggerable)
+                return;
+
             // Input that place or destroy the tile
             if (Input.GetButtonDown(_InputAccept))
                 InsertTile();
@@ -97,7 +111,9 @@ namespace Com.IsartDigital.Rush.Managers
                                 break;
                             }
                         }
-                        _TileFabric[lIndex]._Quantity += 1;
+                        _TileFabric[lIndex].quantity += 1;
+                        OnTileRemoved?.Invoke(_TileFabric[_CurrentIndex].quantity);
+
                         Destroy(_TargetedGameobject.gameObject);
                     }
                 }
@@ -112,25 +128,45 @@ namespace Com.IsartDigital.Rush.Managers
                 if (_Hit.collider.gameObject.layer == _GroundLayer)
                 {
                     _TargetedGameobject = _Hit.collider.gameObject.transform;
-                    if (_TargetedGameobject != null && _TileFabric[_CurrentIndex]._Quantity != 0)
+                    if (_TargetedGameobject != null && _TileFabric[_CurrentIndex].quantity != 0)
                     {
-                        _TileFabric[_CurrentIndex]._Quantity -= 1;
-                        Instantiate(_TileFabric[_CurrentIndex]._Type,
+                        _TileFabric[_CurrentIndex].quantity -= 1;
+                        Instantiate(_TileFabric[_CurrentIndex].prefab,
                                     _TargetedGameobject.position + Vector3.up * (_TargetedGameobject.localScale.y / 2),
                                     new Quaternion(),
                                     _Container);
 
-                        if (_TileFabric[_CurrentIndex]._Quantity == 0) ChangeTileType();
+                        OnTilePlaced?.Invoke(_TileFabric[_CurrentIndex].quantity);
+                        if (_TileFabric[_CurrentIndex].quantity == 0) ChangeTileType();
                     }
                 }
                     
             }
         }
 
+        public void EnableInput() => _InputTriggerable = true;
+
+        public void DisableInput() => _InputTriggerable = false;
+
         private void ChangeTileType()
         {
             _CurrentIndex = (_CurrentIndex + 1 >= _TileFabric.Length) ? 0 : _CurrentIndex + 1;
+
+            OnTileChanged?.Invoke(_CurrentIndex);
             Debug.Log(_CurrentIndex);
+        }
+
+        private void CheckFabricFullness()
+        {
+            foreach (TileData lTile in _TileFabric)
+            {
+                if (lTile.quantity != 0)
+                {
+                    _IsDisplayable = true;
+                    break;
+                }
+                _IsDisplayable = false;
+            }
         }
 
         private void OnDestroy()

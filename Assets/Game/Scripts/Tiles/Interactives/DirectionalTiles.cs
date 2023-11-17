@@ -21,10 +21,14 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected override void Init()
         {
+            UpdateLookDirection();
+            base.Init();
+        }
+
+        private void UpdateLookDirection()
+        {
             _DirectionalVector = _Directions[_Direction];
             transform.LookAt(transform.position + _DirectionalVector);
-
-            base.Init();
         }
 
         protected override void OnCollisionComportement()
@@ -36,6 +40,13 @@ namespace Com.IsartDigital.Rush.Tiles
         protected virtual Vector3 GetDirection()
         {
             return _DirectionalVector;
+        }
+
+        public void SetDirection(Vectors pDirection)
+        {
+            _Direction = pDirection;
+
+            UpdateLookDirection();
         }
 
     }
