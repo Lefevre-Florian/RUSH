@@ -42,9 +42,9 @@ namespace Com.IsartDigital.Rush.Tiles
             return _DirectionalVector;
         }
 
-        public void SetDirection(int pDirection)
+        public void SetDirection(Vectors pDirection)
         {
-            _Direction = (Vectors)pDirection;
+            _Direction = pDirection;
 
             UpdateLookDirection();
         }
