@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65bfba4294aa629478186b05f0b5809f, type: 3}
   m_Name: Tutorial
   m_EditorClassIdentifier: 
-  _Tiles: []
-  _Level: {fileID: 0}
+  _Tiles:
+  - direction: 1
+    prefab: {fileID: 1820389188126086, guid: 16957ef68a439ee4fb120ba2ffa2519e, type: 3}
+    quantity: 1
+  _Level: {fileID: 4531831583599099664, guid: b0b6c44b1a7268040911e3c1678eff8c, type: 3}

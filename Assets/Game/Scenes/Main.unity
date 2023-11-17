@@ -957,6 +957,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
+      propertyPath: _TileDatas
+      value: 
+      objectReference: {fileID: 11400000, guid: 4e18962b7ee53034cb72e01502e4f493, type: 2}
+    - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
       propertyPath: _TileFabric.Array.size
       value: 1
       objectReference: {fileID: 0}
