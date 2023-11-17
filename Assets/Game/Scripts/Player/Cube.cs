@@ -23,6 +23,9 @@ namespace Com.IsartDigital.Rush.Cube
         [Header("Timing")]
         [SerializeField] private int _CollisionWallTickWait = 2;
 
+        [Header("Animation")]
+        [SerializeField] private string _LandingAnimation = "";
+
         private Action DoAction = null;
 
         // Movements & rotations
@@ -35,6 +38,9 @@ namespace Com.IsartDigital.Rush.Cube
         // Raycasting & collisions
         private float _RaycastDistance = 0f;
         private RaycastHit _Hit = default;
+
+        // Animations
+        private Animator _Animator = null;
 
         // References
         private Clock _Clock = null;
@@ -56,6 +62,8 @@ namespace Com.IsartDigital.Rush.Cube
             _Clock.OnTick += InternalCheckCollision;
             _Clock.OnReset += Clear;
 
+            _Animator = GetComponentInChildren<Animator>();
+
             SetActionVoid();
         }
 
@@ -67,7 +75,7 @@ namespace Com.IsartDigital.Rush.Cube
 
         public void Init(Colors pSpawnColor)
         {
-            Material lMaterial = GetComponent<Renderer>().material;
+            Material lMaterial = GetComponentInChildren<Renderer>().material;
             lMaterial.color = ColorLibrary.Library[pSpawnColor];
 
             Color = pSpawnColor;
@@ -196,6 +204,9 @@ namespace Com.IsartDigital.Rush.Cube
             // Collision check on Ground & Tiles
             if(Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance, _Ground))
             {
+                if (DoAction == DoActionFall)
+                    _Animator.SetTrigger(_LandingAnimation);
+
                 if (!_IsStuned)
                     SetActionMove();
             }
