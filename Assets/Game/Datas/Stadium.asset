@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Stadium
   m_EditorClassIdentifier: 
   _Tiles:
-  - direction: 0
+  - direction: 3
     prefab: {fileID: 1820389188126086, guid: 16957ef68a439ee4fb120ba2ffa2519e, type: 3}
     quantity: 1
-  - direction: 2
+  - direction: 0
     prefab: {fileID: 1107203473147756, guid: 7c58f80a63e8a7141b5b7377395135cc, type: 3}
     quantity: 5
   - direction: 2

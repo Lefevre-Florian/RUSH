@@ -1,4 +1,5 @@
 using Com.IsartDigital.Rush.Data;
+using Com.IsartDigital.Rush.Tiles;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -131,10 +132,13 @@ namespace Com.IsartDigital.Rush.Managers
                     if (_TargetedGameobject != null && _TileFabric[_CurrentIndex].quantity != 0)
                     {
                         _TileFabric[_CurrentIndex].quantity -= 1;
-                        Instantiate(_TileFabric[_CurrentIndex].prefab,
-                                    _TargetedGameobject.position + Vector3.up * (_TargetedGameobject.localScale.y / 2),
-                                    new Quaternion(),
-                                    _Container);
+                        
+                        DirectionalTiles lTile;
+                        lTile = Instantiate(_TileFabric[_CurrentIndex].prefab,
+                                            _TargetedGameobject.position + Vector3.up * (_TargetedGameobject.localScale.y / 2),
+                                            new Quaternion(),
+                                            _Container).GetComponent<DirectionalTiles>();
+                        lTile.SetDirection(_TileFabric[_CurrentIndex].direction);
 
                         OnTilePlaced?.Invoke(_TileFabric[_CurrentIndex].quantity);
                         if (_TileFabric[_CurrentIndex].quantity == 0) ChangeTileType();

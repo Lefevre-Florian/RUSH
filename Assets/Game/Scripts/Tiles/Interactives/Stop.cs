@@ -4,7 +4,7 @@ using UnityEngine;
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.Tiles
 {
-    public class Stop : Tile
+    public class Stop : DirectionalTiles
     {
         [SerializeField] private int _WaitDuration = 2;
 
@@ -14,9 +14,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected override void Init()
         {
-            _Clock.OnReset += Restore;
-
             base.Init();
+            _Clock.OnReset += Restore;
         }
 
         private void Restore()
