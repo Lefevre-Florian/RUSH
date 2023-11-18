@@ -6,7 +6,7 @@ using UnityEngine.UI;
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.UI
 {
-    public class LevelSelect : MonoBehaviour
+    public class LevelSelect : Screen
     {
         [Header("Level")]
         [SerializeField] private Transform _LevelContainer = null;
@@ -21,7 +21,7 @@ namespace Com.IsartDigital.Rush.UI
         private GameObject[] _LevelRenderers = new GameObject[0];
         private int _CurrentIndex = 0;
 
-        private void Start()
+        protected override void Init()
         {
             _LevelRenderers = LevelManager.GetInstance().Levels;
 
@@ -68,8 +68,8 @@ namespace Com.IsartDigital.Rush.UI
 
         private void StartLevel()
         {
-            Destroy(transform.parent.gameObject);
-            LevelManager.GetInstance().LoadLevel(_CurrentIndex);
+            LevelManager.GetInstance().LoadLevel(_CurrentIndex); 
+            Close();
         }
 
         private void UpdateNavigationState()

@@ -4,15 +4,13 @@ using UnityEngine.UI;
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.UI
 {
-    public class Titlecard : MonoBehaviour
+    public class Titlecard : Screen
     {
 
         [SerializeField] private Button _ExitButton = default;
         [SerializeField] private Button _PlayButton = default;
 
-        [SerializeField] private GameObject _LevelToLoad = default;
-
-        private void Start()
+        protected override void Init()
         {
             #if UNITY_ANDROID
             Destroy(_ExitButton);
@@ -40,12 +38,8 @@ namespace Com.IsartDigital.Rush.UI
 
         private void Play()
         {
-            Instantiate(_LevelToLoad,
-                        Vector3.zero,
-                        new Quaternion(),
-                        transform.parent);
-
-            Destroy(gameObject);
+            Close();
+            Next();
         }
 
         private void OnDestroy()

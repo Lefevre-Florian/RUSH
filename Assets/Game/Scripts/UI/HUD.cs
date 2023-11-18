@@ -9,7 +9,7 @@ using System;
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.UI
 {
-    public class HUD : MonoBehaviour
+    public class HUD : Screen
     {
         #region Singleton
 
@@ -52,7 +52,7 @@ namespace Com.IsartDigital.Rush.UI
             _Instance = this;
         }
 
-        private void Start()
+        protected override void Init()
         {
             _Clock = Clock.GetInstance();
 
@@ -60,12 +60,13 @@ namespace Com.IsartDigital.Rush.UI
 
             _ResetButton.onClick.AddListener(ResetGame);
             _GameButton.onClick.AddListener(StartGameMode);
+            _BackButton.onClick.AddListener(Back);
             _TimeSlider.onValueChanged.AddListener(OnSliderValueUpdated);
 
-            Init();
+            Restore();
         }
 
-        private void Init()
+        private void Restore()
         {
             _PauseButton.gameObject.SetActive(false);
             _ResetButton.gameObject.SetActive(false);
@@ -85,7 +86,7 @@ namespace Com.IsartDigital.Rush.UI
 
         private void ResetGame()
         {
-            Init();
+            Restore();
             Time.timeScale = 1f;
 
             _GameButton.gameObject.SetActive(true);
@@ -124,6 +125,7 @@ namespace Com.IsartDigital.Rush.UI
 
         private void OnDestroy()
         {
+            _BackButton.onClick.RemoveListener(Back);
             _ResetButton.onClick.RemoveListener(ResetGame);
             _GameButton.onClick.RemoveListener(StartGameMode);
             _Clock = null;

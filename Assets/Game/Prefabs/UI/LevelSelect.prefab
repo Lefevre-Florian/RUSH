@@ -238,6 +238,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d406701f0cf2c654b8c638bc2d266f11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ChildScreen: {fileID: 4544491921442584518, guid: 52b69b73cf66cf149b286ed7da43a132, type: 3}
+  _ParentScreen: {fileID: 7160772636990251489, guid: 423b34ac37541f4468937e4503b38162, type: 3}
   _LevelContainer: {fileID: 4668463789558829679}
   _RendererScaleRatio: 15
   _NextBtn: {fileID: 3540788609915590846}

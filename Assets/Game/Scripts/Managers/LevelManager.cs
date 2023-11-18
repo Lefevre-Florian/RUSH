@@ -20,10 +20,15 @@ namespace Com.IsartDigital.Rush.Managers
 
         #endregion
 
+        [Header("Levels")]
         [SerializeField] private int _LevelID = 0;
         [SerializeField] private Level[] _Levels = null;
 
+        [Space(10)]
         [SerializeField] private GameObject _GameScene = null;
+
+        [Header("Scene Management")]
+        [SerializeField] private Transform _GameContainer = null;
 
         public GameObject[] Levels
         {
@@ -54,11 +59,27 @@ namespace Com.IsartDigital.Rush.Managers
             _LevelID = pLevelID;
             if(_Levels != null && _LevelID < _Levels.Length)
             {
-                Transform lLevel = Instantiate(_GameScene, Vector3.zero, new Quaternion(), transform.parent).transform;
-                Instantiate(_Levels[_LevelID].LevelPrefab, lLevel.transform.position, new Quaternion(), lLevel);
-                Debug.Log(TilesPlacer.GetInstance());
-                TilesPlacer.GetInstance().SetTiles(_Levels[_LevelID]);
+                Transform lLevel = SwitchScene(_GameScene);
+                if(lLevel != null)
+                {
+                    Instantiate(_Levels[_LevelID].LevelPrefab, lLevel.transform.position, new Quaternion(), lLevel);
+                    Debug.Log(TilesPlacer.GetInstance());
+                    TilesPlacer.GetInstance().SetTiles(_Levels[_LevelID]);
+                }
             }
+        }
+
+        public Transform SwitchScene(GameObject pPrefab)
+        {
+            if (_GameContainer != null && _GameContainer.childCount != 0)
+            {
+                int lLength = _GameContainer.childCount;
+                for (int i = 0; i < lLength; i++)
+                    Destroy(_GameContainer.GetChild(i).gameObject);
+
+                return Instantiate(pPrefab, _GameContainer).transform;
+            }
+            return null;
         }
 
         private void OnDestroy()

@@ -610,9 +610,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8b106c68375fbe4f892f8b2d1e1c7e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ChildScreen: {fileID: 8597524859938927134, guid: 66945e0118e18eb46b6ee618a6e84f04, type: 3}
+  _ParentScreen: {fileID: 0}
   _ExitButton: {fileID: 5617812028899167698}
   _PlayButton: {fileID: 4083163659719172904}
-  _LevelToLoad: {fileID: 8597524859938927134, guid: 66945e0118e18eb46b6ee618a6e84f04, type: 3}
 --- !u!1 &9085349337320347685
 GameObject:
   m_ObjectHideFlags: 0
