@@ -83,6 +83,12 @@ namespace Com.IsartDigital.Rush.Managers
             if (!_InputTriggerable)
                 return;
 
+            if (_IsDisplayable && _Preview != null)
+            {
+                if (Physics.Raycast(_MainCamera.ScreenPointToRay(Input.mousePosition), out _Hit, float.MaxValue))
+                    _Preview.transform.position = _Hit.collider.gameObject.transform.position;
+            }
+
             // Input that place or destroy the tile
             if (Input.GetButtonDown(_InputAccept))
                 InsertTile();
@@ -104,6 +110,7 @@ namespace Com.IsartDigital.Rush.Managers
                 _TilesLayers[i] = _TileFabric[i].prefab.layer;
             }
 
+            _Preview = _TileFabric[0].prefab;
             _InputTriggerable = true;
         }
 
@@ -128,6 +135,8 @@ namespace Com.IsartDigital.Rush.Managers
                         }
                         _TileFabric[lIndex].quantity += 1;
                         OnTileRemoved?.Invoke(_TileFabric[_CurrentIndex].quantity);
+
+                        CheckFabricFullness();
 
                         Destroy(_TargetedGameobject.gameObject);
                     }
@@ -154,6 +163,8 @@ namespace Com.IsartDigital.Rush.Managers
                                             _Container).GetComponent<DirectionalTiles>();
                         lTile.SetDirection(_TileFabric[_CurrentIndex].direction);
 
+                        CheckFabricFullness();
+
                         OnTilePlaced?.Invoke(_TileFabric[_CurrentIndex].quantity);
                         if (_TileFabric[_CurrentIndex].quantity == 0) ChangeTileType();
                     }
@@ -171,7 +182,6 @@ namespace Com.IsartDigital.Rush.Managers
             _CurrentIndex = (_CurrentIndex + 1 >= _TileFabric.Length) ? 0 : _CurrentIndex + 1;
 
             OnTileChanged?.Invoke(_CurrentIndex);
-            Debug.Log(_CurrentIndex);
         }
 
         private void CheckFabricFullness()

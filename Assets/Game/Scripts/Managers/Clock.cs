@@ -27,13 +27,11 @@ namespace Com.IsartDigital.Rush
         private const float MAX_MULTIPLIER = 5f;
         private const float MIN_MULTIPLIER = .1f;
 
-        [SerializeField][Range(MIN_MULTIPLIER, MAX_MULTIPLIER)] private float _TickMultiplier = 1f;
-
         private Coroutine _InternalTimer = null;
 
-        private float _UpdatedDurationTick = DURATION_BETWEEN_TICK;
+        private float _TimeMultiplier = 1f;
         public float ElapsedTime { get; private set; } = 0f;
-        public float Ratio { get {return ElapsedTime / _UpdatedDurationTick; } private set { } }
+        public float Ratio { get {return ElapsedTime / (DURATION_BETWEEN_TICK / _TimeMultiplier); } private set { } }
 
         private int _CurrentTick = 0;
 
@@ -54,7 +52,7 @@ namespace Com.IsartDigital.Rush
 
         private void Update()
         {
-            ElapsedTime += Time.deltaTime * _TickMultiplier;
+            ElapsedTime += Time.deltaTime * _TimeMultiplier;
         }
 
         public void ResetTicking()
@@ -87,11 +85,11 @@ namespace Com.IsartDigital.Rush
         {
             while (isActiveAndEnabled)
             {
-                yield return new WaitForSeconds(_UpdatedDurationTick);
+                yield return new WaitForSeconds(DURATION_BETWEEN_TICK / _TimeMultiplier);
                 OnTick?.Invoke();
                 Debug.Log("Ticking : " + ++_CurrentTick);
 
-                ElapsedTime -= _UpdatedDurationTick;
+                ElapsedTime = 0f;
             }
 
             StopCoroutine(_InternalTimer);
@@ -101,20 +99,7 @@ namespace Com.IsartDigital.Rush
         public void UpdateTickMultiplier(float pMultiplier)
         {
             if (pMultiplier > MIN_MULTIPLIER || pMultiplier < MAX_MULTIPLIER)
-            {
-                ElapsedTime = 0f;
-
-                _TickMultiplier = pMultiplier;
-                _UpdatedDurationTick = DURATION_BETWEEN_TICK / _TickMultiplier;
-
-                StopCoroutine(_InternalTimer);
-                _InternalTimer = StartCoroutine(Tick());
-            } 
-        }
-        private void OnValidate()
-        {
-            if(_InternalTimer != null)
-                UpdateTickMultiplier(_TickMultiplier);
+                _TimeMultiplier = pMultiplier;
         }
 
         private void OnDestroy()

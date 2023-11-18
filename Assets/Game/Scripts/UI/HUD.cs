@@ -29,6 +29,10 @@ namespace Com.IsartDigital.Rush.UI
         [SerializeField] private Button _PauseButton = null;
         [SerializeField] private Button _GameButton = null;
         [SerializeField] private Button _ResetButton = null;
+        [SerializeField] private Button _BackButton = null;
+
+        [Space(10)]
+        [SerializeField] private Slider _TimeSlider = null;
 
         [Header("Popup & Text")]
         [SerializeField] private TextMeshProUGUI _MsgLabel = null;
@@ -56,6 +60,7 @@ namespace Com.IsartDigital.Rush.UI
 
             _ResetButton.onClick.AddListener(ResetGame);
             _GameButton.onClick.AddListener(StartGameMode);
+            _TimeSlider.onValueChanged.AddListener(OnSliderValueUpdated);
 
             Init();
         }
@@ -86,6 +91,8 @@ namespace Com.IsartDigital.Rush.UI
             _GameButton.gameObject.SetActive(true);
             _Clock.ResetTicking();
         }
+
+        private void OnSliderValueUpdated(float pValue) => _Clock.UpdateTickMultiplier(pValue);
 
         public void ManagePauseMode()
         {
