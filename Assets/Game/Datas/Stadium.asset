@@ -22,4 +22,5 @@ MonoBehaviour:
   - direction: 2
     prefab: {fileID: 1086838927579222, guid: e8eecaadcecd62c4abc686a94f5a59dd, type: 3}
     quantity: 6
-  _Level: {fileID: 4531385388941335955, guid: 3c97847c0c3d9214aae527f01fc61808, type: 3}
+  _Level: {fileID: 6372879310861009351, guid: 5d2d213a7d6ab5d4b892c1294bb49e5e, type: 3}
+  _Model: {fileID: 4531385388941335955, guid: 3c97847c0c3d9214aae527f01fc61808, type: 3}

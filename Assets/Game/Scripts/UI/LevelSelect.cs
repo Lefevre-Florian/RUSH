@@ -10,7 +10,6 @@ namespace Com.IsartDigital.Rush.UI
     {
         [Header("Level")]
         [SerializeField] private Transform _LevelContainer = null;
-        [SerializeField] private GameObject[] _LevelRenderers = new GameObject[0];
         [SerializeField] private float _RendererScaleRatio = 5;
 
         [Header("Navigation")]
@@ -19,10 +18,13 @@ namespace Com.IsartDigital.Rush.UI
         [SerializeField] private Button _StartBtn = null;
         [SerializeField] private TextMeshProUGUI _LevelNameLabel = null;
 
+        private GameObject[] _LevelRenderers = new GameObject[0];
         private int _CurrentIndex = 0;
 
         private void Start()
         {
+            _LevelRenderers = LevelManager.GetInstance().Levels;
+
             int lLength = _LevelRenderers.Length;
             for (int i = 0; i < lLength; i++)
             {

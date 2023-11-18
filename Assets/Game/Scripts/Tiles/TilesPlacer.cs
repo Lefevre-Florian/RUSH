@@ -69,16 +69,13 @@ namespace Com.IsartDigital.Rush.Managers
         {
             _MainCamera = UnityEngine.Camera.main;
 
-            int lLength = _TileDatas.Tile.Length;
-
-            _TileFabric = new TileData[lLength];
-            _TilesLayers = new int[lLength];
-
-            for (int i = 0; i < lLength; i++)
+            if(_TileDatas == null)
             {
-                _TileFabric[i] = _TileDatas.Tile[i];
-                _TilesLayers[i] = _TileFabric[i].prefab.layer;
+                _InputTriggerable = false;
+                return;
             }
+
+            SetTiles(_TileDatas);
         }
 
         private void Update()
@@ -91,6 +88,23 @@ namespace Com.IsartDigital.Rush.Managers
                 InsertTile();
             if (Input.GetButtonDown(_InputDelete))
                 DeleteTile();
+        }
+
+        public void SetTiles(Level pData)
+        {
+            _TileDatas = pData;
+            int lLength = _TileDatas.Tile.Length;
+
+            _TileFabric = new TileData[lLength];
+            _TilesLayers = new int[lLength];
+
+            for (int i = 0; i < lLength; i++)
+            {
+                _TileFabric[i] = _TileDatas.Tile[i];
+                _TilesLayers[i] = _TileFabric[i].prefab.layer;
+            }
+
+            _InputTriggerable = true;
         }
 
         private void DeleteTile()

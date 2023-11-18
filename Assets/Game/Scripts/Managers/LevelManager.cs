@@ -1,3 +1,4 @@
+using Com.IsartDigital.Rush.Data;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -20,14 +21,21 @@ namespace Com.IsartDigital.Rush.Managers
         #endregion
 
         [SerializeField] private int _LevelID = 0;
-        [SerializeField] private GameObject[] _Levels = null;
+        [SerializeField] private Level[] _Levels = null;
 
         [SerializeField] private GameObject _GameScene = null;
 
         public GameObject[] Levels
         {
-            get { return _Levels; }
-            private set { _Levels = value; }
+            get 
+            {
+                int lLength = _Levels.Length;
+                GameObject[] lModel = new GameObject[lLength];
+                for (int i = 0; i < lLength; i++)
+                    lModel[i] = _Levels[i].Model;
+                return lModel; 
+            }
+            private set {}
         }
 
         private void Awake()
@@ -47,7 +55,9 @@ namespace Com.IsartDigital.Rush.Managers
             if(_Levels != null && _LevelID < _Levels.Length)
             {
                 Transform lLevel = Instantiate(_GameScene, Vector3.zero, new Quaternion(), transform.parent).transform;
-                Instantiate(_Levels[_LevelID], lLevel.transform.position, new Quaternion(), lLevel);
+                Instantiate(_Levels[_LevelID].LevelPrefab, lLevel.transform.position, new Quaternion(), lLevel);
+                Debug.Log(TilesPlacer.GetInstance());
+                TilesPlacer.GetInstance().SetTiles(_Levels[_LevelID]);
             }
         }
 

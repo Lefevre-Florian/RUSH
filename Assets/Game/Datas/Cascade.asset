@@ -23,3 +23,4 @@ MonoBehaviour:
     prefab: {fileID: 1107203473147756, guid: 7c58f80a63e8a7141b5b7377395135cc, type: 3}
     quantity: 1
   _Level: {fileID: 8724181505668255447, guid: 82927afe6aacb2942a0f9a5e2984a4d4, type: 3}
+  _Model: {fileID: 8896580577454381683, guid: 21fae8eeb4292cb428b2cc4c3fb94e99, type: 3}
