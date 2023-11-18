@@ -47,6 +47,10 @@ namespace Com.IsartDigital.Rush.Managers
         private bool _InputTriggerable = true;
         private bool _IsDisplayable = true;
 
+        #if UNITY_ANDROID
+        private Touch _Touch = default;
+        #endif
+
         public TileData[] Tiles { get { return _TileFabric; } private set { _TileFabric = value; } }
 
         // Signals
@@ -90,10 +94,24 @@ namespace Com.IsartDigital.Rush.Managers
             }
 
             // Input that place or destroy the tile
+            #if UNITY_STANDALONE
             if (Input.GetButtonDown(_InputAccept))
-                InsertTile();
+                InsertTile(_MainCamera.ScreenPointToRay(Input.mousePosition));
             if (Input.GetButtonDown(_InputDelete))
-                DeleteTile();
+                DeleteTile(_MainCamera.ScreenPointToRay(Input.mousePosition));
+            #endif
+
+            #if UNITY_ANDROID
+            if(Input.touchCount > 0)
+            {
+                _Touch = Input.GetTouch(0);
+                if(_Touch.phase == TouchPhase.Began)
+                {
+                    DeleteTile(_MainCamera.ScreenPointToRay(_Touch.position));
+                    InsertTile(_MainCamera.ScreenPointToRay(_Touch.position));
+                }
+            }
+            #endif
         }
 
         public void SetTiles(Level pData)
@@ -114,9 +132,9 @@ namespace Com.IsartDigital.Rush.Managers
             _InputTriggerable = true;
         }
 
-        private void DeleteTile()
+        private void DeleteTile(Ray pRay)
         {
-            if (Physics.Raycast(_MainCamera.ScreenPointToRay(Input.mousePosition), out _Hit, float.MaxValue))
+            if (Physics.Raycast(pRay, out _Hit, float.MaxValue))
             {
                 if (_TilesLayers.Contains(_Hit.collider.gameObject.layer))
                 {
@@ -145,9 +163,9 @@ namespace Com.IsartDigital.Rush.Managers
             }
         }
 
-        private void InsertTile()
+        private void InsertTile(Ray pRay)
         {
-            if (Physics.Raycast(_MainCamera.ScreenPointToRay(Input.mousePosition), out _Hit, float.MaxValue))
+            if (Physics.Raycast(pRay, out _Hit, float.MaxValue))
             {
                 if (_Hit.collider.gameObject.layer == _GroundLayer)
                 {
