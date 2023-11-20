@@ -147,7 +147,8 @@ namespace Com.IsartDigital.Rush.Managers
                             }
                         }
                         _TileFabric[lIndex].quantity += 1;
-                        OnTileRemoved?.Invoke(_CurrentIndex);
+                        Debug.Log(lIndex);
+                        OnTileRemoved?.Invoke(lIndex);
 
                         CheckFabricFullness();
 
@@ -192,7 +193,7 @@ namespace Com.IsartDigital.Rush.Managers
         
         public void SetCurrentTileIndex(int pIndex)
         {
-            if (pIndex > 0 && pIndex < _TileFabric.Length)
+            if (pIndex >= 0 && pIndex < _TileFabric.Length)
                 _CurrentIndex = pIndex;
         }
 

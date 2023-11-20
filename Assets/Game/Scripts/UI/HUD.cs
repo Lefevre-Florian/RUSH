@@ -48,6 +48,7 @@ namespace Com.IsartDigital.Rush.UI
 
         [Header("Tiles")]
         [SerializeField] private RectTransform _Container = null;
+        [SerializeField] private float _ContainerSpacingHeight = 50f;
         [SerializeField] private List<TileButton> _TileDictionary = new List<TileButton>();
 
         private Clock _Clock = null;
@@ -80,13 +81,23 @@ namespace Com.IsartDigital.Rush.UI
 
             // Init tiles buttons
             int lLength = _TilePlacer.Tiles.Length;
-            GameObject lBtn = null;
+            GameObject lBtn, lPrefab = null;
+            RectTransform lPrefabRect = null;
+
             for (int i = 0; i < lLength; i++)
             {
-                lBtn = Instantiate(_TileDictionary.Find(lTile => lTile.tile == _TilePlacer.Tiles[i].prefab).button, 
+                lPrefab = _TileDictionary.Find(lTile => lTile.tile == _TilePlacer.Tiles[i].prefab).button;
+                lPrefabRect = lPrefab.GetComponent<RectTransform>();
+
+                lBtn = Instantiate(lPrefab, 
+                                   new Vector2(_Container.transform.position.x - (_Container.rect.width / 2 - (lPrefabRect.rect.width/2)),
+                                               _Container.rect.height - ((i+1) * lPrefabRect.rect.size.y + _ContainerSpacingHeight * i)
+                                                ),
+                                   new Quaternion(),
                                    _Container);
 
-                lBtn.GetComponent<Button>().onClick.AddListener(delegate { SetTileButton(i); });
+                int lIndex = i;
+                lBtn.GetComponent<Button>().onClick.AddListener(delegate { SetTileButton(lIndex); });
                 lBtn.GetComponentInChildren<Text>().text = _TilePlacer.Tiles[i].quantity.ToString();
 
                 _TileBtns.Add(lBtn.GetComponent<Button>());
