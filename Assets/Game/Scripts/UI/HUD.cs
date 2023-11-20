@@ -48,7 +48,6 @@ namespace Com.IsartDigital.Rush.UI
 
         [Header("Tiles")]
         [SerializeField] private RectTransform _Container = null;
-        [SerializeField] private float _ContainerSpacingHeight = 50f;
         [SerializeField] private List<TileButton> _TileDictionary = new List<TileButton>();
 
         private Clock _Clock = null;
@@ -89,12 +88,7 @@ namespace Com.IsartDigital.Rush.UI
                 lPrefab = _TileDictionary.Find(lTile => lTile.tile == _TilePlacer.Tiles[i].prefab).button;
                 lPrefabRect = lPrefab.GetComponent<RectTransform>();
 
-                lBtn = Instantiate(lPrefab, 
-                                   new Vector2(_Container.transform.position.x - (_Container.rect.width / 2 - (lPrefabRect.rect.width/2)),
-                                               _Container.rect.height - ((i+1) * lPrefabRect.rect.size.y + _ContainerSpacingHeight * i)
-                                                ),
-                                   new Quaternion(),
-                                   _Container);
+                lBtn = Instantiate(lPrefab, _Container);
 
                 int lIndex = i;
                 lBtn.GetComponent<Button>().onClick.AddListener(delegate { SetTileButton(lIndex); });
