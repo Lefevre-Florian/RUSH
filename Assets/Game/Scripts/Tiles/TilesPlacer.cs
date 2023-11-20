@@ -136,22 +136,26 @@ namespace Com.IsartDigital.Rush.Managers
                     _TargetedGameobject = _Hit.collider.gameObject.transform;
                     if (_TargetedGameobject != null)
                     {
-                        int lLength = _TilesLayers.Length;
-                        int lIndex = 0;
+                        int lLength = _TileFabric.Length;
+                        int lIndex = -1;
                         for (int i = 0; i < lLength; i++)
                         {
-                            if (_TilesLayers[i] == _TargetedGameobject.gameObject.layer)
+                            if (_TileFabric[i].prefab.gameObject.layer == _TargetedGameobject.gameObject.layer 
+                                && _TileFabric[i].direction == _TargetedGameobject.GetComponent<DirectionalTiles>().Direction)
                             {
                                 lIndex = i;
                                 break;
                             }
                         }
-                        _TileFabric[lIndex].quantity += 1;
-                        Debug.Log(lIndex);
-                        OnTileRemoved?.Invoke(lIndex);
 
-                        CheckFabricFullness();
+                        if(lIndex != -1)
+                        {
+                            _TileFabric[lIndex].quantity += 1;
+                            OnTileRemoved?.Invoke(lIndex);
 
+                            CheckFabricFullness();
+                        }
+                        
                         Destroy(_TargetedGameobject.gameObject);
                     }
                 }
