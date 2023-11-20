@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -47,6 +48,9 @@ namespace Com.IsartDigital.Rush.Camera
         private Vector2 _TouchDirection = default;
         private Vector2 _StartTouchPosition = default;
         #endif
+
+        // Signals
+        public event Action OnMove;
 
         void Start()
         {
@@ -123,6 +127,7 @@ namespace Com.IsartDigital.Rush.Camera
                                                                Mathf.Sin(_HorizontalAngle),
                                                                Mathf.Cos(_HorizontalAngle) * Mathf.Sin(_VerticalAngle)) * _Radius;
             transform.LookAt(_Center);
+            OnMove?.Invoke();
         }
     }
 }

@@ -933,15 +933,16 @@ MonoBehaviour:
   - Wonderfull
   - Magnificent
   _Container: {fileID: 4248061770465521685}
+  _ContainerSpacingHeight: 50
   _TileDictionary:
   - tile: {fileID: 1820389188126086, guid: 16957ef68a439ee4fb120ba2ffa2519e, type: 3}
-    button: {fileID: 5239540658571158539, guid: 303d2db77a9bb10439c8564af56c59f9, type: 3}
+    button: {fileID: 6873094969101864180, guid: edd9aeed11a1ffa44a2cedb22ea65879, type: 3}
   - tile: {fileID: 1107203473147756, guid: 7c58f80a63e8a7141b5b7377395135cc, type: 3}
-    button: {fileID: 5239540658571158539, guid: 303d2db77a9bb10439c8564af56c59f9, type: 3}
+    button: {fileID: 4536045837595256402, guid: 4074abd4fbaaa7f4e89986716cfe2d3c, type: 3}
   - tile: {fileID: 1324669775067448, guid: c6a4f00d8e6ee94408e741323199cb71, type: 3}
-    button: {fileID: 5239540658571158539, guid: 303d2db77a9bb10439c8564af56c59f9, type: 3}
+    button: {fileID: 8306380955329653739, guid: 720f81e553162aa459a96b4ecea4f767, type: 3}
   - tile: {fileID: 1086838927579222, guid: e8eecaadcecd62c4abc686a94f5a59dd, type: 3}
-    button: {fileID: 5239540658571158539, guid: 303d2db77a9bb10439c8564af56c59f9, type: 3}
+    button: {fileID: 5332697859781325304, guid: 77ac250b8b959dc4a84b526fb0901ee6, type: 3}
 --- !u!1 &4706746499806040052
 GameObject:
   m_ObjectHideFlags: 0
