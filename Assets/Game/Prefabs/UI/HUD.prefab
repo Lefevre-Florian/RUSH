@@ -932,6 +932,16 @@ MonoBehaviour:
   - Congratulations
   - Wonderfull
   - Magnificent
+  _Container: {fileID: 4248061770465521685}
+  _TileDictionary:
+  - tile: {fileID: 1820389188126086, guid: 16957ef68a439ee4fb120ba2ffa2519e, type: 3}
+    button: {fileID: 5239540658571158539, guid: 303d2db77a9bb10439c8564af56c59f9, type: 3}
+  - tile: {fileID: 1107203473147756, guid: 7c58f80a63e8a7141b5b7377395135cc, type: 3}
+    button: {fileID: 5239540658571158539, guid: 303d2db77a9bb10439c8564af56c59f9, type: 3}
+  - tile: {fileID: 1324669775067448, guid: c6a4f00d8e6ee94408e741323199cb71, type: 3}
+    button: {fileID: 5239540658571158539, guid: 303d2db77a9bb10439c8564af56c59f9, type: 3}
+  - tile: {fileID: 1086838927579222, guid: e8eecaadcecd62c4abc686a94f5a59dd, type: 3}
+    button: {fileID: 5239540658571158539, guid: 303d2db77a9bb10439c8564af56c59f9, type: 3}
 --- !u!1 &4706746499806040052
 GameObject:
   m_ObjectHideFlags: 0

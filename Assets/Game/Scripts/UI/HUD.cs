@@ -25,6 +25,13 @@ namespace Com.IsartDigital.Rush.UI
         private HUD() : base() { }
         #endregion
 
+        [Serializable]
+        private struct TileButton
+        {
+            public GameObject tile;
+            public GameObject button;
+        }
+
         [Header("Buttons")]
         [SerializeField] private Button _PauseButton = null;
         [SerializeField] private Button _GameButton = null;
@@ -39,8 +46,16 @@ namespace Com.IsartDigital.Rush.UI
         [SerializeField][TextArea] private string _LooseText = "";
         [SerializeField] private string[] _WinTexts = new string[0];
 
+        [Header("Tiles")]
+        [SerializeField] private RectTransform _Container = null;
+        [SerializeField] private List<TileButton> _TileDictionary = new List<TileButton>();
+
         private Clock _Clock = null;
         private bool _IsPaused = false;
+
+        private TilesPlacer _TilePlacer = null;
+
+        private List<Button> _TileBtns = new List<Button>();
 
         private void Awake()
         {
@@ -56,16 +71,34 @@ namespace Com.IsartDigital.Rush.UI
         {
             _Clock = Clock.GetInstance();
 
-            TilesPlacer lTilePlacer = TilesPlacer.GetInstance();
+            _TilePlacer = TilesPlacer.GetInstance();
 
             _ResetButton.onClick.AddListener(ResetGame);
             _GameButton.onClick.AddListener(StartGameMode);
             _BackButton.onClick.AddListener(Back);
             _TimeSlider.onValueChanged.AddListener(OnSliderValueUpdated);
 
+            // Init tiles buttons
+            int lLength = _TilePlacer.Tiles.Length;
+            GameObject lBtn = null;
+            for (int i = 0; i < lLength; i++)
+            {
+                lBtn = Instantiate(_TileDictionary.Find(lTile => lTile.tile == _TilePlacer.Tiles[i].prefab).button, 
+                                   _Container);
+
+                lBtn.GetComponent<Button>().onClick.AddListener(delegate { SetTileButton(i); });
+                lBtn.GetComponentInChildren<Text>().text = _TilePlacer.Tiles[i].quantity.ToString();
+
+                _TileBtns.Add(lBtn.GetComponent<Button>());
+            }
+
+            _TilePlacer.OnTilePlaced += UpdateTileStatus;
+            _TilePlacer.OnTileRemoved += UpdateTileStatus;
+
             Restore();
         }
 
+        #region Menu comportement (Self comportement)
         private void Restore()
         {
             _PauseButton.gameObject.SetActive(false);
@@ -73,7 +106,6 @@ namespace Com.IsartDigital.Rush.UI
 
             _MsgLabel.gameObject.SetActive(false);
         }
-
 
         private void StartGameMode()
         {
@@ -122,13 +154,30 @@ namespace Com.IsartDigital.Rush.UI
             else
                 _MsgLabel.text = _LooseText;
         }
+        #endregion
+
+        #region Tiles comportement in UI
+        private void SetTileButton(int pIndex) => _TilePlacer.SetCurrentTileIndex(pIndex);
+
+        private void UpdateTileStatus(int pIndex) => _TileBtns[pIndex].GetComponentInChildren<Text>().text = _TilePlacer.Tiles[pIndex].quantity.ToString();
+
+        private void UpdateTileOrientation()
+        {
+
+        }
+        #endregion
 
         private void OnDestroy()
         {
+            _TilePlacer.OnTilePlaced -= UpdateTileStatus;
+            _TilePlacer.OnTileRemoved -= UpdateTileStatus;
+
+            _TilePlacer = null;
+            _Clock = null;
+
             _BackButton.onClick.RemoveListener(Back);
             _ResetButton.onClick.RemoveListener(ResetGame);
             _GameButton.onClick.RemoveListener(StartGameMode);
-            _Clock = null;
 
             if (_Instance != null)
                 _Instance = null;
