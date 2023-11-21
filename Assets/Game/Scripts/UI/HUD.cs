@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Com.IsartDigital.Rush.Managers;
 using TMPro;
 using System;
+using Com.IsartDigital.Rush.Camera;
 
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.UI
@@ -53,9 +54,12 @@ namespace Com.IsartDigital.Rush.UI
         private Clock _Clock = null;
         private bool _IsPaused = false;
 
+        // refs
+        private OrbitalCamera _Camera = null;
         private TilesPlacer _TilePlacer = null;
 
         private List<Button> _TileBtns = new List<Button>();
+        private Vector3[] _TileDirection = new Vector3[0];
 
         private void Awake()
         {
@@ -72,6 +76,7 @@ namespace Com.IsartDigital.Rush.UI
             _Clock = Clock.GetInstance();
 
             _TilePlacer = TilesPlacer.GetInstance();
+            _Camera = OrbitalCamera.GetInstance();
 
             _ResetButton.onClick.AddListener(ResetGame);
             _GameButton.onClick.AddListener(StartGameMode);
@@ -82,6 +87,8 @@ namespace Com.IsartDigital.Rush.UI
             int lLength = _TilePlacer.Tiles.Length;
             GameObject lBtn, lPrefab = null;
             RectTransform lPrefabRect = null;
+
+            _TileDirection = new Vector3[lLength];
 
             for (int i = 0; i < lLength; i++)
             {
@@ -94,8 +101,29 @@ namespace Com.IsartDigital.Rush.UI
                 lBtn.GetComponent<Button>().onClick.AddListener(delegate { SetTileButton(lIndex); });
                 lBtn.GetComponentInChildren<Text>().text = _TilePlacer.Tiles[i].quantity.ToString();
 
+                switch (_TilePlacer.Tiles[i].direction)
+                {
+                    case Vectors.FORWARD:
+                        _TileDirection[i] = new Vector3(0f, 0f, Mathf.PI * Mathf.Rad2Deg);
+                        break;
+                    case Vectors.BACKWARD:
+                        _TileDirection[i] = new Vector3(0f, 0f, -Mathf.PI * Mathf.Rad2Deg);
+                        break;
+                    case Vectors.RIGHT:
+                        _TileDirection[i] = new Vector3(0f, 0f, Mathf.PI / 2 * Mathf.Rad2Deg);
+                        break;
+                    case Vectors.LEFT:
+                        _TileDirection[i] = new Vector3(0f, 0f, -Mathf.PI / 2 * Mathf.Rad2Deg);
+                        break;
+                    default:
+                        break;
+                }
+
+                lBtn.transform.rotation = Quaternion.Euler(_TileDirection[i]);
                 _TileBtns.Add(lBtn.GetComponent<Button>());
             }
+
+            _Camera.OnMove += UpdateTileOrientation;
 
             _TilePlacer.OnTilePlaced += UpdateTileStatus;
             _TilePlacer.OnTileRemoved += UpdateTileStatus;
@@ -168,7 +196,10 @@ namespace Com.IsartDigital.Rush.UI
 
         private void UpdateTileOrientation()
         {
-
+            int lLength = _TileBtns.Count;
+            for (int i = 0; i < lLength; i++)
+                _TileBtns[i].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.PI * 2 * Mathf.Rad2Deg - _TileDirection[i].z + _Camera.transform.eulerAngles.y);
+                
         }
         #endregion
 
@@ -177,6 +208,9 @@ namespace Com.IsartDigital.Rush.UI
             _TilePlacer.OnTilePlaced -= UpdateTileStatus;
             _TilePlacer.OnTileRemoved -= UpdateTileStatus;
 
+            _Camera.OnMove -= UpdateTileOrientation;
+
+            _Camera = null;
             _TilePlacer = null;
             _Clock = null;
 

@@ -3953,11 +3953,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1920442427008566440, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
       propertyPath: m_Spacing
-      value: 25
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 1920442427008566440, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
       propertyPath: m_Padding.m_Top
-      value: 25
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 1920442427008566440, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
       propertyPath: m_Padding.m_Left
