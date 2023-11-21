@@ -4856,6 +4856,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 351933572}
+    - target: {fileID: 6581036411201555856, guid: b0b6c44b1a7268040911e3c1678eff8c, type: 3}
+      propertyPath: _NumberCubeToSpawn
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6600001763189288331, guid: b0b6c44b1a7268040911e3c1678eff8c, type: 3}
       propertyPath: m_Mesh
       value: 

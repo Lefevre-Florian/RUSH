@@ -26,6 +26,8 @@ namespace Com.IsartDigital.Rush.Cube
         [Header("Animation")]
         [SerializeField] private string _LandingAnimation = "";
 
+        [SerializeField] private CubeRenderer _Renderer = null;
+
         private Action DoAction = null;
 
         // Movements & rotations
@@ -75,10 +77,8 @@ namespace Com.IsartDigital.Rush.Cube
 
         public void Init(Colors pSpawnColor)
         {
-            Material lMaterial = GetComponentInChildren<Renderer>().material;
-            lMaterial.color = ColorLibrary.Library[pSpawnColor];
-
             Color = pSpawnColor;
+            _Renderer.Init(ColorLibrary.Library[pSpawnColor]);
         }
 
         #region State Machine
@@ -207,7 +207,7 @@ namespace Com.IsartDigital.Rush.Cube
                     OnDied?.Invoke();
             }
 
-            // Collision check on Ground & Tiles
+            // Collision check on Ground
             if(Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance, _Ground))
             {
                 if (DoAction == DoActionFall)
