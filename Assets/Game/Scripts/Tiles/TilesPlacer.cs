@@ -29,7 +29,6 @@ namespace Com.IsartDigital.Rush.Managers
         [Header("Windows / PC")]
         [SerializeField] private string _InputAccept = "";
         [SerializeField] private string _InputDelete = "";
-        [SerializeField] private string _InputScroll = "";
 
         [SerializeField] private Transform _Container = null;
 
@@ -67,20 +66,16 @@ namespace Com.IsartDigital.Rush.Managers
             }
 
             _Instance = this;
-        }
-
-        private void Start()
-        {
-            _MainCamera = UnityEngine.Camera.main;
-
+            
             if(_TileDatas == null)
             {
                 _InputTriggerable = false;
                 return;
             }
-
             SetTiles(_TileDatas);
         }
+
+        private void Start() => _MainCamera = UnityEngine.Camera.main;
 
         private void Update()
         {
@@ -141,21 +136,26 @@ namespace Com.IsartDigital.Rush.Managers
                     _TargetedGameobject = _Hit.collider.gameObject.transform;
                     if (_TargetedGameobject != null)
                     {
-                        int lLength = _TilesLayers.Length;
-                        int lIndex = 0;
+                        int lLength = _TileFabric.Length;
+                        int lIndex = -1;
                         for (int i = 0; i < lLength; i++)
                         {
-                            if (_TilesLayers[i] == _TargetedGameobject.gameObject.layer)
+                            if (_TileFabric[i].prefab.gameObject.layer == _TargetedGameobject.gameObject.layer 
+                                && _TileFabric[i].direction == _TargetedGameobject.GetComponent<DirectionalTiles>().Direction)
                             {
                                 lIndex = i;
                                 break;
                             }
                         }
-                        _TileFabric[lIndex].quantity += 1;
-                        OnTileRemoved?.Invoke(_TileFabric[_CurrentIndex].quantity);
 
-                        CheckFabricFullness();
+                        if(lIndex != -1)
+                        {
+                            _TileFabric[lIndex].quantity += 1;
+                            OnTileRemoved?.Invoke(lIndex);
 
+                            CheckFabricFullness();
+                        }
+                        
                         Destroy(_TargetedGameobject.gameObject);
                     }
                 }
@@ -173,7 +173,7 @@ namespace Com.IsartDigital.Rush.Managers
                     if (_TargetedGameobject != null && _TileFabric[_CurrentIndex].quantity != 0)
                     {
                         _TileFabric[_CurrentIndex].quantity -= 1;
-                        
+
                         DirectionalTiles lTile;
                         lTile = Instantiate(_TileFabric[_CurrentIndex].prefab,
                                             _TargetedGameobject.position + Vector3.up * (_TargetedGameobject.localScale.y / 2),
@@ -183,7 +183,7 @@ namespace Com.IsartDigital.Rush.Managers
 
                         CheckFabricFullness();
 
-                        OnTilePlaced?.Invoke(_TileFabric[_CurrentIndex].quantity);
+                        OnTilePlaced?.Invoke(_CurrentIndex);
                         if (_TileFabric[_CurrentIndex].quantity == 0) ChangeTileType();
                     }
                 }
@@ -194,6 +194,12 @@ namespace Com.IsartDigital.Rush.Managers
         public void EnableInput() => _InputTriggerable = true;
 
         public void DisableInput() => _InputTriggerable = false;
+        
+        public void SetCurrentTileIndex(int pIndex)
+        {
+            if (pIndex >= 0 && pIndex < _TileFabric.Length)
+                _CurrentIndex = pIndex;
+        }
 
         private void ChangeTileType()
         {

@@ -19,6 +19,12 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected Vector3 _DirectionalVector = default;
 
+        public Vectors Direction
+        {
+            get { return _Direction; }
+            private set { _Direction = value; }
+        }
+
         protected override void Init()
         {
             UpdateLookDirection();

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Com.IsartDigital.Rush.Managers;
 using TMPro;
 using System;
+using Com.IsartDigital.Rush.Camera;
 
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.UI
@@ -25,6 +26,13 @@ namespace Com.IsartDigital.Rush.UI
         private HUD() : base() { }
         #endregion
 
+        [Serializable]
+        private struct TileButton
+        {
+            public GameObject tile;
+            public GameObject button;
+        }
+
         [Header("Buttons")]
         [SerializeField] private Button _PauseButton = null;
         [SerializeField] private Button _GameButton = null;
@@ -39,8 +47,19 @@ namespace Com.IsartDigital.Rush.UI
         [SerializeField][TextArea] private string _LooseText = "";
         [SerializeField] private string[] _WinTexts = new string[0];
 
+        [Header("Tiles")]
+        [SerializeField] private RectTransform _Container = null;
+        [SerializeField] private List<TileButton> _TileDictionary = new List<TileButton>();
+
         private Clock _Clock = null;
         private bool _IsPaused = false;
+
+        // refs
+        private OrbitalCamera _Camera = null;
+        private TilesPlacer _TilePlacer = null;
+
+        private List<Button> _TileBtns = new List<Button>();
+        private Vector3[] _TileDirection = new Vector3[0];
 
         private void Awake()
         {
@@ -56,16 +75,63 @@ namespace Com.IsartDigital.Rush.UI
         {
             _Clock = Clock.GetInstance();
 
-            TilesPlacer lTilePlacer = TilesPlacer.GetInstance();
+            _TilePlacer = TilesPlacer.GetInstance();
+            _Camera = OrbitalCamera.GetInstance();
 
             _ResetButton.onClick.AddListener(ResetGame);
             _GameButton.onClick.AddListener(StartGameMode);
             _BackButton.onClick.AddListener(Back);
             _TimeSlider.onValueChanged.AddListener(OnSliderValueUpdated);
 
+            // Init tiles buttons
+            int lLength = _TilePlacer.Tiles.Length;
+            GameObject lBtn, lPrefab = null;
+            RectTransform lPrefabRect = null;
+
+            _TileDirection = new Vector3[lLength];
+
+            for (int i = 0; i < lLength; i++)
+            {
+                lPrefab = _TileDictionary.Find(lTile => lTile.tile == _TilePlacer.Tiles[i].prefab).button;
+                lPrefabRect = lPrefab.GetComponent<RectTransform>();
+
+                lBtn = Instantiate(lPrefab, _Container);
+
+                int lIndex = i;
+                lBtn.GetComponent<Button>().onClick.AddListener(delegate { SetTileButton(lIndex); });
+                lBtn.GetComponentInChildren<Text>().text = _TilePlacer.Tiles[i].quantity.ToString();
+
+                switch (_TilePlacer.Tiles[i].direction)
+                {
+                    case Vectors.FORWARD:
+                        _TileDirection[i] = new Vector3(0f, 0f, Mathf.PI * Mathf.Rad2Deg);
+                        break;
+                    case Vectors.BACKWARD:
+                        _TileDirection[i] = new Vector3(0f, 0f, -Mathf.PI * Mathf.Rad2Deg);
+                        break;
+                    case Vectors.RIGHT:
+                        _TileDirection[i] = new Vector3(0f, 0f, Mathf.PI / 2 * Mathf.Rad2Deg);
+                        break;
+                    case Vectors.LEFT:
+                        _TileDirection[i] = new Vector3(0f, 0f, -Mathf.PI / 2 * Mathf.Rad2Deg);
+                        break;
+                    default:
+                        break;
+                }
+
+                lBtn.transform.rotation = Quaternion.Euler(_TileDirection[i]);
+                _TileBtns.Add(lBtn.GetComponent<Button>());
+            }
+
+            _Camera.OnMove += UpdateTileOrientation;
+
+            _TilePlacer.OnTilePlaced += UpdateTileStatus;
+            _TilePlacer.OnTileRemoved += UpdateTileStatus;
+
             Restore();
         }
 
+        #region Menu comportement (Self comportement)
         private void Restore()
         {
             _PauseButton.gameObject.SetActive(false);
@@ -73,7 +139,6 @@ namespace Com.IsartDigital.Rush.UI
 
             _MsgLabel.gameObject.SetActive(false);
         }
-
 
         private void StartGameMode()
         {
@@ -122,13 +187,36 @@ namespace Com.IsartDigital.Rush.UI
             else
                 _MsgLabel.text = _LooseText;
         }
+        #endregion
+
+        #region Tiles comportement in UI
+        private void SetTileButton(int pIndex) => _TilePlacer.SetCurrentTileIndex(pIndex);
+
+        private void UpdateTileStatus(int pIndex) => _TileBtns[pIndex].GetComponentInChildren<Text>().text = _TilePlacer.Tiles[pIndex].quantity.ToString();
+
+        private void UpdateTileOrientation()
+        {
+            int lLength = _TileBtns.Count;
+            for (int i = 0; i < lLength; i++)
+                _TileBtns[i].transform.rotation = Quaternion.Euler(0f, 0f, Mathf.PI * 2 * Mathf.Rad2Deg - _TileDirection[i].z + _Camera.transform.eulerAngles.y);
+                
+        }
+        #endregion
 
         private void OnDestroy()
         {
+            _TilePlacer.OnTilePlaced -= UpdateTileStatus;
+            _TilePlacer.OnTileRemoved -= UpdateTileStatus;
+
+            _Camera.OnMove -= UpdateTileOrientation;
+
+            _Camera = null;
+            _TilePlacer = null;
+            _Clock = null;
+
             _BackButton.onClick.RemoveListener(Back);
             _ResetButton.onClick.RemoveListener(ResetGame);
             _GameButton.onClick.RemoveListener(StartGameMode);
-            _Clock = null;
 
             if (_Instance != null)
                 _Instance = null;

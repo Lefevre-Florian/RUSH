@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // Author : Lefevre Florian
@@ -5,6 +6,19 @@ namespace Com.IsartDigital.Rush.Camera
 {
     public class OrbitalCamera : MonoBehaviour
     {
+
+        #region Singleton
+        private static OrbitalCamera _Instance = null;
+
+        public static OrbitalCamera GetInstance()
+        {
+            if (_Instance == null)
+                _Instance = new OrbitalCamera();
+            return _Instance;
+        }
+
+        private OrbitalCamera() : base() { }
+        #endregion
 
         [Header("Support speed")]
         [SerializeField] private float _MouseSpeed = 10f;
@@ -48,6 +62,19 @@ namespace Com.IsartDigital.Rush.Camera
         private Vector2 _StartTouchPosition = default;
         #endif
 
+        // Signals
+        public event Action OnMove;
+
+        private void Awake()
+        {
+            if(_Instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            _Instance = this;
+        }
+
         void Start()
         {
             _Center = Vector3.zero;
@@ -86,12 +113,16 @@ namespace Com.IsartDigital.Rush.Camera
                 // Mouse only
                 _VerticalAngle += _MouseSpeed * Time.deltaTime * Input.GetAxis(_HorizontalMouseAxis) * Mathf.Deg2Rad;
                 _HorizontalAngle += _MouseSpeed * Time.deltaTime * Input.GetAxis(_VerticalMouseAxis) * Mathf.Deg2Rad;
+
+                OnMove?.Invoke();
             }
-            else
+            else if(Input.GetAxis(_HorizontalKeyboardAxis) != 0f || Input.GetAxis(_VerticalKeyboardAxis) != 0)
             {
                 // Keyboard only
                 _VerticalAngle += _KeyboardSpeed * Time.deltaTime * Input.GetAxis(_HorizontalKeyboardAxis) * Mathf.Deg2Rad;
                 _HorizontalAngle += _KeyboardSpeed * Time.deltaTime * Input.GetAxis(_VerticalKeyboardAxis) * Mathf.Deg2Rad;
+
+                OnMove?.Invoke();
             }
 
             // Zoom options
@@ -124,5 +155,12 @@ namespace Com.IsartDigital.Rush.Camera
                                                                Mathf.Cos(_HorizontalAngle) * Mathf.Sin(_VerticalAngle)) * _Radius;
             transform.LookAt(_Center);
         }
+
+        private void OnDestroy()
+        {
+            if (_Instance != null)
+                _Instance = null;
+        }
+
     }
 }
