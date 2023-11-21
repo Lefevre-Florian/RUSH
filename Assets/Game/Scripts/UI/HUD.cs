@@ -136,8 +136,8 @@ namespace Com.IsartDigital.Rush.UI
         {
             _PauseButton.gameObject.SetActive(false);
             _ResetButton.gameObject.SetActive(false);
-
             _MsgLabel.gameObject.SetActive(false);
+            _TimeSlider.gameObject.SetActive(false);
         }
 
         private void StartGameMode()
@@ -147,12 +147,16 @@ namespace Com.IsartDigital.Rush.UI
             _PauseButton.gameObject.SetActive(true);
             _GameButton.gameObject.SetActive(false);
             _ResetButton.gameObject.SetActive(true);
+
+            _TimeSlider.gameObject.SetActive(true);
         }
 
         private void ResetGame()
         {
             Restore();
             Time.timeScale = 1f;
+
+            _TimeSlider.value = 1f;
 
             _GameButton.gameObject.SetActive(true);
             _Clock.ResetTicking();

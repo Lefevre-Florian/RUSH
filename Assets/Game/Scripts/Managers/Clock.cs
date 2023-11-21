@@ -58,6 +58,7 @@ namespace Com.IsartDigital.Rush
         public void ResetTicking()
         {
             StopTicking();
+            _TimeMultiplier = 1f;
 
             OnReset?.Invoke();
         }

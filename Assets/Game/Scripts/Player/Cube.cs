@@ -144,6 +144,12 @@ namespace Com.IsartDigital.Rush.Cube
 
         public void SetActionSlideMove(Vector3 pDirection)
         {
+            if (Physics.Raycast(transform.position, pDirection, _RaycastDistance, _Ground))
+            {
+                SetActionVoid();
+                return;
+            }
+
             _Clock.OnTick -= InternalClockTick;
 
             _InitialPosition = transform.position;
@@ -198,7 +204,7 @@ namespace Com.IsartDigital.Rush.Cube
                     SetActionWait(_CollisionWallTickWait);
                 }
                 else if (lCollided.layer == gameObject.layer)
-                    Debug.Log("Collide with other player so loose the game");
+                    OnDied?.Invoke();
             }
 
             // Collision check on Ground & Tiles
