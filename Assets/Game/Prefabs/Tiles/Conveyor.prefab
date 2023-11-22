@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4885800248076192}
   - component: {fileID: 65360627517417286}
   - component: {fileID: 2188098100540858787}
+  - component: {fileID: 1295326849554666791}
   m_Layer: 8
   m_Name: Conveyor
   m_TagString: Untagged
@@ -71,6 +72,29 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _Direction: 0
+  _SpawnParticlePrefab: {fileID: 1806809999422285094, guid: 2f950b5402ef33346847bd5679760cf1, type: 3}
+  _SpwanParticleOffset: 0.01
+--- !u!95 &1295326849554666791
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107203473147756}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 56c65d582df05ce48a2e710d844412b8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1674811635417900
 GameObject:
   m_ObjectHideFlags: 0

@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 4103324586174300}
   - component: {fileID: 65602418466369314}
   - component: {fileID: 2028644793624795555}
+  - component: {fileID: 1495731586136638104}
   m_Layer: 9
   m_Name: Arrow
   m_TagString: Untagged
@@ -154,3 +155,26 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _Direction: 1
+  _SpawnParticlePrefab: {fileID: 1806809999422285094, guid: 2f950b5402ef33346847bd5679760cf1, type: 3}
+  _SpwanParticleOffset: 0.01
+--- !u!95 &1495731586136638104
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820389188126086}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 56c65d582df05ce48a2e710d844412b8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

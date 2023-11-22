@@ -5,6 +5,9 @@ using UnityEngine;
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.Tiles
 {
+    /// <summary>
+    /// Parent class for every interactive classes (Stop / Turnstile / Convoyer)
+    /// </summary>
     public class DirectionalTiles : Tile
     {
         private static Dictionary<Vectors, Vector3> _Directions = new Dictionary<Vectors, Vector3>
@@ -17,6 +20,10 @@ namespace Com.IsartDigital.Rush.Tiles
 
         [SerializeField] private Vectors _Direction = default;
 
+        [Header("Spawn")]
+        [SerializeField] private GameObject _SpawnParticlePrefab = default;
+        [SerializeField] private float _SpwanParticleOffset = 0.01f;
+
         protected Vector3 _DirectionalVector = default;
 
         public Vectors Direction
@@ -27,6 +34,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected override void Init()
         {
+            Instantiate(_SpawnParticlePrefab, transform.position + Vector3.up * _SpwanParticleOffset, transform.rotation, transform.parent);
+
             UpdateLookDirection();
             base.Init();
         }
