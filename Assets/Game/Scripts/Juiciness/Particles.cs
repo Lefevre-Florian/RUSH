@@ -6,20 +6,18 @@ namespace Com.IsartDigital.Rush.Juiciness
     [RequireComponent(typeof(ParticleSystem))]
     public class Particles : MonoBehaviour
     {
+        private void Start() => Init();
 
-        [SerializeField] private float _SwirlSpeed = 0f;
-
-        private void Start()
+        protected virtual void Init()
         {
             ParticleSystem.MainModule lParticles = GetComponent<ParticleSystem>().main;
             lParticles.stopAction = ParticleSystemStopAction.Callback;
         }
 
-        private void Update() => transform.rotation = Quaternion.AngleAxis(_SwirlSpeed * Time.deltaTime, Vector3.up) * transform.rotation;
+        private void Update() => Process();
 
-        private void OnParticleSystemStopped()
-        {
-            Destroy(gameObject);
-        }
+        protected virtual void Process() { }
+
+        private void OnParticleSystemStopped() => Destroy(gameObject);
     }
 }
