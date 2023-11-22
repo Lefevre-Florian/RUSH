@@ -62,8 +62,9 @@ namespace Com.IsartDigital.Rush.Managers
                 Transform lLevel = SwitchScene(_GameScene);
                 if(lLevel != null)
                 {
-                    Instantiate(_Levels[_LevelID].LevelPrefab, lLevel.transform.position, new Quaternion(), lLevel);
-                    Debug.Log(TilesPlacer.GetInstance());
+                    Instantiate(_Levels[_LevelID].LevelPrefab,  
+                                FlowManager.GetInstance().LevelContainer);
+
                     TilesPlacer.GetInstance().SetTiles(_Levels[_LevelID]);
                 }
             }
