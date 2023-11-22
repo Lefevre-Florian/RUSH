@@ -21,9 +21,13 @@ namespace Com.IsartDigital.Rush.Managers
         }
         #endregion
 
+        [SerializeField] private Transform _LevelContainer = null;
+
         private List<Cube.Cube> _Cubes = new List<Cube.Cube>();
 
         private int _CountBeforeEnd = 0;
+
+        public  Transform LevelContainer { get { return _LevelContainer; } private set { _LevelContainer = value; } }
 
         // Refs
         private Clock _Clock = null;
