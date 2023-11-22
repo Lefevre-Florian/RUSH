@@ -1,8 +1,5 @@
-using Com.IsartDigital.Rush.Tiles;
-using Com.IsartDigital.Rush.UI;
 using System;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.Cube

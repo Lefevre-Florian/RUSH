@@ -1,6 +1,4 @@
 using Com.IsartDigital.Rush.Managers;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Author : Lefevre Florian

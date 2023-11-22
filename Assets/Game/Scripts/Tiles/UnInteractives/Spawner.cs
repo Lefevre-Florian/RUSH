@@ -1,4 +1,3 @@
-using Com.IsartDigital.Rush.Cube;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,7 +80,6 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void CreateCube()
         {
-            Debug.Log("Create cube");
             Cube.Cube lCube = Instantiate(_CubePrefab, transform.position + Vector3.up * 0.5f, transform.rotation, transform.parent)
                                          .GetComponent<Cube.Cube>();
             lCube.Init(_ColorIdentifier);
