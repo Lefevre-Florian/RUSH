@@ -86,6 +86,10 @@ namespace Com.IsartDigital.Rush.Camera
             _MaxRadius = _Radius + _MaxZoom;
             _MinRadius = _Radius - _MinZoom;
             #endif
+
+            _HorizontalAngle = Mathf.Atan2(Vector3.up.y, Vector3.up.x);
+            _VerticalAngle = Mathf.Acos(Vector3.up.z / _Radius);
+            UpdateCameraPositionOnCircle();
         }
 
         void Update()
@@ -115,6 +119,7 @@ namespace Com.IsartDigital.Rush.Camera
                 _HorizontalAngle += _MouseSpeed * Time.deltaTime * Input.GetAxis(_VerticalMouseAxis) * Mathf.Deg2Rad;
 
                 OnMove?.Invoke();
+                UpdateCameraPositionOnCircle();
             }
             else if(Input.GetAxis(_HorizontalKeyboardAxis) != 0f || Input.GetAxis(_VerticalKeyboardAxis) != 0)
             {
@@ -123,6 +128,7 @@ namespace Com.IsartDigital.Rush.Camera
                 _HorizontalAngle += _KeyboardSpeed * Time.deltaTime * Input.GetAxis(_VerticalKeyboardAxis) * Mathf.Deg2Rad;
 
                 OnMove?.Invoke();
+                UpdateCameraPositionOnCircle();
             }
 
             // Zoom options
@@ -139,21 +145,26 @@ namespace Com.IsartDigital.Rush.Camera
                 UpdateCameraPositionOnCircle();
             }
             #endif
-
-            if (_VerticalAngle != 0 || _HorizontalAngle != 0)
-            {
-                _HorizontalAngle = Mathf.Clamp(_HorizontalAngle, _MinYAngle * Mathf.Deg2Rad, _MaxYAngle * Mathf.Deg2Rad);
-
-                UpdateCameraPositionOnCircle();
-            }
         }
 
         private void UpdateCameraPositionOnCircle()
         {
+            _HorizontalAngle = Mathf.Clamp(_HorizontalAngle, _MinYAngle * Mathf.Deg2Rad, _MaxYAngle * Mathf.Deg2Rad);
+
             transform.position = _Center + new Vector3(Mathf.Cos(_HorizontalAngle) * Mathf.Cos(_VerticalAngle),
-                                                               Mathf.Sin(_HorizontalAngle),
-                                                               Mathf.Cos(_HorizontalAngle) * Mathf.Sin(_VerticalAngle)) * _Radius;
+                                                       Mathf.Sin(_HorizontalAngle),
+                                                       Mathf.Cos(_HorizontalAngle) * Mathf.Sin(_VerticalAngle)) * _Radius;
             transform.LookAt(_Center);
+        }
+
+        public void CenterCameraOnPositionOnCircle(Vector3 pLookAt)
+        {
+            float lRadius = (_Center - pLookAt).magnitude;
+            _VerticalAngle = Mathf.Acos(pLookAt.z / lRadius);
+            _HorizontalAngle = Mathf.Atan2(pLookAt.y , pLookAt.x);
+
+            UpdateCameraPositionOnCircle();
+            transform.LookAt(pLookAt);
         }
 
         private void OnDestroy()

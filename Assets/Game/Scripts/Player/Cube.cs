@@ -50,7 +50,7 @@ namespace Com.IsartDigital.Rush.Cube
         [HideInInspector] public Colors Color { get; private set; } = default;
 
         // Signals
-        public event Action OnDied;
+        public event Action<Vector3> OnDied;
 
         private void Start()
         {
@@ -201,7 +201,7 @@ namespace Com.IsartDigital.Rush.Cube
                     SetActionWait(_CollisionWallTickWait);
                 }
                 else if (lCollided.layer == gameObject.layer)
-                    OnDied?.Invoke();
+                    OnDied?.Invoke(transform.position);
             }
 
             // Collision check on Ground
@@ -220,7 +220,7 @@ namespace Com.IsartDigital.Rush.Cube
                 if (!Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance * _RaycastFallHeight))
                 {
                     SetActionVoid();
-                    OnDied?.Invoke();
+                    OnDied?.Invoke(transform.position);
                 }
             }
         }
