@@ -12,6 +12,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         [SerializeField] private int _RequiredCubes = 1;
 
+        private int _InternalRequiredCubes = 0;
+
         private Colors _Color = default;
 
         // Signals
@@ -21,8 +23,11 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected override void Init()
         {
+            _InternalRequiredCubes = _RequiredCubes;
             _Color = GetComponent<ColoredTiles>().Color;
+
             base.Init();
+            _Clock.OnReset += Restore;
         }
 
         protected override void OnCollisionComportement()
@@ -32,13 +37,16 @@ namespace Com.IsartDigital.Rush.Tiles
 
             Destroy(_Hit.collider.gameObject);
 
-            if (--_RequiredCubes == 0)
+            if (--_InternalRequiredCubes == 0)
                 OnFullyArrived?.Invoke();
         }
+
+        private void Restore() => _InternalRequiredCubes = _RequiredCubes;
 
         protected override void Destroy()
         {
             Targets.Remove(this);
+            _Clock.OnReset -= Restore;
 
             base.Destroy();
         }
