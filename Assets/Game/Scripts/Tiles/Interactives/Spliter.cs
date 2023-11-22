@@ -9,8 +9,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected override void Init()
         {
-            _Clock.OnReset += Restore;
             base.Init();
+            _Clock.OnReset += Restore;
         }
 
         private void Restore() => _Switchers = 0;

@@ -124,6 +124,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8315121547642578238, guid: 29d103496e119334ea82a5e866a00c1d, type: 3}
+      propertyPath: _RequiredCubes
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -282,7 +286,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _NumberCubeToSpawn
-      value: 5
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7567483275528803928, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _Color
@@ -360,7 +364,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _NumberCubeToSpawn
-      value: 5
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7567483275528803928, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _Color
@@ -432,6 +436,10 @@ PrefabInstance:
       propertyPath: _Color
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8315121547642578238, guid: 29d103496e119334ea82a5e866a00c1d, type: 3}
+      propertyPath: _RequiredCubes
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -497,6 +505,10 @@ PrefabInstance:
     - target: {fileID: 5467958303359648598, guid: 29d103496e119334ea82a5e866a00c1d, type: 3}
       propertyPath: _Color
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8315121547642578238, guid: 29d103496e119334ea82a5e866a00c1d, type: 3}
+      propertyPath: _RequiredCubes
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -594,7 +606,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _NumberCubeToSpawn
-      value: 5
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7567483275528803928, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _Color
@@ -672,7 +684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _NumberCubeToSpawn
-      value: 5
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -739,6 +751,10 @@ PrefabInstance:
     - target: {fileID: 5467958303359648598, guid: 29d103496e119334ea82a5e866a00c1d, type: 3}
       propertyPath: _Color
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8315121547642578238, guid: 29d103496e119334ea82a5e866a00c1d, type: 3}
+      propertyPath: _RequiredCubes
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
