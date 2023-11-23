@@ -42,9 +42,8 @@ namespace Com.IsartDigital.Rush.UI
         [SerializeField] private Slider _TimeSlider = null;
 
         [Header("Popup & Text")]
-        [SerializeField] private TextMeshProUGUI _MsgLabel = null;
-        [SerializeField][TextArea] private string _LooseText = "";
-        [SerializeField] private string[] _WinTexts = new string[0];
+        [SerializeField] private GameObject _LoosePopup = null;
+        [SerializeField] private GameObject _WinPopup = null;
 
         [Header("Tiles")]
         [SerializeField] private RectTransform _Container = null;
@@ -135,7 +134,8 @@ namespace Com.IsartDigital.Rush.UI
         {
             _PauseButton.gameObject.SetActive(false);
             _ResetButton.gameObject.SetActive(false);
-            _MsgLabel.gameObject.SetActive(false);
+            _WinPopup.gameObject.SetActive(false);
+            _LoosePopup.gameObject.SetActive(false);
             _TimeSlider.gameObject.SetActive(false);
         }
 
@@ -184,11 +184,10 @@ namespace Com.IsartDigital.Rush.UI
         {
             Time.timeScale = 0f;
 
-            _MsgLabel.gameObject.SetActive(true);
             if (pState)
-                _MsgLabel.text = _WinTexts[UnityEngine.Random.Range(0, _WinTexts.Length - 1)];
+                _WinPopup.SetActive(true);
             else
-                _MsgLabel.text = _LooseText;
+                _LoosePopup.SetActive(true);
         }
         #endregion
 

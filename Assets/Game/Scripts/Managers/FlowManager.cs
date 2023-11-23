@@ -73,9 +73,10 @@ namespace Com.IsartDigital.Rush.Managers
         }
         
         // Executed if loose condition = true
-        private void GameOver()
+        private void GameOver(Vector3 pPosition)
         {
             CleanGame();
+            Camera.OrbitalCamera.GetInstance().CenterCameraOnPositionOnCircle(pPosition);
             _HUD.DisplayGameoverState(false);
         }
 
