@@ -48,10 +48,8 @@ namespace Com.IsartDigital.Rush.Camera
 
         private float _Radius = 0f;
 
-        #if UNITY_STANDALONE
         private float _MaxRadius = 0f;
         private float _MinRadius = 0f;
-        #endif
         
         private float _HorizontalAngle = 0f;
         private float _VerticalAngle = 90f;
@@ -60,6 +58,9 @@ namespace Com.IsartDigital.Rush.Camera
         private Touch _Touch = default;
         private Vector2 _TouchDirection = default;
         private Vector2 _StartTouchPosition = default;
+
+        private float _CurrentTouchSize = 0f;
+        private float _PreviousTouchSize = 0f;
         #endif
 
         // Signals
@@ -82,10 +83,8 @@ namespace Com.IsartDigital.Rush.Camera
             transform.LookAt(_Center);
             _Radius = Vector3.Distance(transform.position, _Center);
 
-            #if UNITY_STANDALONE
             _MaxRadius = _Radius + _MaxZoom;
             _MinRadius = _Radius - _MinZoom;
-            #endif
 
             _HorizontalAngle = Mathf.Atan2(Vector3.up.y, Vector3.up.x);
             _VerticalAngle = Mathf.Acos(Vector3.up.z / _Radius);
@@ -95,7 +94,9 @@ namespace Com.IsartDigital.Rush.Camera
         void Update()
         {
             #if UNITY_ANDROID
-            if (Input.touchCount > 0)
+
+            // Movement of the camera using the touch (Mobile only)
+            if (Input.touchCount == 1)
             {
                 _Touch = Input.GetTouch(0);
                 if(_Touch.phase == TouchPhase.Began)
@@ -107,8 +108,30 @@ namespace Com.IsartDigital.Rush.Camera
 
                     _VerticalAngle += _PhoneSpeed * Time.deltaTime * _TouchDirection.x * Mathf.Deg2Rad;
                     _HorizontalAngle += _PhoneSpeed * Time.deltaTime * _TouchDirection.y * Mathf.Deg2Rad;
+
+                    OnMove?.Invoke();
+                    UpdateCameraPositionOnCircle();
                 }
             }
+            // Zoom options for mobile (capturing two fingers)
+            else if(Input.touchCount >= 2)
+            {
+                if (Input.GetTouch(0).phase == TouchPhase.Began && Input.GetTouch(1).phase == TouchPhase.Began)
+                    _CurrentTouchSize = Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position);
+                else if (Input.GetTouch(0).phase == TouchPhase.Moved && Input.GetTouch(1).phase == TouchPhase.Moved)
+                {
+                    _PreviousTouchSize = _CurrentTouchSize;
+                    _CurrentTouchSize = Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position);
+
+                    if (_PreviousTouchSize > _CurrentTouchSize && _Radius >= _MinRadius)
+                        _Radius -= _ZoomForce;
+                    else if (_PreviousTouchSize < _CurrentTouchSize && _Radius <= _MaxRadius)
+                        _Radius += _ZoomForce;
+
+                    UpdateCameraPositionOnCircle();
+                }
+            }
+
             #endif
 
             #if UNITY_STANDALONE
