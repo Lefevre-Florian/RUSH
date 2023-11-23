@@ -208,7 +208,7 @@ namespace Com.IsartDigital.Rush.Managers
             OnTileChanged?.Invoke(_CurrentIndex);
         }
 
-        private void CheckFabricFullness()
+        private bool CheckFabricFullness()
         {
             foreach (TileData lTile in _TileFabric)
             {
@@ -219,6 +219,7 @@ namespace Com.IsartDigital.Rush.Managers
                 }
                 _IsDisplayable = false;
             }
+            return _IsDisplayable;
         }
 
         private void OnDestroy()

@@ -137,6 +137,9 @@ namespace Com.IsartDigital.Rush.UI
             _WinPopup.gameObject.SetActive(false);
             _LoosePopup.gameObject.SetActive(false);
             _TimeSlider.gameObject.SetActive(false);
+
+            _Container.gameObject.SetActive(true);
+            _TilePlacer.EnableInput();
         }
 
         private void StartGameMode()
@@ -148,6 +151,9 @@ namespace Com.IsartDigital.Rush.UI
             _ResetButton.gameObject.SetActive(true);
 
             _TimeSlider.gameObject.SetActive(true);
+
+            _Container.gameObject.SetActive(false);
+            _TilePlacer.DisableInput();
         }
 
         private void ResetGame()
