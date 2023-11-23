@@ -124,9 +124,9 @@ namespace Com.IsartDigital.Rush.Camera
                     _CurrentTouchSize = Vector2.Distance(Input.GetTouch(0).position, Input.GetTouch(1).position);
 
                     if (_PreviousTouchSize > _CurrentTouchSize && _Radius >= _MinRadius)
-                        _Radius -= _ZoomForce;
-                    else if (_PreviousTouchSize < _CurrentTouchSize && _Radius <= _MaxRadius)
                         _Radius += _ZoomForce;
+                    else if (_PreviousTouchSize < _CurrentTouchSize && _Radius <= _MaxRadius)
+                        _Radius -= _ZoomForce;
 
                     UpdateCameraPositionOnCircle();
                 }
