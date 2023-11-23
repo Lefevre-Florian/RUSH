@@ -20,12 +20,15 @@ namespace Com.IsartDigital.Rush.Managers
             return _Instance;
         }
         #endregion
+        private const float WARNING_OFFSET = 2.5f;
 
         [SerializeField] private Transform _LevelContainer = null;
+        [SerializeField] private GameObject _WarningSignPrefab = null;
 
         private List<Cube.Cube> _Cubes = new List<Cube.Cube>();
 
         private int _CountBeforeEnd = 0;
+        private GameObject _WarningSign = null;
 
         public  Transform LevelContainer { get { return _LevelContainer; } private set { _LevelContainer = value; } }
 
@@ -56,6 +59,9 @@ namespace Com.IsartDigital.Rush.Managers
 
         private void Init()
         {
+            if (_WarningSign != null)
+                Destroy(_WarningSign);
+
             _CountBeforeEnd = Goal.Targets.Count;
             foreach (Goal lTarget in Goal.Targets)
                 lTarget.OnFullyArrived += UpdateEndGameScore;
@@ -75,6 +81,11 @@ namespace Com.IsartDigital.Rush.Managers
         // Executed if loose condition = true
         private void GameOver(Vector3 pPosition)
         {
+            _WarningSign = Instantiate(_WarningSignPrefab, 
+                                       pPosition + Vector3.up * WARNING_OFFSET, 
+                                       new Quaternion(), 
+                                       LevelContainer);
+
             CleanGame();
             Camera.OrbitalCamera.GetInstance().CenterCameraOnPositionOnCircle(pPosition);
             _HUD.DisplayGameoverState(false);

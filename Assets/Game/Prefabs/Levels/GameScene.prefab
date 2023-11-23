@@ -403,6 +403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _LevelContainer: {fileID: 1857129377714049518}
+  _WarningSignPrefab: {fileID: 399202277335751121, guid: 4765178f3cb1266499fa550f72b3d672, type: 3}
 --- !u!1 &8856984143848207909
 GameObject:
   m_ObjectHideFlags: 0

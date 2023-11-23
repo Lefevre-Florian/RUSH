@@ -71,6 +71,8 @@ namespace Com.IsartDigital.Rush.UI
 
         protected override void Init()
         {
+            Time.timeScale = 1f;
+
             _Clock = Clock.GetInstance();
 
             _TilePlacer = TilesPlacer.GetInstance();
