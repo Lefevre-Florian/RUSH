@@ -246,6 +246,7 @@ MonoBehaviour:
   _PreviousBtn: {fileID: 5428394628681030451}
   _StartBtn: {fileID: 467477231667711899}
   _LevelNameLabel: {fileID: 285889179561229290}
+  _BackInput: Cancel
 --- !u!1 &2372141594090850418
 GameObject:
   m_ObjectHideFlags: 0

@@ -44,6 +44,9 @@ namespace Com.IsartDigital.Rush.Cube
         // References
         private Clock _Clock = null;
 
+        // Components
+        public CubeRenderer Renderer { get { return _Renderer; } private set { _Renderer = value; } }
+
         private int _ActionTick = 0;
         private int _InternalTick = 0;
 

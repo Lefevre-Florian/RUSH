@@ -33,11 +33,10 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void Start()
         {
-            Init();
-
             _Clock = Clock.GetInstance();
-            _Clock.OnGameStart += StartSpawner;
             _Clock.OnReset += Init;
+            
+            Init();
 
             _ColorIdentifier = GetComponent<ColoredTiles>().Color;
         }
@@ -46,6 +45,8 @@ namespace Com.IsartDigital.Rush.Tiles
         {
             _InternalNumberCubeToSpawn = _NumberCubeToSpawn;
             _InternalDelay = 0;
+
+            _Clock.OnGameStart += StartSpawner;
         }
 
         private void StartSpawner()

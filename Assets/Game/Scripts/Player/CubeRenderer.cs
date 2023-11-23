@@ -17,5 +17,9 @@ namespace Com.IsartDigital.Rush.Cube
                                                      _BodyRenderer.material.color.a);
             _CoreRenderer.material.color = pColor;
         }
+
+        public void EnableVisibility() => _BodyRenderer.enabled = _CoreRenderer.enabled = true;
+
+        public void DisableVisibility() => _BodyRenderer.enabled = _CoreRenderer.enabled = false;
     }
 }

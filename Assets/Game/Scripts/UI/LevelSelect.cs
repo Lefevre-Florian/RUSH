@@ -18,8 +18,17 @@ namespace Com.IsartDigital.Rush.UI
         [SerializeField] private Button _StartBtn = null;
         [SerializeField] private TextMeshProUGUI _LevelNameLabel = null;
 
+        [Header("Input")]
+        [SerializeField] private string _BackInput = "";
+
         private GameObject[] _LevelRenderers = new GameObject[0];
         private int _CurrentIndex = 0;
+
+        private void Update()
+        {
+            if (Input.GetButtonDown(_BackInput))
+                Back();
+        }
 
         protected override void Init()
         {

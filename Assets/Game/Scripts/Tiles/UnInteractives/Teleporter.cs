@@ -36,7 +36,7 @@ namespace Com.IsartDigital.Rush.Tiles
             if(_TeleportationStack.Count == 0)
                 _Clock.OnTick += ManageTeleportation;
 
-            lCube.GetComponent<MeshRenderer>().enabled = false;
+            lCube.Renderer.DisableVisibility();
             lCube.SetActionWait(_TeleportationTick);
             lCube.transform.position = OutputPosition + Vector3.up * 0.5f;
 
@@ -46,7 +46,7 @@ namespace Com.IsartDigital.Rush.Tiles
         private void ManageTeleportation()
         {
             Cube.Cube lCube = _TeleportationStack.Dequeue();
-            lCube.GetComponent<MeshRenderer>().enabled = true;
+            lCube.Renderer.EnableVisibility();
 
             _TeleportationMemory.Enqueue(lCube);
 

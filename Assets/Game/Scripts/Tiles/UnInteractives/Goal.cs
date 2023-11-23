@@ -36,7 +36,7 @@ namespace Com.IsartDigital.Rush.Tiles
                 return;
 
             Destroy(_Hit.collider.gameObject);
-
+            
             if (--_InternalRequiredCubes == 0)
                 OnFullyArrived?.Invoke();
         }
