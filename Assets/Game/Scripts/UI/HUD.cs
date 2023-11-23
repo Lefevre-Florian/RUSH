@@ -102,10 +102,10 @@ namespace Com.IsartDigital.Rush.UI
                 switch (_TilePlacer.Tiles[i].direction)
                 {
                     case Vectors.FORWARD:
-                        _TileDirection[i] = new Vector3(0f, 0f, Mathf.PI * Mathf.Rad2Deg);
+                        _TileDirection[i] = new Vector3(0f, 0f, -Mathf.PI * Mathf.Rad2Deg);
                         break;
                     case Vectors.BACKWARD:
-                        _TileDirection[i] = new Vector3(0f, 0f, -Mathf.PI * Mathf.Rad2Deg);
+                        _TileDirection[i] = new Vector3(0f, 0f, Mathf.PI * Mathf.Rad2Deg);
                         break;
                     case Vectors.RIGHT:
                         _TileDirection[i] = new Vector3(0f, 0f, Mathf.PI / 2 * Mathf.Rad2Deg);
