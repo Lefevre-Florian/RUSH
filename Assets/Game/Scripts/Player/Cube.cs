@@ -16,7 +16,6 @@ namespace Com.IsartDigital.Rush.Cube
 
         [Header("Collision Layers")]
         [SerializeField] private int _GroundLayer = 6;
-
         [SerializeField] private LayerMask _Ground = default;
 
         [Header("Timing")]
@@ -73,6 +72,10 @@ namespace Com.IsartDigital.Rush.Cube
 
         private void Update()
         {
+            if (Physics.Raycast(transform.position, _MovementDirection, out _Hit, transform.localScale.x / 2 - _RaycastOffsetOutSideCube) 
+                && _Hit.transform.gameObject.layer == gameObject.layer)
+                OnDied?.Invoke(transform.position);
+                
             if (DoAction != null)
                 DoAction();
         }
@@ -205,8 +208,6 @@ namespace Com.IsartDigital.Rush.Cube
 
                     SetActionWait(_CollisionWallTickWait);
                 }
-                else if (lCollided.layer == gameObject.layer)
-                    OnDied?.Invoke(transform.position);
             }
 
             // Collision check on Ground

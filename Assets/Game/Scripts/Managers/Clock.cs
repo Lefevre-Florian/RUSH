@@ -87,7 +87,6 @@ namespace Com.IsartDigital.Rush
             {
                 yield return new WaitForSeconds(DURATION_BETWEEN_TICK / _TimeMultiplier);
                 OnTick?.Invoke();
-                Debug.Log("Ticking : " + ++_CurrentTick);
 
                 ElapsedTime = 0f;
             }
