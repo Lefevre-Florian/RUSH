@@ -9,25 +9,17 @@ namespace Com.IsartDigital.Rush.Tiles
     public class Goal : Tile
     {
         public static List<Goal> Targets { get; private set; } = new List<Goal>();
-
-        [SerializeField] private int _RequiredCubes = 1;
-
-        private int _InternalRequiredCubes = 0;
-
         private Colors _Color = default;
 
         // Signals
-        public event Action OnFullyArrived;
+        public event Action<Cube.Cube> OnFullyArrived;
 
         private void Awake() => Targets.Add(this);
 
         protected override void Init()
         {
-            _InternalRequiredCubes = _RequiredCubes;
             _Color = GetComponent<ColoredTiles>().Color;
-
             base.Init();
-            _Clock.OnReset += Restore;
         }
 
         protected override void OnCollisionComportement()
@@ -35,19 +27,15 @@ namespace Com.IsartDigital.Rush.Tiles
             if (_Hit.collider.gameObject.GetComponent<Cube.Cube>().Color != _Color)
                 return;
 
-            Destroy(_Hit.collider.gameObject);
-            
-            if (--_InternalRequiredCubes == 0)
-                OnFullyArrived?.Invoke();
-        }
+            GameObject lCollider = _Hit.collider.gameObject;
 
-        private void Restore() => _InternalRequiredCubes = _RequiredCubes;
+            OnFullyArrived?.Invoke(lCollider.GetComponent<Cube.Cube>());
+            Destroy(lCollider);
+        }
 
         protected override void Destroy()
         {
             Targets.Remove(this);
-            _Clock.OnReset -= Restore;
-
             base.Destroy();
         }
 

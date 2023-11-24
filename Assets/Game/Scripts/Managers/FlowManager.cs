@@ -25,9 +25,7 @@ namespace Com.IsartDigital.Rush.Managers
         [SerializeField] private Transform _LevelContainer = null;
         [SerializeField] private GameObject _WarningSignPrefab = null;
 
-        private List<Cube.Cube> _Cubes = new List<Cube.Cube>();
-
-        private int _CountBeforeEnd = 0;
+        private Dictionary<Cube.Cube, bool> _Cubes = new Dictionary<Cube.Cube, bool>();
         private GameObject _WarningSign = null;
 
         public  Transform LevelContainer { get { return _LevelContainer; } private set { _LevelContainer = value; } }
@@ -62,20 +60,19 @@ namespace Com.IsartDigital.Rush.Managers
             if (_WarningSign != null)
                 Destroy(_WarningSign);
 
-            _CountBeforeEnd = Goal.Targets.Count;
             foreach (Goal lTarget in Goal.Targets)
                 lTarget.OnFullyArrived += UpdateEndGameScore;
 
             foreach (Spawner lSpawner in Spawner.Spawners)
                 lSpawner.OnCubeSpawned += AddCubeToPlayingParty;
 
-            _Cubes = new List<Cube.Cube>();
+            _Cubes = new Dictionary<Cube.Cube, bool>();
         }
 
         private void AddCubeToPlayingParty(Cube.Cube pCube)
         {
             pCube.OnDied += GameOver;
-            _Cubes.Add(pCube);
+            _Cubes.Add(pCube, false);
         }
         
         // Executed if loose condition = true
@@ -92,9 +89,22 @@ namespace Com.IsartDigital.Rush.Managers
         }
 
         // Executed if win condition = true
-        private void UpdateEndGameScore()
+        private void UpdateEndGameScore(Cube.Cube pCube)
         {
-            if (--_CountBeforeEnd == 0)
+            _Cubes[pCube] = true;
+
+            bool lAllCubesWin = false;
+            foreach (bool lState in _Cubes.Values)
+            {
+                if (!lState)
+                {
+                    lAllCubesWin = false;
+                    break;
+                }
+                lAllCubesWin = true;
+            }
+
+            if (lAllCubesWin)
             {
                 CleanGame();
                 _HUD.DisplayGameoverState(true);
@@ -110,7 +120,7 @@ namespace Com.IsartDigital.Rush.Managers
             
             if(_Cubes != null)
             {
-                foreach (Cube.Cube lCube in _Cubes)
+                foreach (Cube.Cube lCube in _Cubes.Keys)
                     lCube.OnDied -= GameOver;
                 _Cubes.Clear();
                 _Cubes = null;
