@@ -6,6 +6,8 @@ namespace Com.IsartDigital.Rush.Cube
 {
     public class Cube : MonoBehaviour
     {
+        private const float ROTATION_ANGLE = 90f;
+
         private const int MAX_DIRECTION_COUNT = 4;
 
         [Header("Raycasting")]
@@ -89,18 +91,18 @@ namespace Com.IsartDigital.Rush.Cube
             Vector3 lAxis = -Vector3.Cross(Vector3.up, transform.position - lPivot).normalized;
 
             _InitialRotation = transform.rotation;
-            _TargetedRotation = Quaternion.AngleAxis(90f, lAxis) * _InitialRotation;
+            _TargetedRotation = Quaternion.AngleAxis(ROTATION_ANGLE, lAxis) * _InitialRotation;
 
             _InitialPosition = transform.position;
-            _TargetedPosition = lPivot + (Quaternion.AngleAxis(90f, lAxis) * (transform.position - lPivot));
+            _TargetedPosition = lPivot + (Quaternion.AngleAxis(ROTATION_ANGLE, lAxis) * (transform.position - lPivot));
 
             DoAction = DoActionMove;
         }
 
         private void DoActionMove()
         {            
-            transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
             transform.rotation = Quaternion.Lerp(_InitialRotation, _TargetedRotation, _Clock.Ratio);
+            transform.position = Vector3.Lerp(_InitialPosition, _TargetedPosition, _Clock.Ratio);
         }
 
         public void SetDirectionMove(Vector3 pDirection)
