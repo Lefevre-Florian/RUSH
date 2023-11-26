@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,12 @@ namespace Com.IsartDigital.Rush.UI
 
         [SerializeField] private Button _ExitButton = default;
         [SerializeField] private Button _PlayButton = default;
+
+        [Header("Juiciness")]
+        [SerializeField] private Animator _CameraAnimator = default;
+        [SerializeField] private string _CameraTransitionAnim = "";
+
+        private Coroutine _Timer = null;
 
         protected override void Init()
         {
@@ -38,12 +45,29 @@ namespace Com.IsartDigital.Rush.UI
 
         private void Play()
         {
+            _PlayButton.onClick.RemoveListener(Play);
+            _CameraAnimator.Play(_CameraTransitionAnim);
+
+            if (_Timer == null)
+                _Timer = StartCoroutine(Timer()); 
+        }
+
+        private IEnumerator Timer()
+        {
+            yield return new WaitForSeconds(_CameraAnimator.GetCurrentAnimatorStateInfo(0).length);
+
+            if (_Timer != null)
+                StopCoroutine(_Timer);
+
             Close();
             Next();
         }
 
         private void OnDestroy()
         {
+            if (_Timer != null)
+                StopCoroutine(_Timer);
+
             _PlayButton.onClick.RemoveListener(Play);
 
             #if UNITY_STANDALONE
