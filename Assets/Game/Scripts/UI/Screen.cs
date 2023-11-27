@@ -31,7 +31,7 @@ namespace Com.IsartDigital.Rush.UI
             Close();
         }
 
-        protected void Close() => Destroy(gameObject);
+        public void Close() => Destroy(gameObject);
 
         protected void Open(GameObject pScreen) => LevelManager.GetInstance().SwitchScene(pScreen);
 
