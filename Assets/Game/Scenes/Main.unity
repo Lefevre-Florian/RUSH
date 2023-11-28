@@ -158,6 +158,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 854eb132620cb5d43a607e517192e292, type: 2}
   - {fileID: 11400000, guid: 80a24b1ece1ea924594a0b6da13bfadb, type: 2}
   - {fileID: 11400000, guid: 49688c7ede9001f4b8adf141c4108038, type: 2}
+  - {fileID: 11400000, guid: 20434abad2501dc419fe87c1a64c68b5, type: 2}
+  - {fileID: 11400000, guid: ba20ed660ba7ec34cac7aa945ff51960, type: 2}
   _GameScene: {fileID: 6539295304293461025, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
   _GameContainer: {fileID: 2054407015}
 --- !u!4 &87595615
