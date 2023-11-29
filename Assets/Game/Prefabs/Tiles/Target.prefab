@@ -171,6 +171,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8edb4e3391d44524dbf8ce12e63d8263, type: 2}
   m_Prefab: {fileID: 4809600284553703890, guid: 0acfa42bd1ac77841ba27b21426ca6c1, type: 3}
   m_Height: 1
+  _IsStatic: 0
 --- !u!1 &1289343281830474
 GameObject:
   m_ObjectHideFlags: 0
