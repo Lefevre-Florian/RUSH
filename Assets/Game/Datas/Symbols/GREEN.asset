@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GREEN
   m_EditorClassIdentifier: 
   _Color: 2
-  _Texture: {fileID: 2800000, guid: 187187d8ebf6e4347b3f657b8a59f817, type: 3}
+  _Texture: {fileID: 21300000, guid: 187187d8ebf6e4347b3f657b8a59f817, type: 3}

@@ -8,10 +8,10 @@ namespace Com.IsartDigital.Rush.Data
     public class ColorData : ScriptableObject
     {
         [SerializeField] private Colors _Color = default;
-        [SerializeField] private Texture _Texture = default;
+        [SerializeField] private Sprite _Texture = default;
 
         public Colors Color { get { return _Color; } private set { _Color = value; } }
 
-        public Texture Texture { get { return _Texture; } private set { _Texture = value; } }
+        public Sprite Texture { get { return _Texture; } private set { _Texture = value; } }
     }
 }

@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 4081725744714006}
   - component: {fileID: 8315121547642578238}
   - component: {fileID: 5467958303359648598}
+  - component: {fileID: 6994447462356971764}
   m_Layer: 11
   m_Name: Target
   m_TagString: Untagged
@@ -135,7 +136,6 @@ MonoBehaviour:
   _PlayerLayer:
     serializedVersion: 2
     m_Bits: 8
-  _RequiredCubes: 1
 --- !u!114 &5467958303359648598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,6 +149,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Color: 0
+--- !u!114 &6994447462356971764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244564097872744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 358571379bdd5404d9ed6d631a07c8e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsColorblindModeOn: 1
+  m_AccessibilityLibrary:
+  - {fileID: 11400000, guid: 76f175b6fca58974780bf6a3bf5d5fae, type: 2}
+  - {fileID: 11400000, guid: c7d1bf1fe7170934cbb3e5f014482957, type: 2}
+  - {fileID: 11400000, guid: 26242bab22ebd1f4386e6473d9f1d2cb, type: 2}
+  - {fileID: 11400000, guid: 439ad9940a126ae42be5ce189b19d058, type: 2}
+  - {fileID: 11400000, guid: 8a965372ea2b2e046bdc9074232bdfb9, type: 2}
+  - {fileID: 11400000, guid: 8edb4e3391d44524dbf8ce12e63d8263, type: 2}
+  m_Prefab: {fileID: 4809600284553703890, guid: 0acfa42bd1ac77841ba27b21426ca6c1, type: 3}
+  m_Height: 1
 --- !u!1 &1289343281830474
 GameObject:
   m_ObjectHideFlags: 0
