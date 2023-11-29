@@ -83,7 +83,7 @@ namespace Com.IsartDigital.Rush.Cube
         public void Init(Colors pSpawnColor)
         {
             Color = pSpawnColor;
-            _Renderer.Init(ColorLibrary.Library[pSpawnColor]);
+            _Renderer.Init(Color);
         }
 
         #region State Machine
