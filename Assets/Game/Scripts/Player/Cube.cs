@@ -1,3 +1,4 @@
+using Com.IsartDigital.Rush.Accessibility;
 using System;
 using UnityEngine;
 
@@ -80,11 +81,7 @@ namespace Com.IsartDigital.Rush.Cube
                 DoAction();
         }
 
-        public void Init(Colors pSpawnColor)
-        {
-            Color = pSpawnColor;
-            _Renderer.Init(ColorLibrary.Library[pSpawnColor]);
-        }
+        public void Init(Colors pSpawnColor) => Color = pSpawnColor;
 
         #region State Machine
         public void SetActionMove()
