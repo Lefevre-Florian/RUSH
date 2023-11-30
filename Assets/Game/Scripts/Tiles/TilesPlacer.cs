@@ -32,6 +32,11 @@ namespace Com.IsartDigital.Rush.Managers
 
         [SerializeField] private Transform _Container = null;
 
+        [Header("Juiciness")]
+        [SerializeField] private GameObject _TileBlueprint = null;
+        [SerializeField] private GameObject _CloudParticles = null;
+        [SerializeField][Range(0f,2f)] private float _CloudHeight = 2f;
+
         private RaycastHit _Hit = default;
         private UnityEngine.Camera _MainCamera = null;
 
@@ -41,7 +46,9 @@ namespace Com.IsartDigital.Rush.Managers
         private int[] _TilesLayers = new int[0];
         private TileData[] _TileFabric = new TileData[0];
 
-        private GameObject _Preview = null;
+        // Renderer
+        private Transform _Preview = null;
+        private Renderer _PreviewRenderer = null; 
 
         private bool _InputTriggerable = true;
         private bool _IsDisplayable = true;
@@ -73,19 +80,40 @@ namespace Com.IsartDigital.Rush.Managers
                 return;
             }
             SetTiles(_TileDatas);
+
         }
 
-        private void Start() => _MainCamera = UnityEngine.Camera.main;
+        private void Start()
+        {
+            _MainCamera = UnityEngine.Camera.main;
+        }
 
         private void Update()
         {
             if (!_InputTriggerable)
                 return;
 
-            if (_IsDisplayable && _Preview != null)
+            if (_IsDisplayable)
             {
-                if (Physics.Raycast(_MainCamera.ScreenPointToRay(Input.mousePosition), out _Hit, float.MaxValue))
-                    _Preview.transform.position = _Hit.collider.gameObject.transform.position;
+                if(_Preview == null)
+                {
+                    _Preview = Instantiate(_TileBlueprint, transform.parent).transform;
+                    _PreviewRenderer = _Preview.GetComponentInChildren<Renderer>();
+                    _PreviewRenderer.enabled = false;
+
+                    Instantiate(_CloudParticles, _Preview.localPosition + Vector3.up * _CloudHeight , new Quaternion(), _Preview);
+                }
+
+                if (Physics.Raycast(_MainCamera.ScreenPointToRay(Input.mousePosition), out _Hit, float.MaxValue)
+                    && _Hit.collider.gameObject.layer == _GroundLayer
+                    && _Preview != null)
+                {
+                    if (!_PreviewRenderer.enabled)
+                        _PreviewRenderer.enabled = true;
+                    _Preview.transform.position = _Hit.collider.gameObject.transform.position + Vector3.up * 0.5f;
+                }
+                else
+                    _PreviewRenderer.enabled = false;
             }
 
             // Input that place or destroy the tile
@@ -122,8 +150,6 @@ namespace Com.IsartDigital.Rush.Managers
                 _TileFabric[i] = _TileDatas.Tile[i];
                 _TilesLayers[i] = _TileFabric[i].prefab.layer;
             }
-
-            _Preview = _TileFabric[0].prefab;
             _InputTriggerable = true;
         }
 
@@ -219,6 +245,9 @@ namespace Com.IsartDigital.Rush.Managers
                 }
                 _IsDisplayable = false;
             }
+
+            if (!_IsDisplayable)
+                _PreviewRenderer.enabled = false;
             return _IsDisplayable;
         }
 
