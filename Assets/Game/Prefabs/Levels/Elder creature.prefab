@@ -130,7 +130,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5467958303359648598, guid: 29d103496e119334ea82a5e866a00c1d, type: 3}
       propertyPath: _Color
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -363,6 +363,18 @@ PrefabInstance:
     - target: {fileID: 4358187150086414, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnFrequency
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _NumberCubeToSpawn
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7567483275528803928, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _Color
@@ -883,7 +895,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5467958303359648598, guid: 29d103496e119334ea82a5e866a00c1d, type: 3}
       propertyPath: _Color
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -946,6 +958,14 @@ PrefabInstance:
     - target: {fileID: 4358187150086414, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _SpawnFrequency
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842554813203140046, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
+      propertyPath: _NumberCubeToSpawn
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7567483275528803928, guid: 9ca5dea2adfa3df4789e230db6d39e0a, type: 3}
       propertyPath: _Color

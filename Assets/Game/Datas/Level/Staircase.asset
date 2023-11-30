@@ -27,3 +27,4 @@ MonoBehaviour:
     quantity: 1
   _Level: {fileID: 5436766005248594147, guid: aea9d775270abb547aa40d41dc0d260b, type: 3}
   _Model: {fileID: 6371774375804255268, guid: cc0e1fbf8eb2b014586e8a826aecf036, type: 3}
+  _Name: Staircase

@@ -33,3 +33,4 @@ MonoBehaviour:
     quantity: 1
   _Level: {fileID: 540467982473180845, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
   _Model: {fileID: 3950706637992407068, guid: d9ab0d54dc205594c97d32dea973bf7c, type: 3}
+  _Name: Elder creature

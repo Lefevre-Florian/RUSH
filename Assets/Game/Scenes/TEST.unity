@@ -12677,6 +12677,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1845346264}
+    - target: {fileID: 955421271793295064, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
+      propertyPath: _SpawnFrequency
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 955421271793295064, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
+      propertyPath: _NumberCubeToSpawn
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1109923483119977850, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -12789,6 +12797,18 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1554251826}
+    - target: {fileID: 2334778606550575260, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
+      propertyPath: _SpawnDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2334778606550575260, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
+      propertyPath: _SpawnFrequency
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2334778606550575260, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
+      propertyPath: _NumberCubeToSpawn
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2339293227048358307, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -13013,6 +13033,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1205135397}
+    - target: {fileID: 5624873041687705338, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
+      propertyPath: _Color
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5669210583188089913, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -13321,6 +13345,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1347839438}
+    - target: {fileID: 9159090631527882948, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
+      propertyPath: _Color
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 9177757990678249262, guid: 89a879ad3cf392b488286499f88f3b42, type: 3}
       propertyPath: m_Mesh
       value: 

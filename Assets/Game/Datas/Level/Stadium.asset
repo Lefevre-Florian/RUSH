@@ -24,3 +24,4 @@ MonoBehaviour:
     quantity: 6
   _Level: {fileID: 6372879310861009351, guid: 5d2d213a7d6ab5d4b892c1294bb49e5e, type: 3}
   _Model: {fileID: 4531385388941335955, guid: 3c97847c0c3d9214aae527f01fc61808, type: 3}
+  _Name: Stadium

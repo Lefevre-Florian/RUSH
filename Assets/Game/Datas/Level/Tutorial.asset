@@ -18,3 +18,4 @@ MonoBehaviour:
     quantity: 1
   _Level: {fileID: 4531831583599099664, guid: b0b6c44b1a7268040911e3c1678eff8c, type: 3}
   _Model: {fileID: 4500314098034356556, guid: 6283d1e9f1574e44db760c2daba6f1d8, type: 3}
+  _Name: Tutorial
