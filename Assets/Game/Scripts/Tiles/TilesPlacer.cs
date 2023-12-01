@@ -33,6 +33,9 @@ namespace Com.IsartDigital.Rush.Managers
         [SerializeField] private string _InputAccept = "";
         [SerializeField] private string _InputDelete = "";
 
+        [SerializeField] private string _InputMouseVertical = "";
+        [SerializeField] private string _InputMouseHorizontal = "";
+
         [SerializeField] private Transform _Container = null;
 
         [Header("Juiciness")]
@@ -97,7 +100,8 @@ namespace Com.IsartDigital.Rush.Managers
             if (!_InputTriggerable)
                 return;
 
-            if (_IsDisplayable)
+            if (_IsDisplayable 
+                && (Input.GetAxis(_InputMouseVertical) != 0f || Input.GetAxis(_InputMouseHorizontal) != 0f))
             {
                 if(_Preview == null)
                 {
@@ -121,7 +125,9 @@ namespace Com.IsartDigital.Rush.Managers
                     }
                 }
                 else
+                {
                     _Preview.gameObject.SetActive(false);
+                }
             }
 
             // Input that place or destroy the tile

@@ -3998,6 +3998,14 @@ PrefabInstance:
       propertyPath: _CloudParticles
       value: 
       objectReference: {fileID: 2945049032879892667, guid: d1161a4fe4cdcfa449b7307d623a9a53, type: 3}
+    - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
+      propertyPath: _InputMouseVertical
+      value: Mouse Y
+      objectReference: {fileID: 0}
+    - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
+      propertyPath: _InputMouseHorizontal
+      value: Mouse X
+      objectReference: {fileID: 0}
     - target: {fileID: 4224140281081326190, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
       propertyPath: m_Pivot.x
       value: 1
