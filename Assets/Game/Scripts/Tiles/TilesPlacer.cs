@@ -28,6 +28,7 @@ namespace Com.IsartDigital.Rush.Managers
         [Header("Tiles & Fabric")]
         [SerializeField] private Level _TileDatas = null;
         [SerializeField] private int _GroundLayer = 6;
+        [SerializeField] private LayerMask _GroundMask = default;
 
         [Header("Windows / PC")]
         [SerializeField] private string _InputAccept = "";
@@ -43,6 +44,9 @@ namespace Com.IsartDigital.Rush.Managers
         [SerializeField] private GameObject _CloudParticles = null;
         [SerializeField][Range(0f,2f)] private float _CloudHeight = 2f;
 
+        [Header("Animation triggers")]
+        [SerializeField] private string _TriggerDelete = "";
+
         private RaycastHit _Hit = default;
         private UnityEngine.Camera _MainCamera = null;
 
@@ -54,6 +58,7 @@ namespace Com.IsartDigital.Rush.Managers
 
         // Renderer
         private Transform _Preview = null;
+        private Animator _PreviewAnimator = null;
 
         private bool _InputTriggerable = true;
         private bool _IsDisplayable = true;
@@ -108,21 +113,20 @@ namespace Com.IsartDigital.Rush.Managers
                     _Preview = Instantiate(_TileBlueprint, transform.parent).transform;
                     _Preview.gameObject.SetActive(false);
 
-                    Instantiate(_CloudParticles, _Preview.localPosition + Vector3.up * _CloudHeight , new Quaternion(), _Preview);
+                    _PreviewAnimator = Instantiate(_CloudParticles, 
+                                                   _Preview.localPosition + Vector3.up * _CloudHeight , 
+                                                   new Quaternion(), 
+                                                   _Preview).GetComponentInChildren<Animator>();
                 }
 
                 if (Physics.Raycast(_MainCamera.ScreenPointToRay(Input.mousePosition), out _Hit, float.MaxValue)
-                    && _Hit.collider.gameObject.layer == _GroundLayer
-                    && _Preview != null)
+                    && (!Physics.Raycast(_Hit.collider.gameObject.transform.position, Vector3.up, _RaycastDistance, _GroundMask)))
                 {
-
                     //Cast on the upper block
-                    if(!Physics.Raycast(_Hit.collider.gameObject.transform.position, Vector3.up, _RaycastDistance))
-                    {
-                        if (!_Preview.gameObject.activeSelf)
-                            _Preview.gameObject.SetActive(true);
-                        _Preview.transform.position = _Hit.collider.gameObject.transform.position + Vector3.up * TILE_SIZE;
-                    }
+                    if (!_Preview.gameObject.activeSelf)
+                        _Preview.gameObject.SetActive(true);
+
+                    _Preview.transform.position = ((_Hit.collider.gameObject.layer == _GroundLayer) ? _Hit.collider.gameObject.transform.position : _Hit.collider.gameObject.transform.position - Vector3.up) + Vector3.up * TILE_SIZE;
                 }
                 else
                 {
@@ -176,6 +180,8 @@ namespace Com.IsartDigital.Rush.Managers
                     _TargetedGameobject = _Hit.collider.gameObject.transform;
                     if (_TargetedGameobject != null)
                     {
+                        if(_Preview != null) _PreviewAnimator.SetTrigger(_TriggerDelete);
+
                         int lLength = _TileFabric.Length;
                         int lIndex = -1;
                         for (int i = 0; i < lLength; i++)

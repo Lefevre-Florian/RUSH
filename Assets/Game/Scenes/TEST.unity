@@ -3995,9 +3995,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1820389188126086, guid: 0ad3e42b188a0ef46a87b42d79a8b770, type: 3}
     - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
+      propertyPath: _TriggerDelete
+      value: Delete
+      objectReference: {fileID: 0}
+    - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
       propertyPath: _CloudParticles
       value: 
       objectReference: {fileID: 2945049032879892667, guid: d1161a4fe4cdcfa449b7307d623a9a53, type: 3}
+    - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
+      propertyPath: _GroundMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
       propertyPath: _InputMouseVertical
       value: Mouse Y
