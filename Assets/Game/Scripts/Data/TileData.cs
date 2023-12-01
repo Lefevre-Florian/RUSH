@@ -10,5 +10,7 @@ namespace Com.IsartDigital.Rush.Data
         public Vectors direction;
         public GameObject prefab;
         public int quantity;
+
+        public Material Material { get { return prefab.GetComponentInChildren<Renderer>().sharedMaterial; } private set { } }
     }
 }

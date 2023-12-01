@@ -59,6 +59,7 @@ namespace Com.IsartDigital.Rush.Managers
 
         // Renderer
         private Transform _Preview = null;
+        private Renderer _PreviewRenderer = null;
         private Animator _PreviewAnimator = null;
 
         private bool _InputTriggerable = true;
@@ -106,18 +107,20 @@ namespace Com.IsartDigital.Rush.Managers
             if (!_InputTriggerable)
                 return;
 
-            if (_IsDisplayable 
-                && (Input.GetAxis(_InputMouseVertical) != 0f || Input.GetAxis(_InputMouseHorizontal) != 0f))
+            if ((Input.GetAxis(_InputMouseVertical) != 0f || Input.GetAxis(_InputMouseHorizontal) != 0f))
             {
                 if(_Preview == null)
                 {
                     _Preview = Instantiate(_TileBlueprint, transform.parent).transform;
+                    _PreviewRenderer = _Preview.GetComponentInChildren<Renderer>();
                     _Preview.gameObject.SetActive(false);
 
                     _PreviewAnimator = Instantiate(_CloudParticles, 
                                                    _Preview.localPosition + Vector3.up * _CloudHeight , 
                                                    new Quaternion(), 
                                                    _Preview).GetComponentInChildren<Animator>();
+
+                    UpdatePreview();
                 }
 
                 if (Physics.Raycast(_MainCamera.ScreenPointToRay(Input.mousePosition), out _Hit, float.MaxValue)
@@ -199,8 +202,6 @@ namespace Com.IsartDigital.Rush.Managers
                         {
                             _TileFabric[lIndex].quantity += 1;
                             OnTileRemoved?.Invoke(lIndex);
-
-                            CheckFabricFullness();
                         }
                         
                         Destroy(_TargetedGameobject.gameObject);
@@ -230,8 +231,6 @@ namespace Com.IsartDigital.Rush.Managers
                                             _Container).GetComponent<DirectionalTiles>();
                         lTile.SetDirection(_TileFabric[_CurrentIndex].direction);
 
-                        CheckFabricFullness();
-
                         OnTilePlaced?.Invoke(_CurrentIndex);
                         if (_TileFabric[_CurrentIndex].quantity == 0) ChangeTileType();
                     }
@@ -247,14 +246,47 @@ namespace Com.IsartDigital.Rush.Managers
         public void SetCurrentTileIndex(int pIndex)
         {
             if (pIndex >= 0 && pIndex < _TileFabric.Length)
+            {
                 _CurrentIndex = pIndex;
+                UpdatePreview();
+            }
         }
 
         private void ChangeTileType()
         {
             _CurrentIndex = (_CurrentIndex + 1 >= _TileFabric.Length) ? 0 : _CurrentIndex + 1;
+            UpdatePreview();
 
             OnTileChanged?.Invoke(_CurrentIndex);
+        }
+
+        private void UpdatePreview()
+        {
+            if (_Preview == null)
+                return;
+
+            _PreviewRenderer.material.mainTexture = _TileFabric[_CurrentIndex].Material.mainTexture;
+
+            Vector3 lLookDirection = Vector3.zero;
+            switch (_TileFabric[_CurrentIndex].direction)
+            {
+                case Vectors.FORWARD:
+                    lLookDirection = Vector3.forward;
+                    break;
+                case Vectors.BACKWARD:
+                    lLookDirection = Vector3.back;
+                    break;
+                case Vectors.RIGHT:
+                    lLookDirection = Vector3.right;
+                    break;
+                case Vectors.LEFT:
+                    lLookDirection = Vector3.left;
+                    break;
+                default:
+                    break;
+            }
+
+            _PreviewRenderer.transform.LookAt(_PreviewRenderer.transform.position + lLookDirection);
         }
 
         private bool CheckFabricFullness()
