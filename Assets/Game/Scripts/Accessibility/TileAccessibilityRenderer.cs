@@ -9,11 +9,6 @@ namespace Com.IsartDigital.Rush.Accessibility
     [RequireComponent(typeof(ColoredTiles))]
     public class TileAccessibilityRenderer : AccessibilityRenderer
     {
-        [SerializeField] private bool _IsStatic = true;
-
-        private OrbitalCamera _Camera = null;
-        private Transform _Icon = null;
-
         private void Start()
         {
             Colors lID = GetComponent<ColoredTiles>().Color;
@@ -27,33 +22,15 @@ namespace Com.IsartDigital.Rush.Accessibility
                                               transform).transform;
                 lIcon.GetComponentInChildren<Image>().sprite = lTexture;
 
-                if (_IsStatic)
+                if (m_IsStatic)
                     lIcon.gameObject.isStatic = true;
                 else
                 {
-                    _Icon = lIcon;
+                    m_Icon = lIcon;
 
-                    _Camera = OrbitalCamera.GetInstance();
-                    _Camera.OnMove += LookAt;
+                    m_Camera = OrbitalCamera.GetInstance();
+                    m_Camera.OnMove += LookAt;
                 }
-            }
-        }
-
-        private void LookAt()
-        {
-            _Icon.LookAt(new Vector3(_Camera.transform.position.x,
-                                     _Icon.position.y,
-                                     _Camera.transform.position.z));
-        }
-
-        private void OnDestroy()
-        {
-            _Icon = null;
-
-            if (!_IsStatic)
-            {
-                _Camera.OnMove -= LookAt;
-                _Camera = null;
             }
         }
     }
