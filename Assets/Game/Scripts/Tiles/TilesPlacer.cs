@@ -202,6 +202,9 @@ namespace Com.IsartDigital.Rush.Managers
                         {
                             _TileFabric[lIndex].quantity += 1;
                             OnTileRemoved?.Invoke(lIndex);
+
+                            _CurrentIndex = lIndex;
+                            UpdatePreview();
                         }
                         
                         Destroy(_TargetedGameobject.gameObject);
@@ -265,28 +268,35 @@ namespace Com.IsartDigital.Rush.Managers
             if (_Preview == null)
                 return;
 
-            _PreviewRenderer.material.mainTexture = _TileFabric[_CurrentIndex].Material.mainTexture;
-
-            Vector3 lLookDirection = Vector3.zero;
-            switch (_TileFabric[_CurrentIndex].direction)
+            if (CheckFabricFullness())
             {
-                case Vectors.FORWARD:
-                    lLookDirection = Vector3.forward;
-                    break;
-                case Vectors.BACKWARD:
-                    lLookDirection = Vector3.back;
-                    break;
-                case Vectors.RIGHT:
-                    lLookDirection = Vector3.right;
-                    break;
-                case Vectors.LEFT:
-                    lLookDirection = Vector3.left;
-                    break;
-                default:
-                    break;
-            }
+                _PreviewRenderer.material.mainTexture = _TileFabric[_CurrentIndex].Material.mainTexture;
 
-            _PreviewRenderer.transform.LookAt(_PreviewRenderer.transform.position + lLookDirection);
+                Vector3 lLookDirection = Vector3.zero;
+                switch (_TileFabric[_CurrentIndex].direction)
+                {
+                    case Vectors.FORWARD:
+                        lLookDirection = Vector3.forward;
+                        break;
+                    case Vectors.BACKWARD:
+                        lLookDirection = Vector3.back;
+                        break;
+                    case Vectors.RIGHT:
+                        lLookDirection = Vector3.right;
+                        break;
+                    case Vectors.LEFT:
+                        lLookDirection = Vector3.left;
+                        break;
+                    default:
+                        break;
+                }
+
+                _PreviewRenderer.transform.LookAt(_PreviewRenderer.transform.position + lLookDirection);
+            }
+            else
+            {
+                _PreviewRenderer.material.mainTexture = null;
+            }
         }
 
         private bool CheckFabricFullness()
@@ -294,14 +304,9 @@ namespace Com.IsartDigital.Rush.Managers
             foreach (TileData lTile in _TileFabric)
             {
                 if (lTile.quantity != 0)
-                {
-                    _IsDisplayable = true;
-                    break;
-                }
-                _IsDisplayable = false;
+                    return true;
             }
-
-            return _IsDisplayable;
+            return false;
         }
 
         private void OnDestroy()
