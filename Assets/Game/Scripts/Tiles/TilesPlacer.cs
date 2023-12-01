@@ -46,6 +46,7 @@ namespace Com.IsartDigital.Rush.Managers
 
         [Header("Animation triggers")]
         [SerializeField] private string _TriggerDelete = "";
+        [SerializeField] private string _TriggerCast = "";
 
         private RaycastHit _Hit = default;
         private UnityEngine.Camera _MainCamera = null;
@@ -218,6 +219,8 @@ namespace Com.IsartDigital.Rush.Managers
                     _TargetedGameobject = _Hit.collider.gameObject.transform;
                     if (_TargetedGameobject != null && _TileFabric[_CurrentIndex].quantity != 0)
                     {
+                        if (_Preview != null) _PreviewAnimator.SetTrigger(_TriggerCast);
+
                         _TileFabric[_CurrentIndex].quantity -= 1;
 
                         DirectionalTiles lTile;
@@ -266,8 +269,6 @@ namespace Com.IsartDigital.Rush.Managers
                 _IsDisplayable = false;
             }
 
-            if (!_IsDisplayable)
-                _Preview.gameObject.SetActive(false);
             return _IsDisplayable;
         }
 

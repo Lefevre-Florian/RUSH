@@ -3991,6 +3991,10 @@ PrefabInstance:
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
+      propertyPath: _TriggerCast
+      value: Cast
+      objectReference: {fileID: 0}
+    - target: {fileID: 4068256861087753466, guid: c57cb5845d368dc499d41d33818dd7a6, type: 3}
       propertyPath: _TileBlueprint
       value: 
       objectReference: {fileID: 1820389188126086, guid: 0ad3e42b188a0ef46a87b42d79a8b770, type: 3}
