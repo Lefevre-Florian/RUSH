@@ -22,6 +22,9 @@ namespace Com.IsartDigital.Rush.Managers
         }
         #endregion
 
+        private const float RAYCAST_OFFSET = 0.2f;
+        private const float TILE_SIZE = 0.5f;
+
         [Header("Tiles & Fabric")]
         [SerializeField] private Level _TileDatas = null;
         [SerializeField] private int _GroundLayer = 6;
@@ -48,10 +51,11 @@ namespace Com.IsartDigital.Rush.Managers
 
         // Renderer
         private Transform _Preview = null;
-        private Renderer _PreviewRenderer = null; 
 
         private bool _InputTriggerable = true;
         private bool _IsDisplayable = true;
+
+        private float _RaycastDistance = TILE_SIZE + RAYCAST_OFFSET;
 
         #if UNITY_ANDROID
         private Touch _Touch = default;
@@ -98,8 +102,7 @@ namespace Com.IsartDigital.Rush.Managers
                 if(_Preview == null)
                 {
                     _Preview = Instantiate(_TileBlueprint, transform.parent).transform;
-                    _PreviewRenderer = _Preview.GetComponentInChildren<Renderer>();
-                    _PreviewRenderer.enabled = false;
+                    _Preview.gameObject.SetActive(false);
 
                     Instantiate(_CloudParticles, _Preview.localPosition + Vector3.up * _CloudHeight , new Quaternion(), _Preview);
                 }
@@ -108,12 +111,17 @@ namespace Com.IsartDigital.Rush.Managers
                     && _Hit.collider.gameObject.layer == _GroundLayer
                     && _Preview != null)
                 {
-                    if (!_PreviewRenderer.enabled)
-                        _PreviewRenderer.enabled = true;
-                    _Preview.transform.position = _Hit.collider.gameObject.transform.position + Vector3.up * 0.5f;
+
+                    //Cast on the upper block
+                    if(!Physics.Raycast(_Hit.collider.gameObject.transform.position, Vector3.up, _RaycastDistance))
+                    {
+                        if (!_Preview.gameObject.activeSelf)
+                            _Preview.gameObject.SetActive(true);
+                        _Preview.transform.position = _Hit.collider.gameObject.transform.position + Vector3.up * TILE_SIZE;
+                    }
                 }
                 else
-                    _PreviewRenderer.enabled = false;
+                    _Preview.gameObject.SetActive(false);
             }
 
             // Input that place or destroy the tile
@@ -247,7 +255,7 @@ namespace Com.IsartDigital.Rush.Managers
             }
 
             if (!_IsDisplayable)
-                _PreviewRenderer.enabled = false;
+                _Preview.gameObject.SetActive(false);
             return _IsDisplayable;
         }
 
