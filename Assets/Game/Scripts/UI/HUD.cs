@@ -39,6 +39,10 @@ namespace Com.IsartDigital.Rush.UI
         [SerializeField] private Button _BackButton = null;
 
         [Space(10)]
+        [SerializeField] private Button _HintButton = null;
+        [SerializeField] private Button _HintFullButton = null;
+
+        [Space(10)]
         [SerializeField] private Slider _TimeSlider = null;
 
         [Header("Popup & Text")]
@@ -55,6 +59,7 @@ namespace Com.IsartDigital.Rush.UI
         // refs
         private OrbitalCamera _Camera = null;
         private TilesPlacer _TilePlacer = null;
+        private HintManager _HintManager = null;
 
         private List<Button> _TileBtns = new List<Button>();
         private Vector3[] _TileDirection = new Vector3[0];
@@ -81,6 +86,12 @@ namespace Com.IsartDigital.Rush.UI
             _ResetButton.onClick.AddListener(ResetGame);
             _GameButton.onClick.AddListener(StartGameMode);
             _BackButton.onClick.AddListener(Back);
+
+            _HintButton.onClick.AddListener(CallHint);
+            _HintFullButton.onClick.AddListener(CallFullHint);
+
+            _HintManager = HintManager.GetInstance();
+
             _TimeSlider.onValueChanged.AddListener(OnSliderValueUpdated);
 
             // Init tiles buttons
@@ -140,6 +151,9 @@ namespace Com.IsartDigital.Rush.UI
             _LoosePopup.gameObject.SetActive(false);
             _TimeSlider.gameObject.SetActive(false);
 
+            _HintButton.gameObject.SetActive(true);
+            _HintFullButton.gameObject.SetActive(true);
+
             _Container.gameObject.SetActive(true);
             _TilePlacer.EnableInput();
         }
@@ -154,8 +168,13 @@ namespace Com.IsartDigital.Rush.UI
 
             _TimeSlider.gameObject.SetActive(true);
 
+            _HintButton.gameObject.SetActive(false);
+            _HintFullButton.gameObject.SetActive(false);
+
             _Container.gameObject.SetActive(false);
             _TilePlacer.DisableInput();
+
+            _HintManager.ForceHideHint();
         }
 
         private void ResetGame()
@@ -180,6 +199,10 @@ namespace Com.IsartDigital.Rush.UI
             else
                 Time.timeScale = 1f;
         }
+
+        private void CallHint() => _HintManager.DisplayHint();
+
+        private void CallFullHint() => _HintManager.DisplayCompleteHint();
 
         /// <summary>
         /// Display the correct popup depending of the game over state at the end of the play phase
@@ -219,6 +242,11 @@ namespace Com.IsartDigital.Rush.UI
 
         private void OnDestroy()
         {
+            _HintManager = null;
+
+            _HintFullButton.onClick.RemoveListener(CallFullHint);
+            _HintButton.onClick.RemoveListener(CallHint);
+
             _TilePlacer.OnTilePlaced -= UpdateTileStatus;
             _TilePlacer.OnTileRemoved -= UpdateTileStatus;
 
