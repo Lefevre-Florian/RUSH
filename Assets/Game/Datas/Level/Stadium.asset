@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65bfba4294aa629478186b05f0b5809f, type: 3}
-  m_Name: Cascade
+  m_Name: Stadium
   m_EditorClassIdentifier: 
   _Tiles:
-  - direction: 2
+  - direction: 3
     prefab: {fileID: 1820389188126086, guid: 16957ef68a439ee4fb120ba2ffa2519e, type: 3}
     quantity: 1
-  - direction: 3
+  - direction: 0
     prefab: {fileID: 1107203473147756, guid: 7c58f80a63e8a7141b5b7377395135cc, type: 3}
-    quantity: 3
-  - direction: 1
-    prefab: {fileID: 1107203473147756, guid: 7c58f80a63e8a7141b5b7377395135cc, type: 3}
-    quantity: 1
-  _Level: {fileID: 8724181505668255447, guid: 82927afe6aacb2942a0f9a5e2984a4d4, type: 3}
-  _Model: {fileID: 8896580577454381683, guid: 21fae8eeb4292cb428b2cc4c3fb94e99, type: 3}
+    quantity: 5
+  - direction: 2
+    prefab: {fileID: 1086838927579222, guid: e8eecaadcecd62c4abc686a94f5a59dd, type: 3}
+    quantity: 6
+  _Level: {fileID: 6372879310861009351, guid: 5d2d213a7d6ab5d4b892c1294bb49e5e, type: 3}
+  _Model: {fileID: 4531385388941335955, guid: 3c97847c0c3d9214aae527f01fc61808, type: 3}
+  _Name: Stadium

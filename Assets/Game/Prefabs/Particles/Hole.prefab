@@ -4842,7 +4842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14469c4ce65b2442be27d7d663bb9e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _SwirlSpeed: 25
+  _SwirlSpeed: 50
   _TweenCurve:
     serializedVersion: 2
     m_Curve:

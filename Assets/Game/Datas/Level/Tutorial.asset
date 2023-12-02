@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65bfba4294aa629478186b05f0b5809f, type: 3}
+  m_Name: Tutorial
+  m_EditorClassIdentifier: 
+  _Tiles:
+  - direction: 3
+    prefab: {fileID: 1820389188126086, guid: 16957ef68a439ee4fb120ba2ffa2519e, type: 3}
+    quantity: 1
+  _Level: {fileID: 4531831583599099664, guid: b0b6c44b1a7268040911e3c1678eff8c, type: 3}
+  _Model: {fileID: 4500314098034356556, guid: 6283d1e9f1574e44db760c2daba6f1d8, type: 3}
+  _Name: Tutorial
