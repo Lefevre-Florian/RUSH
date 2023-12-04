@@ -133,6 +133,7 @@ namespace Com.IsartDigital.Rush.UI
                 lBtn.transform.rotation = Quaternion.Euler(_TileDirection[i]);
                 _TileBtns.Add(lBtn.GetComponent<Button>());
             }
+            UpdateTileOrientation();
 
             _Camera.OnMove += UpdateTileOrientation;
 
