@@ -25,6 +25,7 @@ namespace Com.IsartDigital.Rush.Cube
 
         [Header("Animation")]
         [SerializeField] private string _LandingAnimation = "";
+        [SerializeField] private GameObject _StainPrefab = null;
 
         [SerializeField] private CubeRenderer _Renderer = null;
 
@@ -200,6 +201,12 @@ namespace Com.IsartDigital.Rush.Cube
                 GameObject lCollided = _Hit.collider.gameObject;
                 if (lCollided.layer == _GroundLayer && !_IsStuned)
                 {
+                    if(_StainPrefab != null)
+                        Instantiate(_StainPrefab,
+                                    transform.position + Vector3.up / 2f,
+                                    new Quaternion(),
+                                    transform.parent);
+
                     for (int i = 0; i < MAX_DIRECTION_COUNT; i++)
                     {
                         if (!Physics.Raycast(transform.position, _MovementDirection, _RaycastDistance, _Ground)) break;

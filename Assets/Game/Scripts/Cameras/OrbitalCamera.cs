@@ -138,8 +138,8 @@ namespace Com.IsartDigital.Rush.Camera
             if (Input.GetButton(_RightClickInput))
             {
                 // Mouse only
-                _VerticalAngle += _MouseSpeed * Time.deltaTime * Input.GetAxis(_HorizontalMouseAxis) * Mathf.Deg2Rad;
-                _HorizontalAngle += _MouseSpeed * Time.deltaTime * Input.GetAxis(_VerticalMouseAxis) * Mathf.Deg2Rad;
+                _VerticalAngle += _MouseSpeed / (Time.timeScale + 0.1f) * Time.deltaTime * Input.GetAxis(_HorizontalMouseAxis) * Mathf.Deg2Rad;
+                _HorizontalAngle += _MouseSpeed / (Time.timeScale + 0.1f) * Time.deltaTime * Input.GetAxis(_VerticalMouseAxis) * Mathf.Deg2Rad;
 
                 OnMove?.Invoke();
                 UpdateCameraPositionOnCircle();
@@ -147,8 +147,8 @@ namespace Com.IsartDigital.Rush.Camera
             else if(Input.GetAxis(_HorizontalKeyboardAxis) != 0f || Input.GetAxis(_VerticalKeyboardAxis) != 0)
             {
                 // Keyboard only
-                _VerticalAngle += _KeyboardSpeed * Time.deltaTime * Input.GetAxis(_HorizontalKeyboardAxis) * Mathf.Deg2Rad;
-                _HorizontalAngle += _KeyboardSpeed * Time.deltaTime * Input.GetAxis(_VerticalKeyboardAxis) * Mathf.Deg2Rad;
+                _VerticalAngle += _KeyboardSpeed / (Time.timeScale + 0.1f) * Time.deltaTime * Input.GetAxis(_HorizontalKeyboardAxis) * Mathf.Deg2Rad;
+                _HorizontalAngle += _KeyboardSpeed / (Time.timeScale + 0.1f) * Time.deltaTime * Input.GetAxis(_VerticalKeyboardAxis) * Mathf.Deg2Rad;
 
                 OnMove?.Invoke();
                 UpdateCameraPositionOnCircle();

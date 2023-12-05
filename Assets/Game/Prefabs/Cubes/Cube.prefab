@@ -77,6 +77,7 @@ MonoBehaviour:
     m_Bits: 64
   _CollisionWallTickWait: 2
   _LandingAnimation: Landing
+  _StainPrefab: {fileID: 1683348353623562282, guid: f313cd05aea3cfd4f99f087a94bf4e1b, type: 3}
   _Renderer: {fileID: 8357676408054388747}
 --- !u!114 &8357676408054388747
 MonoBehaviour:
