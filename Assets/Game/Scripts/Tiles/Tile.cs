@@ -11,22 +11,22 @@ namespace Com.IsartDigital.Rush.Tiles
 
         [SerializeField] private LayerMask _PlayerLayer = default;
 
-        protected Clock _Clock = null;
-        protected RaycastHit _Hit = default;
+        protected Clock m_Clock = null;
+        protected RaycastHit m_Hit = default;
 
         private void Start() => Init();
 
         protected virtual void Init()
         {
-            _Clock = Clock.GetInstance();
-            _Clock.OnTick += OnCollisionCheck;
+            m_Clock = Clock.GetInstance();
+            m_Clock.OnTick += OnCollisionCheck;
         }
 
         private void OnCollisionCheck()
         {
             if (Physics.Raycast(transform.position + (Vector3.up * RAYCAST_OFFSETING), 
                                 Vector3.up, 
-                                out _Hit, 
+                                out m_Hit, 
                                 RAYCAST_DISTANCE, 
                                 _PlayerLayer))
                 OnCollisionComportement();   
@@ -36,8 +36,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected virtual void Destroy()
         {
-            _Clock.OnTick -= OnCollisionCheck;
-            _Clock = null;
+            m_Clock.OnTick -= OnCollisionCheck;
+            m_Clock = null;
         }
 
         private void OnDestroy() => Destroy();

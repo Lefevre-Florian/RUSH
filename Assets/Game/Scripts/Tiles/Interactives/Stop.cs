@@ -26,7 +26,7 @@ namespace Com.IsartDigital.Rush.Tiles
         protected override void Init()
         {
             base.Init();
-            _Clock.OnReset += Restore;
+            m_Clock.OnReset += Restore;
 
             _IceParticles = Instantiate(_IceSparksParticles,
                                         transform.position + Vector3.up * HEIGHT_OFFSET,
@@ -43,7 +43,7 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected override void OnCollisionComportement()
         {
-            Cube.Cube lCube = _Hit.collider.gameObject.GetComponent<Cube.Cube>();
+            Cube.Cube lCube = m_Hit.collider.gameObject.GetComponent<Cube.Cube>();
 
             if (_CubePaused.Contains(lCube))
                 return;
@@ -51,7 +51,7 @@ namespace Com.IsartDigital.Rush.Tiles
             lCube.SetActionWait(_WaitDuration);
             _CubePaused.Enqueue(lCube);
 
-            _Clock.OnTick += CleanStoppeur;
+            m_Clock.OnTick += CleanStoppeur;
 
             _IcePrison = Instantiate(_IcePrisonPrefab, transform);
         }
@@ -72,15 +72,15 @@ namespace Com.IsartDigital.Rush.Tiles
             // Clean the stoppeur if there's no cube remaining in queue
             if (_CubePaused.Count == 0)
             {
-                _Clock.OnTick -= CleanStoppeur;
+                m_Clock.OnTick -= CleanStoppeur;
                 _InternalTick = 0;
             }
         }
 
         protected override void Destroy()
         {
-            _Clock.OnReset -= Restore;
-            _Clock.OnTick -= CleanStoppeur;
+            m_Clock.OnReset -= Restore;
+            m_Clock.OnTick -= CleanStoppeur;
             base.Destroy();
         }
 

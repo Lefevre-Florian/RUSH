@@ -24,10 +24,10 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected override void OnCollisionComportement()
         {
-            if (_Hit.collider.gameObject.GetComponent<Cube.Cube>().Color != _Color)
+            if (m_Hit.collider.gameObject.GetComponent<Cube.Cube>().Color != _Color)
                 return;
 
-            GameObject lCollider = _Hit.collider.gameObject;
+            GameObject lCollider = m_Hit.collider.gameObject;
 
             OnFullyArrived?.Invoke(lCollider.GetComponent<Cube.Cube>());
             Destroy(lCollider);

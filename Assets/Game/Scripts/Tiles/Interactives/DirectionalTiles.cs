@@ -23,7 +23,7 @@ namespace Com.IsartDigital.Rush.Tiles
         [SerializeField] private GameObject _SpawnParticlePrefab = default;
         [SerializeField] private float _SpwanParticleOffset = 0.01f;
 
-        protected Vector3 _DirectionalVector = default;
+        protected Vector3 m_DirectionalVector = default;
 
         public Vectors Direction
         {
@@ -41,19 +41,19 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void UpdateLookDirection()
         {
-            _DirectionalVector = _Directions[_Direction];
-            transform.LookAt(transform.position + _DirectionalVector);
+            m_DirectionalVector = _Directions[_Direction];
+            transform.LookAt(transform.position + m_DirectionalVector);
         }
 
         protected override void OnCollisionComportement()
         {
-            Cube.Cube lCube = _Hit.collider.gameObject.GetComponent<Cube.Cube>();
+            Cube.Cube lCube = m_Hit.collider.gameObject.GetComponent<Cube.Cube>();
             lCube.SetDirectionMove(GetDirection());
         }
 
         protected virtual Vector3 GetDirection()
         {
-            return _DirectionalVector;
+            return m_DirectionalVector;
         }
 
         public void SetDirection(Vectors pDirection)

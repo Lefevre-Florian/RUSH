@@ -74,6 +74,8 @@ MonoBehaviour:
   _Direction: 0
   _SpawnParticlePrefab: {fileID: 1806809999422285094, guid: 2f950b5402ef33346847bd5679760cf1, type: 3}
   _SpwanParticleOffset: 0.01
+  _ActionDuration: 1
+  _PushingHands: {fileID: 2189520148124427394, guid: 4dab151ddfbb2134ea5ecbfcbee7f59c, type: 3}
 --- !u!95 &1295326849554666791
 Animator:
   serializedVersion: 5

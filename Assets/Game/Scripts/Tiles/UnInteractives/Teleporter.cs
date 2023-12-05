@@ -44,13 +44,13 @@ namespace Com.IsartDigital.Rush.Tiles
 
         protected override void OnCollisionComportement()
         {
-            Cube.Cube lCube = _Hit.collider.gameObject.GetComponent<Cube.Cube>();
+            Cube.Cube lCube = m_Hit.collider.gameObject.GetComponent<Cube.Cube>();
 
             if (_Output.TeleportationStack.Count != 0 && _Output.TeleportationStack.Contains(lCube) || _Output._TeleportationMemory.Contains(lCube))
                 return;
 
             if(_TeleportationStack.Count == 0)
-                _Clock.OnTick += ManageTeleportation;
+                m_Clock.OnTick += ManageTeleportation;
 
             TriggerAnimation();
 
@@ -71,10 +71,10 @@ namespace Com.IsartDigital.Rush.Tiles
             _TeleportationMemory.Enqueue(lCube);
 
             if (_TeleportationMemory.Count != 0)
-                _Clock.OnTick += CleanQueue;
+                m_Clock.OnTick += CleanQueue;
 
             if (_TeleportationStack.Count == 0)
-                _Clock.OnTick -= ManageTeleportation;
+                m_Clock.OnTick -= ManageTeleportation;
         }
 
         private void CleanQueue()
@@ -84,7 +84,7 @@ namespace Com.IsartDigital.Rush.Tiles
 
             if (_TeleportationMemory.Count == 0)
             {
-                _Clock.OnTick -= CleanQueue;
+                m_Clock.OnTick -= CleanQueue;
                 _InternalTick = 0;
             }
                 
@@ -96,7 +96,7 @@ namespace Com.IsartDigital.Rush.Tiles
         {
             _Animator = null;
 
-            _Clock.OnTick -= ManageTeleportation;
+            m_Clock.OnTick -= ManageTeleportation;
             base.Destroy();
         }
     }
