@@ -46,6 +46,9 @@ namespace Com.IsartDigital.Rush.Tiles
             _InternalNumberCubeToSpawn = _NumberCubeToSpawn;
             _InternalDelay = 0;
 
+            _Clock.OnTick -= DelayCubeSpawn;
+            _Clock.OnTick -= CubeSpawner;
+
             _Clock.OnGameStart += StartSpawner;
         }
 

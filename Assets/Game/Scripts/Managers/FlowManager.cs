@@ -57,6 +57,8 @@ namespace Com.IsartDigital.Rush.Managers
 
         private void Init()
         {
+            CleanGame();
+
             if (_WarningSign != null)
                 Destroy(_WarningSign);
 
