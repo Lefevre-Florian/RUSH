@@ -173,6 +173,8 @@ namespace Com.IsartDigital.Rush.Managers
                 _TilesLayers[i] = _TileFabric[i].prefab.layer;
             }
             _InputTriggerable = true;
+
+            UpdatePreview();
         }
 
         private void DeleteTile(Ray pRay)

@@ -15,6 +15,7 @@ namespace Com.IsartDigital.Rush.UI
 
         protected void Back()
         {
+            LevelManager.GetInstance().TriggerFadeOutScreen();
             if (_ParentScreen == null)
                 return;
 

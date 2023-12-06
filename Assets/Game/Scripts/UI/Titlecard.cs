@@ -1,3 +1,4 @@
+using Com.IsartDigital.Rush.Managers;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,8 +13,10 @@ namespace Com.IsartDigital.Rush.UI
         [SerializeField] private Button _PlayButton = default;
 
         [Header("Juiciness")]
-        [SerializeField] private Animator _CameraAnimator = default;
-        [SerializeField] private string _CameraTransitionAnim = "";
+        [SerializeField] private Animator _Animator = default;
+        [SerializeField] private string _Trigger = "";
+
+        [SerializeField][Range(0f, 1f)] private float _Delay = 0.75f;
 
         private Coroutine _Timer = null;
 
@@ -46,7 +49,9 @@ namespace Com.IsartDigital.Rush.UI
         private void Play()
         {
             _PlayButton.onClick.RemoveListener(Play);
-            _CameraAnimator.Play(_CameraTransitionAnim);
+            _Animator.SetTrigger(_Trigger);
+
+            LevelManager.GetInstance().TriggerFadeInScreen();
 
             if (_Timer == null)
                 _Timer = StartCoroutine(Timer()); 
@@ -54,7 +59,7 @@ namespace Com.IsartDigital.Rush.UI
 
         private IEnumerator Timer()
         {
-            yield return new WaitForSeconds(_CameraAnimator.GetCurrentAnimatorStateInfo(0).length);
+            yield return new WaitForSeconds(_Delay);
 
             if (_Timer != null)
                 StopCoroutine(_Timer);
