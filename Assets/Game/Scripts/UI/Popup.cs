@@ -6,11 +6,16 @@ using UnityEngine.UI;
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.UI
 {
+    [RequireComponent(typeof(Animator))]
     public class Popup : Screen
     {
         [Header("Buttons")]
         [SerializeField] private Button _ResetBtn = null;
         [SerializeField] private Button _BackBtn = null;
+
+        [Header("Juiciness")]
+        [SerializeField] private string _Trigger = "";
+        [SerializeField] private Animator _Animator = null;
 
         private HUD _Hud = null;
 
@@ -20,6 +25,12 @@ namespace Com.IsartDigital.Rush.UI
 
             _ResetBtn.onClick.AddListener(_Hud.ResetGame);
             _BackBtn.onClick.AddListener(Back);
+        }
+
+        private void OnEnable()
+        {
+            if (_Animator != null)
+                _Animator.SetTrigger(_Trigger);      
         }
 
         private void OnDestroy()

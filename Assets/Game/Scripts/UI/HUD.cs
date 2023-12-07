@@ -190,16 +190,6 @@ namespace Com.IsartDigital.Rush.UI
             //_Clock.UpdateTickMultiplier(pValue);
         }
 
-        public void ManagePauseMode()
-        {
-            _IsPaused = !_IsPaused;
-
-            if (_IsPaused)
-                Time.timeScale = 0f;
-            else
-                Time.timeScale = _CurrentTimeScale;
-        }
-
         private void CallHint() => _HintManager.DisplayHint();
 
         private void CallFullHint() => _HintManager.DisplayCompleteHint();
@@ -213,7 +203,7 @@ namespace Com.IsartDigital.Rush.UI
         /// </param>
         public void DisplayGameoverState(bool pState)
         {
-            Time.timeScale = 0f;
+            Time.timeScale = 1f;
 
             if (pState)
                 _WinPopup.SetActive(true);
