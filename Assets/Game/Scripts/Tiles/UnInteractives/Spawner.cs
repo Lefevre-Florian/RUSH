@@ -19,6 +19,9 @@ namespace Com.IsartDigital.Rush.Tiles
         [Space(10)]
         [SerializeField] private GameObject _CubePrefab = default;
 
+        [Header("Particles")]
+        [SerializeField] private ParticleSystem _ParticleSystem = null;
+
         private Clock _Clock = null;
 
         private Colors _ColorIdentifier = default;
@@ -43,6 +46,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void Init()
         {
+            _ParticleSystem.Play();
+
             _InternalNumberCubeToSpawn = _NumberCubeToSpawn;
             _InternalDelay = 0;
 
@@ -54,6 +59,8 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void StartSpawner()
         {
+            _ParticleSystem.Stop();
+
             _Clock.OnGameStart -= StartSpawner;
             _Clock.OnTick += DelayCubeSpawn;
         }

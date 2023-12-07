@@ -48,7 +48,6 @@ GameObject:
   - component: {fileID: 1944668615578476520}
   - component: {fileID: 8055896478085750070}
   - component: {fileID: 5715516774913574564}
-  - component: {fileID: 655863106608026301}
   m_Layer: 0
   m_Name: Rope
   m_TagString: Untagged
@@ -1683,28 +1682,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 404669609291687551}
   m_Mesh: {fileID: 0}
---- !u!64 &655863106608026301
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 404669609291687551}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1 &2470342477831661577
 GameObject:
   m_ObjectHideFlags: 0
@@ -1753,7 +1730,6 @@ GameObject:
   - component: {fileID: 4716672608222587180}
   - component: {fileID: 8357955206954668160}
   - component: {fileID: 1251802641355093392}
-  - component: {fileID: 3379874598005425030}
   m_Layer: 0
   m_Name: Border
   m_TagString: Untagged
@@ -7289,28 +7265,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8351871312587556448}
   m_Mesh: {fileID: 0}
---- !u!64 &3379874598005425030
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8351871312587556448}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1 &8363318700777549867
 GameObject:
   m_ObjectHideFlags: 0
@@ -7324,7 +7278,6 @@ GameObject:
   - component: {fileID: 3987837780780543695}
   - component: {fileID: 9082771929894747775}
   - component: {fileID: 1419932470978458016}
-  - component: {fileID: 3765206688172737401}
   m_Layer: 0
   m_Name: Center
   m_TagString: Untagged
@@ -8461,28 +8414,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8363318700777549867}
   m_Mesh: {fileID: 0}
---- !u!64 &3765206688172737401
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8363318700777549867}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1001 &655870694325322282
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8534,6 +8465,10 @@ PrefabInstance:
     - target: {fileID: 7683283067707615382, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8291866664603334941, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
+      propertyPath: m_Range
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8703310365126189267, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8601,6 +8536,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8291866664603334941, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
+      propertyPath: m_Range
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8703310365126189267, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
@@ -8666,6 +8605,10 @@ PrefabInstance:
     - target: {fileID: 7683283067707615382, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8291866664603334941, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
+      propertyPath: m_Range
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8291866664603334941, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
       propertyPath: m_BoundingSphereOverride.w
@@ -8748,6 +8691,10 @@ PrefabInstance:
     - target: {fileID: 7683283067707615382, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8291866664603334941, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
+      propertyPath: m_Range
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8703310365126189267, guid: 638ed5bd4dc0b254e9068c0c3e2b03cc, type: 3}
       propertyPath: m_LocalPosition.z

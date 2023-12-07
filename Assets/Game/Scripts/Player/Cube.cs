@@ -25,8 +25,10 @@ namespace Com.IsartDigital.Rush.Cube
 
         [Header("Animation")]
         [SerializeField] private string _LandingAnimation = "";
-        [SerializeField] private GameObject _StainPrefab = null;
+        [SerializeField] private string _WallAnimation = "";
+        [SerializeField] private string _DeathAnimation = "";
 
+        [Space(5)]
         [SerializeField] private CubeRenderer _Renderer = null;
 
         private Action DoAction = null;
@@ -88,6 +90,11 @@ namespace Com.IsartDigital.Rush.Cube
         public void Init(Colors pSpawnColor) => Color = pSpawnColor;
 
         #region State Machine
+        public void SetActionDeath()
+        {
+            SetActionVoid();
+        }
+        
         public void SetActionMove()
         {
             _IsStuned = false;
@@ -201,11 +208,7 @@ namespace Com.IsartDigital.Rush.Cube
                 GameObject lCollided = _Hit.collider.gameObject;
                 if (lCollided.layer == _GroundLayer && !_IsStuned)
                 {
-                    if(_StainPrefab != null)
-                        Instantiate(_StainPrefab,
-                                    transform.position + Vector3.up / 2f,
-                                    new Quaternion(),
-                                    transform.parent);
+                    _Animator.SetTrigger(_WallAnimation);
 
                     for (int i = 0; i < MAX_DIRECTION_COUNT; i++)
                     {

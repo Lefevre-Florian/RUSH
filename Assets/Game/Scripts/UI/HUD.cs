@@ -33,7 +33,7 @@ namespace Com.IsartDigital.Rush.UI
         }
 
         [Header("Buttons")]
-        [SerializeField] private Button _PauseButton = null;
+        [SerializeField] private CustomToggle _PauseButton = null;
         [SerializeField] private Button _GameButton = null;
         [SerializeField] private Button _ResetButton = null;
         [SerializeField] private Button _BackButton = null;
@@ -92,6 +92,8 @@ namespace Com.IsartDigital.Rush.UI
             _ResetButton.onClick.AddListener(ResetGame);
             _GameButton.onClick.AddListener(StartGameMode);
             _BackButton.onClick.AddListener(Back);
+
+            _PauseButton._Toggled += ManagePause;
 
             _HintButton.onClick.AddListener(CallHint);
             _HintFullButton.onClick.AddListener(CallFullHint);
@@ -184,6 +186,14 @@ namespace Com.IsartDigital.Rush.UI
             _Clock.ResetTicking();
         }
 
+        private void ManagePause(bool pValue)
+        {
+            if (pValue)
+                Time.timeScale = 0f;
+            else
+                Time.timeScale = _CurrentTimeScale;
+        }
+
         private void OnSliderValueUpdated(float pValue)
         {
             _CurrentTimeScale = Time.timeScale = pValue;
@@ -239,6 +249,8 @@ namespace Com.IsartDigital.Rush.UI
 
             _TilePlacer.OnTilePlaced -= UpdateTileStatus;
             _TilePlacer.OnTileRemoved -= UpdateTileStatus;
+
+            _PauseButton._Toggled -= ManagePause;
 
             _Camera.OnMove -= UpdateTileOrientation;
 

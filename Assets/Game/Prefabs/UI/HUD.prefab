@@ -598,8 +598,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 9a388706fcbf84f4db0600e188ccb3cd, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -833,8 +833,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 6217bd9f3a0564f4cb3081c1578a8b35, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2123,7 +2123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ChildScreen: {fileID: 0}
   _ParentScreen: {fileID: 8597524859938927134, guid: 66945e0118e18eb46b6ee618a6e84f04, type: 3}
-  _PauseButton: {fileID: 942541055931111781}
+  _PauseButton: {fileID: 1970840516622246211}
   _GameButton: {fileID: 469463664605406921}
   _ResetButton: {fileID: 538178229220791597}
   _BackButton: {fileID: 7505091158256865682}
