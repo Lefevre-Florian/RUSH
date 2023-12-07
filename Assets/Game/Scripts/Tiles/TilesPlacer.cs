@@ -218,7 +218,8 @@ namespace Com.IsartDigital.Rush.Managers
 
         private void InsertTile(Ray pRay)
         {
-            if (Physics.Raycast(pRay, out _Hit, float.MaxValue))
+            if (Physics.Raycast(pRay, out _Hit, float.MaxValue)
+                && !Physics.Raycast(_Hit.collider.gameObject.transform.position, Vector3.up, _RaycastDistance))
             {
                 if (_Hit.collider.gameObject.layer == _GroundLayer)
                 {

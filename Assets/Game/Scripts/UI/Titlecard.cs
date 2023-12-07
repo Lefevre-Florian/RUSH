@@ -48,6 +48,8 @@ namespace Com.IsartDigital.Rush.UI
 
         private void Play()
         {
+            transform.GetChild(0).gameObject.SetActive(false);
+
             _PlayButton.onClick.RemoveListener(Play);
             _Animator.SetTrigger(_Trigger);
 
