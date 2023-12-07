@@ -1740,6 +1740,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Titlecard
       objectReference: {fileID: 0}
+    - target: {fileID: 7160772636990251489, guid: 423b34ac37541f4468937e4503b38162, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7285201005669908260, guid: 423b34ac37541f4468937e4503b38162, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -2538,7 +2542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2778817202517748655, guid: bf4cd0d7beaf3e5489ffe8a3a60a9d0d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3630960699722751380, guid: bf4cd0d7beaf3e5489ffe8a3a60a9d0d, type: 3}
       propertyPath: m_SizeDelta.x

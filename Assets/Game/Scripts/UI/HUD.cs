@@ -173,7 +173,7 @@ namespace Com.IsartDigital.Rush.UI
             _HintManager.ForceHideHint();
         }
 
-        private void ResetGame()
+        public void ResetGame()
         {
             Restore();
             _CurrentTimeScale = Time.timeScale = 1f;
