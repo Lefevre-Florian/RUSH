@@ -18,6 +18,9 @@ namespace Com.IsartDigital.Rush.Juiciness
 
         protected virtual void Process() { }
 
-        private void OnParticleSystemStopped() => Destroy(gameObject);
+        private void OnParticleSystemStopped()
+        {
+            Destroy(gameObject);
+        }
     }
 }

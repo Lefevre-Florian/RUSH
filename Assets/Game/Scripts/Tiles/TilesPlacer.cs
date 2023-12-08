@@ -107,6 +107,7 @@ namespace Com.IsartDigital.Rush.Managers
             if (!_InputTriggerable)
                 return;
 
+            #if UNITY_STANDALONE
             if ((Input.GetAxis(_InputMouseVertical) != 0f || Input.GetAxis(_InputMouseHorizontal) != 0f))
             {
                 if(_Preview == null)
@@ -139,7 +140,6 @@ namespace Com.IsartDigital.Rush.Managers
             }
 
             // Input that place or destroy the tile
-            #if UNITY_STANDALONE
             if (Input.GetButtonDown(_InputAccept))
                 InsertTile(_MainCamera.ScreenPointToRay(Input.mousePosition));
             if (Input.GetButtonDown(_InputDelete))
@@ -152,6 +152,34 @@ namespace Com.IsartDigital.Rush.Managers
                 _Touch = Input.GetTouch(0);
                 if(_Touch.phase == TouchPhase.Began)
                 {
+                    if(_Preview == null)
+                    {
+                        _Preview = Instantiate(_TileBlueprint, transform.parent).transform;
+                        _PreviewRenderer = _Preview.GetComponentInChildren<Renderer>();
+                        _Preview.gameObject.SetActive(false);
+
+                        _PreviewAnimator = Instantiate(_CloudParticles, 
+                                                       _Preview.localPosition + Vector3.up * _CloudHeight , 
+                                                       new Quaternion(), 
+                                                       _Preview).GetComponentInChildren<Animator>();
+
+                        UpdatePreview();
+                    }
+
+                    if (Physics.Raycast(_MainCamera.ScreenPointToRay(_Touch.position), out _Hit, float.MaxValue)
+                    && (!Physics.Raycast(_Hit.collider.gameObject.transform.position, Vector3.up, _RaycastDistance, _GroundMask)))
+                    {
+                        //Cast on the upper block
+                        if (!_Preview.gameObject.activeSelf)
+                            _Preview.gameObject.SetActive(true);
+
+                        _Preview.transform.position = ((_Hit.collider.gameObject.layer == _GroundLayer) ? _Hit.collider.gameObject.transform.position : _Hit.collider.gameObject.transform.position - Vector3.up) + Vector3.up * TILE_SIZE;
+                    }
+                    else
+                    {
+                        _Preview.gameObject.SetActive(false);
+                    }
+
                     DeleteTile(_MainCamera.ScreenPointToRay(_Touch.position));
                     InsertTile(_MainCamera.ScreenPointToRay(_Touch.position));
                 }
@@ -173,6 +201,8 @@ namespace Com.IsartDigital.Rush.Managers
                 _TilesLayers[i] = _TileFabric[i].prefab.layer;
             }
             _InputTriggerable = true;
+
+            UpdatePreview();
         }
 
         private void DeleteTile(Ray pRay)
@@ -216,7 +246,8 @@ namespace Com.IsartDigital.Rush.Managers
 
         private void InsertTile(Ray pRay)
         {
-            if (Physics.Raycast(pRay, out _Hit, float.MaxValue))
+            if (Physics.Raycast(pRay, out _Hit, float.MaxValue)
+                && !Physics.Raycast(_Hit.collider.gameObject.transform.position, Vector3.up, _RaycastDistance))
             {
                 if (_Hit.collider.gameObject.layer == _GroundLayer)
                 {

@@ -77,6 +77,8 @@ MonoBehaviour:
     m_Bits: 64
   _CollisionWallTickWait: 2
   _LandingAnimation: Landing
+  _WallAnimation: Collide
+  _DeathAnimation: Death
   _Renderer: {fileID: 8357676408054388747}
 --- !u!114 &8357676408054388747
 MonoBehaviour:
@@ -104,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79dbf7e7958c8ad4abeb719dc4c25b22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsColorblindModeOn: 0
+  m_IsColorblindModeOn: 1
   m_AccessibilityLibrary:
   - {fileID: 11400000, guid: 26242bab22ebd1f4386e6473d9f1d2cb, type: 2}
   - {fileID: 11400000, guid: c7d1bf1fe7170934cbb3e5f014482957, type: 2}

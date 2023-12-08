@@ -10,6 +10,7 @@ namespace Com.IsartDigital.Rush.Cube
         private const float ROTATION_ANGLE = 90f;
 
         private const int MAX_DIRECTION_COUNT = 4;
+        private const int MAX_FALLING_HEIGHT = 3;
 
         [Header("Raycasting")]
         [SerializeField] private float _RaycastOffsetOutSideCube = 0.4f;
@@ -24,7 +25,10 @@ namespace Com.IsartDigital.Rush.Cube
 
         [Header("Animation")]
         [SerializeField] private string _LandingAnimation = "";
+        [SerializeField] private string _WallAnimation = "";
+        [SerializeField] private string _DeathAnimation = "";
 
+        [Space(5)]
         [SerializeField] private CubeRenderer _Renderer = null;
 
         private Action DoAction = null;
@@ -35,6 +39,8 @@ namespace Com.IsartDigital.Rush.Cube
 
         private Vector3 _InitialPosition, _TargetedPosition = default;
         private Quaternion _InitialRotation, _TargetedRotation = default;
+
+        private int _FallCounter = 0;
 
         // Raycasting & collisions
         private float _RaycastDistance = 0f;
@@ -84,6 +90,11 @@ namespace Com.IsartDigital.Rush.Cube
         public void Init(Colors pSpawnColor) => Color = pSpawnColor;
 
         #region State Machine
+        public void SetActionDeath()
+        {
+            SetActionVoid();
+        }
+        
         public void SetActionMove()
         {
             _IsStuned = false;
@@ -197,6 +208,8 @@ namespace Com.IsartDigital.Rush.Cube
                 GameObject lCollided = _Hit.collider.gameObject;
                 if (lCollided.layer == _GroundLayer && !_IsStuned)
                 {
+                    _Animator.SetTrigger(_WallAnimation);
+
                     for (int i = 0; i < MAX_DIRECTION_COUNT; i++)
                     {
                         if (!Physics.Raycast(transform.position, _MovementDirection, _RaycastDistance, _Ground)) break;
@@ -210,6 +223,8 @@ namespace Com.IsartDigital.Rush.Cube
             // Collision check on Ground
             if(Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance, _Ground))
             {
+                _FallCounter = 0;
+
                 if (DoAction == DoActionFall)
                     _Animator.SetTrigger(_LandingAnimation);
 
@@ -220,7 +235,8 @@ namespace Com.IsartDigital.Rush.Cube
             {
                 // Falling state + check if fall is infinite (in case trigger end of game)
                 SetActionFall();
-                if (!Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance * _RaycastFallHeight))
+                if (++_FallCounter > MAX_FALLING_HEIGHT
+                    && !Physics.Raycast(transform.position, Vector3.down, out _Hit, _RaycastDistance * _RaycastFallHeight))
                 {
                     SetActionVoid();
                     OnDied?.Invoke(transform.position);

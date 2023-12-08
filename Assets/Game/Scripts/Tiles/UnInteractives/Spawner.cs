@@ -1,3 +1,4 @@
+using Com.IsartDigital.Rush.Juiciness;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,9 @@ namespace Com.IsartDigital.Rush.Tiles
         [Space(10)]
         [SerializeField] private GameObject _CubePrefab = default;
 
+        [Header("Particles")]
+        [SerializeField] private SpawnParticles _ParticleSystem = null;
+
         private Clock _Clock = null;
 
         private Colors _ColorIdentifier = default;
@@ -39,18 +43,26 @@ namespace Com.IsartDigital.Rush.Tiles
             Init();
 
             _ColorIdentifier = GetComponent<ColoredTiles>().Color;
+            _ParticleSystem.Init(_SpawnDelay, _SpawnFrequency, _NumberCubeToSpawn, GetComponent<ColoredTiles>().RealColor);
         }
 
         private void Init()
         {
+            _ParticleSystem.gameObject.SetActive(true);
+
             _InternalNumberCubeToSpawn = _NumberCubeToSpawn;
             _InternalDelay = 0;
+
+            _Clock.OnTick -= DelayCubeSpawn;
+            _Clock.OnTick -= CubeSpawner;
 
             _Clock.OnGameStart += StartSpawner;
         }
 
         private void StartSpawner()
         {
+            _ParticleSystem.gameObject.SetActive(false);
+
             _Clock.OnGameStart -= StartSpawner;
             _Clock.OnTick += DelayCubeSpawn;
         }

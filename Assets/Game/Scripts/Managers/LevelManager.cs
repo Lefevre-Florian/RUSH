@@ -7,6 +7,10 @@ namespace Com.IsartDigital.Rush.Managers
     public class LevelManager : MonoBehaviour
     {
         #region Singleton
+        [SerializeField] private Animator _TransitionScreen = null;
+        [SerializeField] private string _FadeInTrigger = "";
+        [SerializeField] private string _FadeOutTrigger = "";
+
         private static LevelManager _Instance = null;
 
         public static LevelManager GetInstance()
@@ -59,12 +63,12 @@ namespace Com.IsartDigital.Rush.Managers
             _LevelID = pLevelID;
             if(_Levels != null && _LevelID < _Levels.Length)
             {
+                TriggerFadeOutScreen();
                 Transform lLevel = SwitchScene(_GameScene);
                 if(lLevel != null)
                 {
                     Instantiate(_Levels[_LevelID].LevelPrefab,  
                                 FlowManager.GetInstance().LevelContainer);
-
                     TilesPlacer.GetInstance().SetTiles(_Levels[_LevelID]);
                 }
             }
@@ -82,6 +86,10 @@ namespace Com.IsartDigital.Rush.Managers
             }
             return null;
         }
+
+        public void TriggerFadeInScreen() => _TransitionScreen.SetTrigger(_FadeInTrigger);
+
+        public void TriggerFadeOutScreen() => _TransitionScreen.SetTrigger(_FadeOutTrigger);
 
         private void OnDestroy()
         {

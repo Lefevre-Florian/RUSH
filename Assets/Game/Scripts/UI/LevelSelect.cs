@@ -21,13 +21,23 @@ namespace Com.IsartDigital.Rush.UI
         [Header("Input")]
         [SerializeField] private string _BackInput = "";
 
+        [Header("Juiciness")]
+        [SerializeField] private float _RendererRotationSpeed = 25f; 
+
         private GameObject[] _LevelRenderers = new GameObject[0];
         private int _CurrentIndex = 0;
+
+        private Transform _LevelRenderer = null;
 
         private void Update()
         {
             if (Input.GetButtonDown(_BackInput))
                 Back();
+
+            if(_LevelRenderer != null)
+            {
+                _LevelRenderer.Rotate(Vector3.up, _RendererRotationSpeed * Time.deltaTime);
+            }
         }
 
         protected override void Init()
@@ -46,6 +56,8 @@ namespace Com.IsartDigital.Rush.UI
             }
 
             _LevelRenderers[_CurrentIndex].SetActive(true);
+            _LevelRenderer = _LevelRenderers[_CurrentIndex].transform;
+
             UpdateNavigationState();
 
             _StartBtn.onClick.AddListener(StartLevel);
@@ -83,7 +95,7 @@ namespace Com.IsartDigital.Rush.UI
 
         private void UpdateNavigationState()
         {
-            _LevelNameLabel.text = _LevelRenderers[_CurrentIndex].name;
+            _LevelNameLabel.text = _LevelRenderers[_CurrentIndex].name.Split("(")[0];
 
             if (_CurrentIndex == 0)
                 SetButtonState(_PreviousBtn, false);
@@ -94,6 +106,10 @@ namespace Com.IsartDigital.Rush.UI
                 SetButtonState(_NextBtn, true);
                 SetButtonState(_PreviousBtn, true); 
             }
+
+            Transform lTemp = _LevelRenderer;
+            _LevelRenderer = _LevelRenderers[_CurrentIndex].transform;
+            _LevelRenderer.rotation = lTemp.rotation;
         }
 
         private void SetButtonState(Button pButton, bool pState) => pButton.enabled = pState;

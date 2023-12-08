@@ -33,7 +33,7 @@ namespace Com.IsartDigital.Rush.UI
         }
 
         [Header("Buttons")]
-        [SerializeField] private Button _PauseButton = null;
+        [SerializeField] private CustomToggle _PauseButton = null;
         [SerializeField] private Button _GameButton = null;
         [SerializeField] private Button _ResetButton = null;
         [SerializeField] private Button _BackButton = null;
@@ -44,6 +44,10 @@ namespace Com.IsartDigital.Rush.UI
 
         [Space(10)]
         [SerializeField] private Slider _TimeSlider = null;
+
+        [Header("Section")]
+        [SerializeField] private RectTransform _ReflexionPhaseCanvas = null;
+        [SerializeField] private RectTransform _ActionPhaseCanvas = null;
 
         [Header("Popup & Text")]
         [SerializeField] private GameObject _LoosePopup = null;
@@ -64,6 +68,8 @@ namespace Com.IsartDigital.Rush.UI
         private List<Button> _TileBtns = new List<Button>();
         private Vector3[] _TileDirection = new Vector3[0];
 
+        private float _CurrentTimeScale = 1f;
+
         private void Awake()
         {
             if(_Instance != null)
@@ -76,7 +82,7 @@ namespace Com.IsartDigital.Rush.UI
 
         protected override void Init()
         {
-            Time.timeScale = 1f;
+            _CurrentTimeScale = Time.timeScale = 1f;
 
             _Clock = Clock.GetInstance();
 
@@ -86,6 +92,8 @@ namespace Com.IsartDigital.Rush.UI
             _ResetButton.onClick.AddListener(ResetGame);
             _GameButton.onClick.AddListener(StartGameMode);
             _BackButton.onClick.AddListener(Back);
+
+            _PauseButton._Toggled += ManagePause;
 
             _HintButton.onClick.AddListener(CallHint);
             _HintFullButton.onClick.AddListener(CallFullHint);
@@ -133,6 +141,7 @@ namespace Com.IsartDigital.Rush.UI
                 lBtn.transform.rotation = Quaternion.Euler(_TileDirection[i]);
                 _TileBtns.Add(lBtn.GetComponent<Button>());
             }
+            UpdateTileOrientation();
 
             _Camera.OnMove += UpdateTileOrientation;
 
@@ -145,16 +154,12 @@ namespace Com.IsartDigital.Rush.UI
         #region Menu comportement (Self comportement)
         private void Restore()
         {
-            _PauseButton.gameObject.SetActive(false);
-            _ResetButton.gameObject.SetActive(false);
-            _WinPopup.gameObject.SetActive(false);
             _LoosePopup.gameObject.SetActive(false);
-            _TimeSlider.gameObject.SetActive(false);
+            _WinPopup.gameObject.SetActive(false);
 
-            _HintButton.gameObject.SetActive(true);
-            _HintFullButton.gameObject.SetActive(true);
+            _ReflexionPhaseCanvas.gameObject.SetActive(true);
+            _ActionPhaseCanvas.gameObject.SetActive(false);
 
-            _Container.gameObject.SetActive(true);
             _TilePlacer.EnableInput();
         }
 
@@ -162,25 +167,18 @@ namespace Com.IsartDigital.Rush.UI
         {
             _Clock.StartTicking();
 
-            _PauseButton.gameObject.SetActive(true);
-            _GameButton.gameObject.SetActive(false);
-            _ResetButton.gameObject.SetActive(true);
+            _ReflexionPhaseCanvas.gameObject.SetActive(false);
+            _ActionPhaseCanvas.gameObject.SetActive(true);
 
-            _TimeSlider.gameObject.SetActive(true);
-
-            _HintButton.gameObject.SetActive(false);
-            _HintFullButton.gameObject.SetActive(false);
-
-            _Container.gameObject.SetActive(false);
             _TilePlacer.DisableInput();
 
             _HintManager.ForceHideHint();
         }
 
-        private void ResetGame()
+        public void ResetGame()
         {
             Restore();
-            Time.timeScale = 1f;
+            _CurrentTimeScale = Time.timeScale = 1f;
 
             _TimeSlider.value = 1f;
 
@@ -188,16 +186,18 @@ namespace Com.IsartDigital.Rush.UI
             _Clock.ResetTicking();
         }
 
-        private void OnSliderValueUpdated(float pValue) => _Clock.UpdateTickMultiplier(pValue);
-
-        public void ManagePauseMode()
+        private void ManagePause(bool pValue)
         {
-            _IsPaused = !_IsPaused;
-
-            if (_IsPaused)
+            if (pValue)
                 Time.timeScale = 0f;
             else
-                Time.timeScale = 1f;
+                Time.timeScale = _CurrentTimeScale;
+        }
+
+        private void OnSliderValueUpdated(float pValue)
+        {
+            _CurrentTimeScale = Time.timeScale = pValue;
+            //_Clock.UpdateTickMultiplier(pValue);
         }
 
         private void CallHint() => _HintManager.DisplayHint();
@@ -213,7 +213,7 @@ namespace Com.IsartDigital.Rush.UI
         /// </param>
         public void DisplayGameoverState(bool pState)
         {
-            Time.timeScale = 0f;
+            Time.timeScale = 1f;
 
             if (pState)
                 _WinPopup.SetActive(true);
@@ -249,6 +249,8 @@ namespace Com.IsartDigital.Rush.UI
 
             _TilePlacer.OnTilePlaced -= UpdateTileStatus;
             _TilePlacer.OnTileRemoved -= UpdateTileStatus;
+
+            _PauseButton._Toggled -= ManagePause;
 
             _Camera.OnMove -= UpdateTileOrientation;
 

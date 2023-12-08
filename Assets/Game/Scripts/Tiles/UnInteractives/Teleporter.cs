@@ -40,17 +40,18 @@ namespace Com.IsartDigital.Rush.Tiles
             base.Init();
 
             _Animator = GetComponent<Animator>();
+            m_Clock.OnReset += Restore;
         }
 
         protected override void OnCollisionComportement()
         {
-            Cube.Cube lCube = _Hit.collider.gameObject.GetComponent<Cube.Cube>();
+            Cube.Cube lCube = m_Hit.collider.gameObject.GetComponent<Cube.Cube>();
 
             if (_Output.TeleportationStack.Count != 0 && _Output.TeleportationStack.Contains(lCube) || _Output._TeleportationMemory.Contains(lCube))
                 return;
 
             if(_TeleportationStack.Count == 0)
-                _Clock.OnTick += ManageTeleportation;
+                m_Clock.OnTick += ManageTeleportation;
 
             TriggerAnimation();
 
@@ -71,10 +72,10 @@ namespace Com.IsartDigital.Rush.Tiles
             _TeleportationMemory.Enqueue(lCube);
 
             if (_TeleportationMemory.Count != 0)
-                _Clock.OnTick += CleanQueue;
+                m_Clock.OnTick += CleanQueue;
 
             if (_TeleportationStack.Count == 0)
-                _Clock.OnTick -= ManageTeleportation;
+                m_Clock.OnTick -= ManageTeleportation;
         }
 
         private void CleanQueue()
@@ -84,10 +85,20 @@ namespace Com.IsartDigital.Rush.Tiles
 
             if (_TeleportationMemory.Count == 0)
             {
-                _Clock.OnTick -= CleanQueue;
+                m_Clock.OnTick -= CleanQueue;
                 _InternalTick = 0;
             }
                 
+        }
+
+        private void Restore()
+        {
+            _TeleportationStack.Clear();
+            if (_TeleportationMemory.Count != 0)
+                _TeleportationMemory.Clear();
+
+            m_Clock.OnTick -= CleanQueue;
+            m_Clock.OnTick -= ManageTeleportation;
         }
 
         public void TriggerAnimation() => _Animator.SetTrigger(_TeleportationTrigger);
@@ -96,7 +107,9 @@ namespace Com.IsartDigital.Rush.Tiles
         {
             _Animator = null;
 
-            _Clock.OnTick -= ManageTeleportation;
+            Restore();
+            m_Clock.OnReset -= Restore;
+
             base.Destroy();
         }
     }
