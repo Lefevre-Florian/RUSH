@@ -22,15 +22,31 @@ namespace Com.IsartDigital.Rush.Managers
         }
         #endregion
 
+        private const float RAYCAST_OFFSET = 0.2f;
+        private const float TILE_SIZE = 0.5f;
+
         [Header("Tiles & Fabric")]
         [SerializeField] private Level _TileDatas = null;
         [SerializeField] private int _GroundLayer = 6;
+        [SerializeField] private LayerMask _GroundMask = default;
 
         [Header("Windows / PC")]
         [SerializeField] private string _InputAccept = "";
         [SerializeField] private string _InputDelete = "";
 
+        [SerializeField] private string _InputMouseVertical = "";
+        [SerializeField] private string _InputMouseHorizontal = "";
+
         [SerializeField] private Transform _Container = null;
+
+        [Header("Juiciness")]
+        [SerializeField] private GameObject _TileBlueprint = null;
+        [SerializeField] private GameObject _CloudParticles = null;
+        [SerializeField][Range(0f,2f)] private float _CloudHeight = 2f;
+
+        [Header("Animation triggers")]
+        [SerializeField] private string _TriggerDelete = "";
+        [SerializeField] private string _TriggerCast = "";
 
         private RaycastHit _Hit = default;
         private UnityEngine.Camera _MainCamera = null;
@@ -41,10 +57,15 @@ namespace Com.IsartDigital.Rush.Managers
         private int[] _TilesLayers = new int[0];
         private TileData[] _TileFabric = new TileData[0];
 
-        private GameObject _Preview = null;
+        // Renderer
+        private Transform _Preview = null;
+        private Renderer _PreviewRenderer = null;
+        private Animator _PreviewAnimator = null;
 
         private bool _InputTriggerable = true;
         private bool _IsDisplayable = true;
+
+        private float _RaycastDistance = TILE_SIZE + RAYCAST_OFFSET;
 
         #if UNITY_ANDROID
         private Touch _Touch = default;
@@ -73,23 +94,52 @@ namespace Com.IsartDigital.Rush.Managers
                 return;
             }
             SetTiles(_TileDatas);
+
         }
 
-        private void Start() => _MainCamera = UnityEngine.Camera.main;
+        private void Start()
+        {
+            _MainCamera = UnityEngine.Camera.main;
+        }
 
         private void Update()
         {
             if (!_InputTriggerable)
                 return;
 
-            if (_IsDisplayable && _Preview != null)
+            #if UNITY_STANDALONE
+            if ((Input.GetAxis(_InputMouseVertical) != 0f || Input.GetAxis(_InputMouseHorizontal) != 0f))
             {
-                if (Physics.Raycast(_MainCamera.ScreenPointToRay(Input.mousePosition), out _Hit, float.MaxValue))
-                    _Preview.transform.position = _Hit.collider.gameObject.transform.position;
+                if(_Preview == null)
+                {
+                    _Preview = Instantiate(_TileBlueprint, transform.parent).transform;
+                    _PreviewRenderer = _Preview.GetComponentInChildren<Renderer>();
+                    _Preview.gameObject.SetActive(false);
+
+                    _PreviewAnimator = Instantiate(_CloudParticles, 
+                                                   _Preview.localPosition + Vector3.up * _CloudHeight , 
+                                                   new Quaternion(), 
+                                                   _Preview).GetComponentInChildren<Animator>();
+
+                    UpdatePreview();
+                }
+
+                if (Physics.Raycast(_MainCamera.ScreenPointToRay(Input.mousePosition), out _Hit, float.MaxValue)
+                    && (!Physics.Raycast(_Hit.collider.gameObject.transform.position, Vector3.up, _RaycastDistance, _GroundMask)))
+                {
+                    //Cast on the upper block
+                    if (!_Preview.gameObject.activeSelf)
+                        _Preview.gameObject.SetActive(true);
+
+                    _Preview.transform.position = ((_Hit.collider.gameObject.layer == _GroundLayer) ? _Hit.collider.gameObject.transform.position : _Hit.collider.gameObject.transform.position - Vector3.up) + Vector3.up * TILE_SIZE;
+                }
+                else
+                {
+                    _Preview.gameObject.SetActive(false);
+                }
             }
 
             // Input that place or destroy the tile
-            #if UNITY_STANDALONE
             if (Input.GetButtonDown(_InputAccept))
                 InsertTile(_MainCamera.ScreenPointToRay(Input.mousePosition));
             if (Input.GetButtonDown(_InputDelete))
@@ -102,6 +152,34 @@ namespace Com.IsartDigital.Rush.Managers
                 _Touch = Input.GetTouch(0);
                 if(_Touch.phase == TouchPhase.Began)
                 {
+                    if(_Preview == null)
+                    {
+                        _Preview = Instantiate(_TileBlueprint, transform.parent).transform;
+                        _PreviewRenderer = _Preview.GetComponentInChildren<Renderer>();
+                        _Preview.gameObject.SetActive(false);
+
+                        _PreviewAnimator = Instantiate(_CloudParticles, 
+                                                       _Preview.localPosition + Vector3.up * _CloudHeight , 
+                                                       new Quaternion(), 
+                                                       _Preview).GetComponentInChildren<Animator>();
+
+                        UpdatePreview();
+                    }
+
+                    if (Physics.Raycast(_MainCamera.ScreenPointToRay(_Touch.position), out _Hit, float.MaxValue)
+                    && (!Physics.Raycast(_Hit.collider.gameObject.transform.position, Vector3.up, _RaycastDistance, _GroundMask)))
+                    {
+                        //Cast on the upper block
+                        if (!_Preview.gameObject.activeSelf)
+                            _Preview.gameObject.SetActive(true);
+
+                        _Preview.transform.position = ((_Hit.collider.gameObject.layer == _GroundLayer) ? _Hit.collider.gameObject.transform.position : _Hit.collider.gameObject.transform.position - Vector3.up) + Vector3.up * TILE_SIZE;
+                    }
+                    else
+                    {
+                        _Preview.gameObject.SetActive(false);
+                    }
+
                     DeleteTile(_MainCamera.ScreenPointToRay(_Touch.position));
                     InsertTile(_MainCamera.ScreenPointToRay(_Touch.position));
                 }
@@ -122,9 +200,9 @@ namespace Com.IsartDigital.Rush.Managers
                 _TileFabric[i] = _TileDatas.Tile[i];
                 _TilesLayers[i] = _TileFabric[i].prefab.layer;
             }
-
-            _Preview = _TileFabric[0].prefab;
             _InputTriggerable = true;
+
+            UpdatePreview();
         }
 
         private void DeleteTile(Ray pRay)
@@ -136,6 +214,8 @@ namespace Com.IsartDigital.Rush.Managers
                     _TargetedGameobject = _Hit.collider.gameObject.transform;
                     if (_TargetedGameobject != null)
                     {
+                        if(_Preview != null) _PreviewAnimator.SetTrigger(_TriggerDelete);
+
                         int lLength = _TileFabric.Length;
                         int lIndex = -1;
                         for (int i = 0; i < lLength; i++)
@@ -153,7 +233,8 @@ namespace Com.IsartDigital.Rush.Managers
                             _TileFabric[lIndex].quantity += 1;
                             OnTileRemoved?.Invoke(lIndex);
 
-                            CheckFabricFullness();
+                            _CurrentIndex = lIndex;
+                            UpdatePreview();
                         }
                         
                         Destroy(_TargetedGameobject.gameObject);
@@ -165,13 +246,16 @@ namespace Com.IsartDigital.Rush.Managers
 
         private void InsertTile(Ray pRay)
         {
-            if (Physics.Raycast(pRay, out _Hit, float.MaxValue))
+            if (Physics.Raycast(pRay, out _Hit, float.MaxValue)
+                && !Physics.Raycast(_Hit.collider.gameObject.transform.position, Vector3.up, _RaycastDistance))
             {
                 if (_Hit.collider.gameObject.layer == _GroundLayer)
                 {
                     _TargetedGameobject = _Hit.collider.gameObject.transform;
                     if (_TargetedGameobject != null && _TileFabric[_CurrentIndex].quantity != 0)
                     {
+                        if (_Preview != null) _PreviewAnimator.SetTrigger(_TriggerCast);
+
                         _TileFabric[_CurrentIndex].quantity -= 1;
 
                         DirectionalTiles lTile;
@@ -180,8 +264,6 @@ namespace Com.IsartDigital.Rush.Managers
                                             new Quaternion(),
                                             _Container).GetComponent<DirectionalTiles>();
                         lTile.SetDirection(_TileFabric[_CurrentIndex].direction);
-
-                        CheckFabricFullness();
 
                         OnTilePlaced?.Invoke(_CurrentIndex);
                         if (_TileFabric[_CurrentIndex].quantity == 0) ChangeTileType();
@@ -198,14 +280,54 @@ namespace Com.IsartDigital.Rush.Managers
         public void SetCurrentTileIndex(int pIndex)
         {
             if (pIndex >= 0 && pIndex < _TileFabric.Length)
+            {
                 _CurrentIndex = pIndex;
+                UpdatePreview();
+            }
         }
 
         private void ChangeTileType()
         {
             _CurrentIndex = (_CurrentIndex + 1 >= _TileFabric.Length) ? 0 : _CurrentIndex + 1;
+            UpdatePreview();
 
             OnTileChanged?.Invoke(_CurrentIndex);
+        }
+
+        private void UpdatePreview()
+        {
+            if (_Preview == null)
+                return;
+
+            if (CheckFabricFullness())
+            {
+                _PreviewRenderer.material.mainTexture = _TileFabric[_CurrentIndex].Material.mainTexture;
+
+                Vector3 lLookDirection = Vector3.zero;
+                switch (_TileFabric[_CurrentIndex].direction)
+                {
+                    case Vectors.FORWARD:
+                        lLookDirection = Vector3.forward;
+                        break;
+                    case Vectors.BACKWARD:
+                        lLookDirection = Vector3.back;
+                        break;
+                    case Vectors.RIGHT:
+                        lLookDirection = Vector3.right;
+                        break;
+                    case Vectors.LEFT:
+                        lLookDirection = Vector3.left;
+                        break;
+                    default:
+                        break;
+                }
+
+                _PreviewRenderer.transform.LookAt(_PreviewRenderer.transform.position + lLookDirection);
+            }
+            else
+            {
+                _PreviewRenderer.material.mainTexture = null;
+            }
         }
 
         private bool CheckFabricFullness()
@@ -213,13 +335,9 @@ namespace Com.IsartDigital.Rush.Managers
             foreach (TileData lTile in _TileFabric)
             {
                 if (lTile.quantity != 0)
-                {
-                    _IsDisplayable = true;
-                    break;
-                }
-                _IsDisplayable = false;
+                    return true;
             }
-            return _IsDisplayable;
+            return false;
         }
 
         private void OnDestroy()

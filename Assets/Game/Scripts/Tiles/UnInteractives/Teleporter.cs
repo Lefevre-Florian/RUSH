@@ -4,11 +4,16 @@ using UnityEngine;
 // Author : Lefevre Florian
 namespace Com.IsartDigital.Rush.Tiles
 {
+    [RequireComponent(typeof(Animator))]
     public class Teleporter : Tile
     {
         [SerializeField] private Teleporter _Output = default;
         [SerializeField] private int _TeleportationTick = 1;
 
+        [Header("Animation & Juiciness")]
+        [SerializeField] private string _TeleportationTrigger = "";
+
+        // Logic comportements
         public Vector3 OutputPosition
         {
             get { return _Output.transform.position; }
@@ -26,15 +31,29 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private int _InternalTick = 0;
 
+        // Animations & Juiciness variables
+
+        private Animator _Animator = null;
+
+        protected override void Init()
+        {
+            base.Init();
+
+            _Animator = GetComponent<Animator>();
+            m_Clock.OnReset += Restore;
+        }
+
         protected override void OnCollisionComportement()
         {
-            Cube.Cube lCube = _Hit.collider.gameObject.GetComponent<Cube.Cube>();
+            Cube.Cube lCube = m_Hit.collider.gameObject.GetComponent<Cube.Cube>();
 
             if (_Output.TeleportationStack.Count != 0 && _Output.TeleportationStack.Contains(lCube) || _Output._TeleportationMemory.Contains(lCube))
                 return;
 
             if(_TeleportationStack.Count == 0)
-                _Clock.OnTick += ManageTeleportation;
+                m_Clock.OnTick += ManageTeleportation;
+
+            TriggerAnimation();
 
             lCube.Renderer.DisableVisibility();
             lCube.SetActionWait(_TeleportationTick);
@@ -45,16 +64,18 @@ namespace Com.IsartDigital.Rush.Tiles
 
         private void ManageTeleportation()
         {
+            _Output.TriggerAnimation();
+
             Cube.Cube lCube = _TeleportationStack.Dequeue();
             lCube.Renderer.EnableVisibility();
 
             _TeleportationMemory.Enqueue(lCube);
 
             if (_TeleportationMemory.Count != 0)
-                _Clock.OnTick += CleanQueue;
+                m_Clock.OnTick += CleanQueue;
 
             if (_TeleportationStack.Count == 0)
-                _Clock.OnTick -= ManageTeleportation;
+                m_Clock.OnTick -= ManageTeleportation;
         }
 
         private void CleanQueue()
@@ -64,15 +85,31 @@ namespace Com.IsartDigital.Rush.Tiles
 
             if (_TeleportationMemory.Count == 0)
             {
-                _Clock.OnTick -= CleanQueue;
+                m_Clock.OnTick -= CleanQueue;
                 _InternalTick = 0;
             }
                 
         }
 
+        private void Restore()
+        {
+            _TeleportationStack.Clear();
+            if (_TeleportationMemory.Count != 0)
+                _TeleportationMemory.Clear();
+
+            m_Clock.OnTick -= CleanQueue;
+            m_Clock.OnTick -= ManageTeleportation;
+        }
+
+        public void TriggerAnimation() => _Animator.SetTrigger(_TeleportationTrigger);
+
         protected override void Destroy()
         {
-            _Clock.OnTick -= ManageTeleportation;
+            _Animator = null;
+
+            Restore();
+            m_Clock.OnReset -= Restore;
+
             base.Destroy();
         }
     }

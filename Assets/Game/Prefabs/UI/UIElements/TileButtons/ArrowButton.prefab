@@ -185,6 +185,10 @@ PrefabInstance:
       propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23704975771370082, guid: 16957ef68a439ee4fb120ba2ffa2519e, type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2028644793624795555, guid: 16957ef68a439ee4fb120ba2ffa2519e, type: 3}
     - {fileID: 65602418466369314, guid: 16957ef68a439ee4fb120ba2ffa2519e, type: 3}

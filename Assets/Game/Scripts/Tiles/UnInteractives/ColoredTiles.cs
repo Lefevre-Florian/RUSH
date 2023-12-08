@@ -9,14 +9,16 @@ namespace Com.IsartDigital.Rush.Tiles
 
         public Colors Color { get { return _Color; } private set { _Color = value; } }
 
+        public Color RealColor { get { return ColorLibrary.Library[_Color]; } private set {; } }
+
         private void Start()
         {
-            Material lMaterial = null;
+            Renderer lMaterial = null;
             int lLength = transform.childCount;
             for (int i = 0; i < lLength; i++)
             {
-                lMaterial = transform.GetChild(i).GetComponent<Renderer>().material;
-                lMaterial.color = ColorLibrary.Library[_Color];
+                if(transform.GetChild(i).TryGetComponent<Renderer>(out lMaterial))
+                    lMaterial.material.color = ColorLibrary.Library[_Color];
             }
         }
     }

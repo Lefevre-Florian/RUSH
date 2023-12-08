@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3844201250219429937}
   - component: {fileID: 1118239733618223970}
   - component: {fileID: 8357676408054388747}
+  - component: {fileID: 4046012282233322667}
   m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
@@ -76,6 +77,8 @@ MonoBehaviour:
     m_Bits: 64
   _CollisionWallTickWait: 2
   _LandingAnimation: Landing
+  _WallAnimation: Collide
+  _DeathAnimation: Death
   _Renderer: {fileID: 8357676408054388747}
 --- !u!114 &8357676408054388747
 MonoBehaviour:
@@ -91,6 +94,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _BodyRenderer: {fileID: 1712018347329982114}
   _CoreRenderer: {fileID: 7697690203382682250}
+--- !u!114 &4046012282233322667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8626180485439905694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79dbf7e7958c8ad4abeb719dc4c25b22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsColorblindModeOn: 1
+  m_AccessibilityLibrary:
+  - {fileID: 11400000, guid: 26242bab22ebd1f4386e6473d9f1d2cb, type: 2}
+  - {fileID: 11400000, guid: c7d1bf1fe7170934cbb3e5f014482957, type: 2}
+  - {fileID: 11400000, guid: 76f175b6fca58974780bf6a3bf5d5fae, type: 2}
+  - {fileID: 11400000, guid: 439ad9940a126ae42be5ce189b19d058, type: 2}
+  - {fileID: 11400000, guid: 8a965372ea2b2e046bdc9074232bdfb9, type: 2}
+  - {fileID: 11400000, guid: 8edb4e3391d44524dbf8ce12e63d8263, type: 2}
+  m_IsStatic: 0
+  m_Prefab: {fileID: 4809600284553703890, guid: 0acfa42bd1ac77841ba27b21426ca6c1, type: 3}
+  m_Height: 1
 --- !u!1001 &6944711975237284673
 PrefabInstance:
   m_ObjectHideFlags: 0

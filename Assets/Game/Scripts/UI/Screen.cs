@@ -15,6 +15,7 @@ namespace Com.IsartDigital.Rush.UI
 
         protected void Back()
         {
+            LevelManager.GetInstance().TriggerFadeOutScreen();
             if (_ParentScreen == null)
                 return;
 
@@ -31,7 +32,7 @@ namespace Com.IsartDigital.Rush.UI
             Close();
         }
 
-        protected void Close() => Destroy(gameObject);
+        public void Close() => Destroy(gameObject);
 
         protected void Open(GameObject pScreen) => LevelManager.GetInstance().SwitchScene(pScreen);
 
