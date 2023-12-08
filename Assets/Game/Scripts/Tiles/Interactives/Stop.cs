@@ -38,6 +38,10 @@ namespace Com.IsartDigital.Rush.Tiles
         {
             _CubePaused.Clear();
             _CubePaused = new Queue<Cube.Cube>();
+
+            Destroy(_IcePrison);
+            _IcePrison = null;
+
             _InternalTick = 0;
         }
 

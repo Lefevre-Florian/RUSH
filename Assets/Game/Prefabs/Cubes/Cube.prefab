@@ -77,6 +77,8 @@ MonoBehaviour:
     m_Bits: 64
   _CollisionWallTickWait: 2
   _LandingAnimation: Landing
+  _WallAnimation: Collide
+  _DeathAnimation: Death
   _Renderer: {fileID: 8357676408054388747}
 --- !u!114 &8357676408054388747
 MonoBehaviour:

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 176366471822852890}
   - component: {fileID: 2237100717474972300}
   - component: {fileID: 6996518237525474798}
+  - component: {fileID: 4528596581576835245}
   m_Layer: 0
   m_Name: Spawn
   m_TagString: Untagged
@@ -41,7 +42,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4246983740672226217}
   serializedVersion: 8
-  lengthInSec: 10
+  lengthInSec: 2
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -4886,3 +4887,15 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &4528596581576835245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4246983740672226217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7600b575a751ce743af49f6ef6862236, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

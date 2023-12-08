@@ -27,6 +27,7 @@ namespace Com.IsartDigital.Rush
         private const float MIN_MULTIPLIER = .1f;
 
         private Coroutine _InternalTimer = null;
+        private Coroutine _ParticleTimer = null;
 
         private float _TimeMultiplier = 1f;
         public float ElapsedTime { get; private set; } = 0f;
@@ -39,6 +40,8 @@ namespace Com.IsartDigital.Rush
         public event Action OnGameStart;
         public event Action OnReset;
 
+        public event Action OnParticleTicking;
+
         private void Awake()
         {
             if (_Instance != null)
@@ -48,6 +51,8 @@ namespace Com.IsartDigital.Rush
             }
             _Instance = this;
         }
+
+        private void Start() => StartParticleEmission();
 
         private void Update()
         {
@@ -60,16 +65,32 @@ namespace Com.IsartDigital.Rush
             _TimeMultiplier = 1f;
 
             OnReset?.Invoke();
+            StartParticleEmission();
         }
 
         public void StartTicking()
         {
+            StopParticleEmission();
             if (_InternalTimer != null)
                 StopCoroutine(_InternalTimer);
             _InternalTimer = StartCoroutine(Tick());
 
             OnGameStart?.Invoke();
             ElapsedTime = 0f;
+        }
+
+        private void StartParticleEmission()
+        {
+            if (_InternalTimer != null)
+                StopCoroutine(_InternalTimer);
+            _InternalTimer = StartCoroutine(ParticleTick());
+        }
+
+        private void StopParticleEmission()
+        {
+            if (_InternalTimer != null)
+                StopCoroutine(_InternalTimer);
+            _InternalTimer = null;
         }
 
         public void StopTicking()
@@ -95,6 +116,17 @@ namespace Com.IsartDigital.Rush
             yield return null;
         }
 
+        private IEnumerator ParticleTick()
+        {
+            while (isActiveAndEnabled)
+            {
+                yield return new WaitForSeconds(DURATION_BETWEEN_TICK);
+                OnParticleTicking?.Invoke();
+            }
+            StopCoroutine(_InternalTimer);
+            yield return null;
+        }
+
         public void UpdateTickMultiplier(float pMultiplier)
         {
             if (pMultiplier > MIN_MULTIPLIER || pMultiplier < MAX_MULTIPLIER)
@@ -103,6 +135,7 @@ namespace Com.IsartDigital.Rush
 
         private void OnDestroy()
         {
+            StopParticleEmission();
             StopTicking();
 
             if (_Instance != null)

@@ -50,15 +50,13 @@ namespace Com.IsartDigital.Rush.Managers
             _Clock = Clock.GetInstance();
             _HUD = HUD.GetInstance();
 
-            _Clock.OnReset += Init;
+            _Clock.OnReset += Restore;
 
             Init();
         }
 
         private void Init()
         {
-            CleanGame();
-
             if (_WarningSign != null)
                 Destroy(_WarningSign);
 
@@ -69,6 +67,12 @@ namespace Com.IsartDigital.Rush.Managers
                 lSpawner.OnCubeSpawned += AddCubeToPlayingParty;
 
             _Cubes = new Dictionary<Cube.Cube, bool>();
+        }
+
+        private void Restore()
+        {
+            CleanGame();
+            Init();
         }
 
         private void AddCubeToPlayingParty(Cube.Cube pCube)
@@ -135,7 +139,7 @@ namespace Com.IsartDigital.Rush.Managers
         private void OnDestroy()
         {
             CleanGame();
-            _Clock.OnReset -= Init;
+            _Clock.OnReset -= Restore;
 
             _Clock = null;
             _HUD = null;

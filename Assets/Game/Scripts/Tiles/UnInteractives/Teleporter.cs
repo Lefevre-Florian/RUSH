@@ -40,6 +40,7 @@ namespace Com.IsartDigital.Rush.Tiles
             base.Init();
 
             _Animator = GetComponent<Animator>();
+            m_Clock.OnReset += Restore;
         }
 
         protected override void OnCollisionComportement()
@@ -90,13 +91,25 @@ namespace Com.IsartDigital.Rush.Tiles
                 
         }
 
+        private void Restore()
+        {
+            _TeleportationStack.Clear();
+            if (_TeleportationMemory.Count != 0)
+                _TeleportationMemory.Clear();
+
+            m_Clock.OnTick -= CleanQueue;
+            m_Clock.OnTick -= ManageTeleportation;
+        }
+
         public void TriggerAnimation() => _Animator.SetTrigger(_TeleportationTrigger);
 
         protected override void Destroy()
         {
             _Animator = null;
 
-            m_Clock.OnTick -= ManageTeleportation;
+            Restore();
+            m_Clock.OnReset -= Restore;
+
             base.Destroy();
         }
     }

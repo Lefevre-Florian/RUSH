@@ -95,7 +95,7 @@ namespace Com.IsartDigital.Rush.UI
 
         private void UpdateNavigationState()
         {
-            _LevelNameLabel.text = _LevelRenderers[_CurrentIndex].name;
+            _LevelNameLabel.text = _LevelRenderers[_CurrentIndex].name.Split("(")[0];
 
             if (_CurrentIndex == 0)
                 SetButtonState(_PreviousBtn, false);
